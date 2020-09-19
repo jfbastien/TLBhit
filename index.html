@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+    <title>JF Bastien</title>
+    <style>
+      @font-face { font-family: 'Alegreya Sans'; font-style: normal; font-weight: 100; src: local('Alegreya Sans Thin'), local('AlegreyaSans-Thin'), url('./fonts/AlegreyaSans-Thin.woff2') format('woff2'), url('./fonts/AlegreyaSans-Thin.woff') format('woff'); font-display: fallback; }
+      @font-face { font-family: 'Alegreya Sans'; font-style: normal; font-weight: 300; src: local('Alegreya Sans Light'), local('AlegreyaSans-Light'), url('./fonts/AlegreyaSans-Light.woff2') format('woff2'), url('./fonts/AlegreyaSans-Light.woff') format('woff'); font-display: fallback; }
+      @font-face { font-family: 'Alegreya Sans'; font-style: italic; font-weight: 300; src: local('Alegreya Sans Light Italic'), local('AlegreyaSans-LightItalic'), url('./fonts/AlegreyaSans-LightItalic.woff2') format('woff2'), url('./fonts/AlegreyaSans-LightItalic.woff') format('woff'); font-display: fallback; }
+      @font-face { font-family: 'Alegreya Sans'; font-style: normal; font-weight: 400; src: local('Alegreya Sans Regular'), local('AlegreyaSans-Regular'), url('./fonts/AlegreyaSans-Regular.woff2') format('woff2'), url('./fonts/AlegreyaSans-Regular.woff') format('woff'); font-display: fallback; }
+      @font-face { font-family: 'Alegreya Sans SC'; font-style: normal; font-weight: 300; src: local('Alegreya Sans SC Light'), local('AlegreyaSansSC-Light'), url('../fonts/AlegreyaSansSC-Light.woff2') format('woff2'), url('../fonts/AlegreyaSansSC-Light.woff') format('woff'); font-display: fallback; }
+      @font-face { font-family: 'Alegreya Sans SC'; font-style: normal; font-weight: 400; src: local('Alegreya Sans SC Regular'), local('AlegreyaSansSC-Regular'), url('../fonts/AlegreyaSansSC-Regular.woff2') format('woff2'), url('../fonts/AlegreyaSansSC-Regular.woff') format('woff'); font-display: fallback; }
+      @font-face { font-family: 'Alegreya Sans SC'; font-style: normal; font-weight: 800; src: local('Alegreya Sans SC ExtraBold'), local('AlegreyaSansSC-ExtraBold'), url('../fonts/AlegreyaSansSC-ExtraBold.woff2') format('woff2'), url('../fonts/AlegreyaSansSC-ExtraBold.woff') format('woff'); font-display: fallback; }
+
+      body { font-family: "Alegreya Sans", Arial, Helvetica, sans-serif; font-weight: 300; }
+      header { max-width: 50em; margin: 0 auto; padding: 0 1em; display: flex; flex-direction: row; flex-wrap: wrap; justify-content: space-between; }
+      header h1 { font-family: "Alegreya Sans SC", Arial, Helvetica, sans-serif; font-weight: 800; margin-bottom: 0; display: flex; flex-direction: column; }
+      header div { display: flex; flex-direction: column; margin: 1em 0 0 0; }
+      header p { margin: 0; text-align: right; }
+      header p:first-child { font-family: "Alegreya Sans SC", Arial, Helvetica, sans-serif; font-weight: 300; }
+      h2 { font-family: "Alegreya Sans SC", Arial, Helvetica, sans-serif; font-weight: 400; }
+      main { max-width: 50em; margin: 0 auto; padding: 0 1em; }
+      article { padding: 1em 0; }
+      ul { list-style-type: circle; }
+      .grid .entry { padding: 1em 0 1em 0; display: flex; flex-direction: row; flex-wrap: wrap; justify-content: space-between; }
+      .grid h3 { margin: 0; font-weight: 400; }
+      .grid .entry .where { display: flex; flex-direction: column; flex-basis: 8em; }
+      .grid p, .grid ul { margin: 0; }
+      .grid ul { padding: 0 0 0 1em; }
+      .grid .where p { font-weight: 100; }
+      .grid .entry .what { display: flex; flex-direction: column; flex-basis: 30em; }
+      .grid .short { padding: 0.2em 0 0.2em 0; }
+      .grid .short .where { display: flex; flex-direction: row; }
+      .grid .short .where h3, .grid .short .where p { width: 5em; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>TLB hit 💥</h1>
+      <div>
+      <p>A podcast about systems &amp; compilers</p>
+      <p> 🐦 <a href="https://twitter.com/TLBhit">@TLBhit</a></p>
+      </div>
+    </header>
+    <main>
+      <article>
+        <h2>A podcast❕</h2>
+        <p>TLB hit is a podcast about systems and compilers by <a href="https://twitter.com/cdleary">Chris Leary</a> and <a href="https://twitter.com/jfbastien">JF Bastien</a>.</p>
+        <p>We have no idea what we're doing yet, and whether it'll be any good or interesting. Let's find out!</p>
+      </article>
+      <article>
+        <h2>Episodes</h2>
+        <div class=grid>
+          <div class="short entry">
+            <div class=where><h3>Episode #0</h3>
+              <p>2020-??-??</p>
+            </div>
+            <div class=what>
+              <p>The zeroth episode, wherein we talk about stuff.</p>
+            </div>
+          </div>
+      </article>
+    </main>
+    <footer>
+    </footer>
+  </body>
+</html>
