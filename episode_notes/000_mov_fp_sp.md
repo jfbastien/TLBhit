@@ -12,7 +12,7 @@
 * Will put errata up on [the TLB Hit website](https://tlbh.it/)
 * ["Sidechannels"](https://en.wikipedia.org/wiki/Covert_channel) via Twitter
 
-## 00:01:45 What's the stack?
+## 00:01:42 What's the stack?
 
 * Episode is named `mov fp sp`
 * `mov fp sp` in the prologue of functions
@@ -35,7 +35,7 @@
   back to stack pointer, "undoing", locally manipulating the stack pointer then
   rolling things back to where they previously were
 
-## 00:03:53 Mechanisms in the processor
+## 00:03:50 Mechanisms in the processor
 
 * Frame pointer/base pointer (bp/fp), stack pointer (sp)
 * Usual convention is that the frame pointer doesn't change during the course
@@ -45,7 +45,7 @@
 * Stack is kind of like a linked list! Pointer of the stack that says "this is
   where the frame pointer *used to be* before we came into this routine".
 
-## 00:05:13 Comparison to an abstract stack machine
+## 00:05:10 Comparison to an abstract stack machine
 
 * In CS class you may learn about machines where you push two operands onto a
   stack then do an add operation that consumes the top two things on the stack
@@ -55,7 +55,7 @@
 * Distinction of "stack machine" vs scratchpad-area style frame areas
   that happen in stack-like fashion for subroutine calls
 
-## 00:06:15 Some instruction set considerations
+## 00:06:05 Some instruction set considerations
 
 * Considerations on modern machines for frequency of these operations and how
   they fit in our instruction cache; e.g. on x86 `push`/`pop` are single byte
@@ -65,7 +65,7 @@
 * ARMv7 had instruction allowed to push 16 registers (all GPRs) and increment
   stack pointer. Yay RISC!
 
-## 07:20:00 Compiler optimizations and stackiness
+## 00:07:09 Compiler optimizations and stackiness
 
 * By moving things onto the stack -- code is constantly working with the things
   in its stack frame
@@ -85,7 +85,7 @@
 * Allows you to just "explode" the object itself and think about its component
   fields individually and get rid of whatever doesn't matter in there
 
-## 00:09:31 Eliding heap allocations in C++
+## 00:09:17 Eliding heap allocations in C++
 
 * Some compilers can also sometimes optimize local heap allocations, turn them
   into stacky allocation
@@ -99,7 +99,7 @@
 * If you're thinking about things as objects instead of raw bytes having higher
   level understanding you can optimize based off of is pretty key it seems?
 
-## 00:10:33 Frame pointer omission
+## 00:10:18 Frame pointer omission
 
 * When JF started programming there was "frame pointer omission" (FPO) which
   was cool because optmizers weren't as good as they are now
@@ -113,7 +113,7 @@
   micro-architectural register set -- not as worried about saving that one
   register as much of the time -- although in hot code you still might
 
-## 00:12:02 "Leaf" functions
+## 00:11:49 "Leaf" functions
 
 * When you inline things you make bigger regions for analysis, ideally make big
   fat leaf functions
@@ -131,7 +131,7 @@
 * Small region in which you can analyze *everything*, like tiny little whole
   program analysis
 
-## 00:13:33 Why do we have a stack again?
+## 00:13:10 Why do we have a stack again?
 
 * Why can't we inline everything?
 * Two main issues: 1) don't necessarily know call graph for the whole program
@@ -167,7 +167,7 @@
   fixed-value-types you can know everything about the world and really optimize
   everything based off of it -- fun mode to be in for scientific computing code
 
-## 00:17:05 Considerations beyond recursion and indirect calls?
+## 00:16:34 Considerations beyond recursion and indirect calls?
 
 * Some languages use the stack for fast thread switching? Things like full
   stackful coroutines?
@@ -189,7 +189,7 @@
 * Because stack is less constrained can live in different places, e.g. in Go
 * In some cases you remove the allocation entirely
 
-## 00:18:55 Scaling to millions of threads?
+## 00:18:25 Scaling to millions of threads?
 
 * If you want to be able to scale your concurrency assumptions to millions of
   threads, you don't want to have huge stacks
@@ -202,7 +202,7 @@
   program was conceptually a thread, you wouldn't want to allocate 512KiB every
   time you did a tiny atomic operation
 
-## 00:19:39 Managed languages putting frames on the heap
+## 00:19:10 Managed languages putting frames on the heap
 
 * On the term "stackless": one of the [Python
   "greenlet"](https://greenlet.readthedocs.io/en/latest/) ("lightweight thread"
@@ -223,7 +223,7 @@
   reason this one virtual memory region that we call the stack is the place where
   that *has* to happen
 
-## 00:20:50 Stack sizes in practice
+## 00:20:20 Stack sizes in practice
 
 * GPUs have thousands and thousands of threads (organized in warps), you end up
   wanting to not want huge stacks
@@ -238,7 +238,7 @@
 * Blowing the stack can be easy in these cases when you're handling interrupts
   -- can end up blowing stack pretty easily so have to be careful
 
-## 00:21:58 What are the biggest stack programs?
+## 00:21:27 What are the biggest stack programs?
 
 * The reverse of "tiny stacks" environments is interesting -- what are the
   biggest stack programs that exist? Who does that?
@@ -247,7 +247,7 @@
   random segfault because the frame got bigger than the initial stack
   allocation was assuming or you hopped into the guard pages
 
-## 00:22:36 Allocating default start size
+## 00:22:08 Allocating default start size
 
 * Conceptually, doesn't all have to be allocated at the start do you?
 * Could grow on the fly as you determine that you need more space
@@ -258,7 +258,7 @@
 * In managed languages when you know where all the pointers are you can
   relocate all the pointers that had anything to do with the stack locations
 
-## 00:23:35 Stacks working nicely with LRU caches
+## 00:22:58 Stacks working nicely with LRU caches
 
 * Younger frames are recently touched
 * Spatial and temporal locality are two things that caches exploit
@@ -271,7 +271,7 @@
   be pulling in
 * Function's frame is usually in the cache in memory as "recently used"
 
-## 00:24:30 Broader question: how does memory in a modern computer work at all?
+## 00:23:54 Broader question: how does memory in a modern computer work at all?
 
 * Talking to stick of DRAM there are values going over the wires, those are the
   physical addresses
@@ -294,7 +294,7 @@
   to disk, take things that would be backed by physical memory and store them
   on disk: magic possibilities of the virtual memory subsystem!
 
-## 00:26:15 TLB Hit!
+## 00:25:55 TLB Hit!
 
 * Each one of these accesses where I take a virtual address and turn it into a
   physical address 
@@ -312,7 +312,7 @@
 * Stack is LRU-cache amenable structure, and other benefits to it as well
 * Long winded way of describing how we ultimately arrive at TLB hits
 
-## 00:27:38 Store-to-load forwarding of stack values
+## 00:27:00 Store-to-load forwarding of stack values
 
 * Other advantages to stack too -- registers are really fast, caches are fast,
   and go to main memory tier at some point
@@ -323,7 +323,7 @@
 * [ed: alignment is another important property for being able to hit in the
   store to load forwarding pipeline!]
 
-## 00:28:32 Multiprocessing teaser!
+## 00:27:57 Multiprocessing teaser!
 
 * Let's say I'm a CPU in a multi-core die and I do a store, and I do
   store-to-load forwarding, but some other processor stored to the same
@@ -336,7 +336,7 @@
 * What properties do you want from your system? Are these single thread
   improvements "great until they're not?!"
 
-## 00:29:38 Sparsity of stack slot usage
+## 00:29:00 Sparsity of stack slot usage
 
 * Each stage is contiguous
 * How a function uses the stack can be super sparse!
@@ -356,7 +356,7 @@
 * Probably they need to unify their understanding of the stack at any given
   program point
 
-## 00:32:28 Where does the stack go?
+## 00:31:50 Where does the stack go?
 
 * Do addresses grow up or grow down?
 * If A calls B is A's frame addresses bigger than B's frame addresses?
@@ -370,7 +370,7 @@
 * There are these various convention(s) we adhere to based on ABI.
 * Different implementations do different things when they implement the ABI.
 
-## 00:36:45 Seemingly arbitrary choices in computer systems
+## 00:33:07 Seemingly arbitrary choices in computer systems
 
 * Always fun to see these -- little vs big endian, address map with 0 at top or
   bottom?
@@ -383,7 +383,7 @@
   endianness of a machine is! If you can't observe the byte storage. Would need
   to fix alignment as well -- or only have word addresses. Word.
 
-## 00:35:45 Unwinding
+## 00:35:05 Unwinding
 
 * Let's say you want to grab a backtrace from your program because it crashed
   or there's a bug or want to know where it is for diagnostic purposes, or in
@@ -403,7 +403,7 @@
   bad like a crash happened?
 * Ability to walk stack structure and ask questions about it is key!
 
-## 00:00:00 Walking with frame pointer omission?
+## 00:36:40 Walking with frame pointer omission?
 
 * If you think about a basic unwinder, all you have to do is walk the stack
   itself -- tiptoe through the linked list.
@@ -438,7 +438,7 @@
 * So with SEH you can write a trap handler in a C program -- might use signals
   for in other environments like POSIX
 
-## 00:41:15 What are setjmp/longjmp?
+## 00:40:35 What are setjmp/longjmp?
 
 * Way to save the current state of registers and where you are on the stack and
   such
@@ -454,7 +454,7 @@
   state away so the kernel can start doing its thing, then you can resume
 * Abstract notion of continuations we may have to talk about at some future point
 
-## 00:42:40 Variable sized stack entities!
+## 00:41:53 Variable sized stack entities!
 
 * We've been talking about frames being of a set size, but there are these
   functions in C and (kind of) C++, called `alloca`, and you also have variable
@@ -483,7 +483,7 @@
 * Within LLVM everything is represented as alloca and creates stack out of
   consolidated allocas, and put things into registers that it can.
 
-## 00:46:17 Stack buffer overruns
+## 00:45:31 Stack buffer overruns
 
 * We put lots of things on the stack, we see some are variable sized
 * Sometimes we put fixed size array on the stack and *think* we're writing into
@@ -512,7 +512,7 @@
   the end right away, might run afoul of the guard page (e.g. if it's a 4KiB
   single guard page).
 
-## 00:49:34 What are guard pages?
+## 00:48:56 What are guard pages?
 
 * When the OS creates a thread it'll map a certain amount of stack
 * It could do that lazily or eagerly
@@ -535,7 +535,7 @@
 * Brings up topics like how segment registers have evolved on x86: future
   episode!
 
-## 00:52:00 The Red Zone
+## 00:51:20 The Red Zone
 
 * Speaking of x86 evolution! Sounds cool... *Red Zone*.
 * Idea you can guarantee some space underneath your frame; e.g. 128B on x86-64,
@@ -544,7 +544,7 @@
   to do accounting.
 * Part of ABI that that extra space exists there.
 
-## 00:52:45 Alignment!
+## 00:52:00 Alignment!
 
 * Usually you always try to have an aligned stack. Byte aligned stack is weird
   when most of the point is to spill registers and registers are 4B or 8B.
@@ -565,7 +565,7 @@
 * Just to say: some things can become more difficult as we start make this
   general process around how things are supposed to work.
 
-## 00:54:34 Processes vs performance
+## 00:53:45 Processes vs performance
 
 * Establishing processes and conventions for "how a machine is used" vs
   performance
@@ -581,7 +581,7 @@
 * Big space of conventions around performance and the stack that's always
   fascinating
 
-## 00:56:20 Managed Virtual Machines: WebAssembly
+## 00:55:45 Managed Virtual Machines: WebAssembly
 
 * In WebAssembly all the code is totally separate from the data
 * WebAssembly meant to be secure VM that can run inside of the browser
@@ -603,12 +603,12 @@
 * Functions can have infinite registers, can return infinite set of values
 * "Virtual register" and "variadic return value arity"
 * Functions have fixed number of inputs
-* How does it do printf/va_lists?
+* How does it do `printf`/`va_lists`?
 * Compiler creates a stack in user accessible memory (the WebAssembly stack)
   you spill to
 * `printf` routine can access those stack spills into WebAssembly memory
 
-## 00:59:30 Whole stack'o browser stacks
+## 00:58:48 Whole stack'o browser stacks
 
 * In full browser, there's native stack, JavaScript stack which JIT can unify
   with the native stack, also WebAssembly stack -- WebAssembly is also being
@@ -618,7 +618,7 @@
 * Like the glue that binds program execution together, in a way!
 * Super integral to how we think about how machines are going to work today
 
-## 01:00:15 Managed VM's rich stack choices
+## 00:59:30 Managed VM's rich stack choices
 
 * In managed VMs you can potentially put more invariants on the program being
   executed (you are managing what the language is doing)
@@ -633,7 +633,7 @@
 * With typed arrays; are the typed arrays words or are they bytes, etc. Lots of
   variations on how we might think about them.
 
-## 01:01:26 What happens at the end of the stack?
+## 01:00:40 What happens at the end of the stack?
 
 * In C++ when you stack overflow it's not defined where stack end is or what
   happens when you run out of stack
@@ -660,7 +660,7 @@
 * Reducers are also the stars of the show -- getting the crisp short program
   that shows some key problem is always amazing to see
 
-## 01:04:33 Stack limit!
+## 01:03:48 Stack limit!
 
 * More things we haven't talked about: rotating register windows, return
   predictors
