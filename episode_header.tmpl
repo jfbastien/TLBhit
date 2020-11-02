@@ -16,7 +16,7 @@
       body { font-family: "Alegreya Sans", Arial, Helvetica, sans-serif; font-weight: 300; }
       header { max-width: 50em; margin: 0 auto; padding: 0 1em; display: flex; flex-direction: row; flex-wrap: wrap; justify-content: space-between; }
       header h1 { font-family: "Alegreya Sans SC", Arial, Helvetica, sans-serif; font-weight: 800; margin-bottom: 0; display: flex; flex-direction: column; }
-      header h1 a { text-decoration: none; color: 	 }
+      header h1 a { text-decoration: none; }
       header div { display: flex; flex-direction: column; margin: 1em 0 0 0; }
       header p { margin: 0; text-align: right; }
       header p:first-child { font-family: "Alegreya Sans SC", Arial, Helvetica, sans-serif; font-weight: 300; }
@@ -40,6 +40,12 @@
           a:link { color: #bb86fc; }
           a:visited { color: #3700b3; }
       }
+
+      .podcast-audio { width: 100%; }
+      .playback-rate-controls ul { margin: 0; padding: 0; list-style: none; text-align: center; }
+      .playback-rate-controls li { display: inline; }
+      .playback-rate-controls li:not(:last-of-type)::after { content: " | "; }
+      .playback-rate-controls ul li a { text-shadow: none; }
     </style>
   </head>
   <body>

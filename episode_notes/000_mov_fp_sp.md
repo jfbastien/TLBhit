@@ -1,5 +1,7 @@
 # Episode 0: `mov fp, sp`
 
+<audio id="audioplayer" src="https://traffic.libsyn.com/secure/tlbhit/tlbhit0.mp3" controls="controls" class="podcast-audio" preload="auto"></audio><div class="playback-rate-controls"><ul><li><a href="#" onclick="setPlaybackSpeed(0.5)">0.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1)">1⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.25)">1.25⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.5)">1.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.75)">1.75⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(2)">2⨉</a></li></ul></div>
+
 ## 00:00:00 Intro
 
 * Website: [tlbh.it](https://tlbh.it/)
