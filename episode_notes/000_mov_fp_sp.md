@@ -9,7 +9,7 @@
 ## 00:00:59 Disclaimer
 
 * We're lifelong learners, only know so much!
-* Will put errata up on (the website)[https://tlbh.it/]
+* Will put errata up on [the TLB Hit website](https://tlbh.it/)
 * ["Sidechannels"](https://en.wikipedia.org/wiki/Covert_channel) via Twitter
 
 ## 00:01:45 What's the stack?
@@ -204,8 +204,10 @@
 
 ## 00:19:39 Managed languages putting frames on the heap
 
-* On the term "stackless": one of the Python "greenlet" ("lightweight thread"
-  terminology) attempts was called stackless Python
+* On the term "stackless": one of the [Python
+  "greenlet"](https://greenlet.readthedocs.io/en/latest/) ("lightweight thread"
+  terminology) attempts was called [Stackless
+  Python](https://github.com/stackless-dev/stackless/wiki)
 * In managed languages like Python the frames can be allocated on the heap;
   e.g. in CPython the frames are allocated on the heap
 * But you still have a native stack for your native program that's doing the
@@ -668,12 +670,22 @@
 
 ## Terminology Glossary
 
-* VM / Virtual Machine: 
+* VM / Virtual Machine: an overloaded term; however, most of the time that we
+  use it in the podcast we're referring to the notion that a managed language
+  implementation runs on an abstract machine that be thought of as designed for
+  that language in particular -- e.g. Python has a set of stack-based bytecodes
+  and associated runtime support that conceptually implements the abstract Python
+  virtual machine; similarly for the Java Virtual Machine and so on.
 * JIT: Just-in-Time compiler -- these are often used for speeding up managed
   language environments by compiling managed programs to native code at runtime
-* greenlet: 
-* stackless:
+* "Stackless": "Stackless Python, or Stackless, is a Python programming
+  language interpreter, so named because it avoids depending on the C call
+  stack for its own stack." -- [https://en.wikipedia.org/wiki/Stackless_Python]
 * reify: to "make real", i.e. materialize somehow in the computer or program;
   antonym: erasure: erasing information from being present in the program that
   had been determined in some prior phase like compilation
-* translation unit: 
+* [translation
+  unit](https://en.wikipedia.org/wiki/Translation_unit_(programming)): the
+  input that is processed by a single compiler invocation (akin to a "module"
+  concept in languages with modules), serves as a natural scope for compiler
+  optimizations

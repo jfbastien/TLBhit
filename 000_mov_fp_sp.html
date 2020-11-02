@@ -61,7 +61,7 @@
 <h2>00:00:59 Disclaimer</h2>
 <ul>
 <li>We're lifelong learners, only know so much!</li>
-<li>Will put errata up on (the website)[https://tlbh.it/]</li>
+<li>Will put errata up on <a href="https://tlbh.it/">the TLB Hit website</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Covert_channel">&quot;Sidechannels&quot;</a> via Twitter</li>
 </ul>
 <h2>00:01:45 What's the stack?</h2>
@@ -256,8 +256,10 @@ time you did a tiny atomic operation</li>
 </ul>
 <h2>00:19:39 Managed languages putting frames on the heap</h2>
 <ul>
-<li>On the term &quot;stackless&quot;: one of the Python &quot;greenlet&quot; (&quot;lightweight thread&quot;
-terminology) attempts was called stackless Python</li>
+<li>On the term &quot;stackless&quot;: one of the <a href="https://greenlet.readthedocs.io/en/latest/">Python
+&quot;greenlet&quot;</a> (&quot;lightweight thread&quot;
+terminology) attempts was called <a href="https://github.com/stackless-dev/stackless/wiki">Stackless
+Python</a></li>
 <li>In managed languages like Python the frames can be allocated on the heap;
 e.g. in CPython the frames are allocated on the heap</li>
 <li>But you still have a native stack for your native program that's doing the
@@ -720,15 +722,25 @@ predictors</li>
 </ul>
 <h2>Terminology Glossary</h2>
 <ul>
-<li>VM / Virtual Machine:</li>
+<li>VM / Virtual Machine: an overloaded term; however, most of the time that we
+use it in the podcast we're referring to the notion that a managed language
+implementation runs on an abstract machine that be thought of as designed for
+that language in particular -- e.g. Python has a set of stack-based bytecodes
+and associated runtime support that conceptually implements the abstract Python
+virtual machine; similarly for the Java Virtual Machine and so on.</li>
 <li>JIT: Just-in-Time compiler -- these are often used for speeding up managed
 language environments by compiling managed programs to native code at runtime</li>
-<li>greenlet:</li>
-<li>stackless:</li>
+<li>&quot;Stackless&quot;: &quot;Stackless Python, or Stackless, is a Python programming
+language interpreter, so named because it avoids depending on the C call
+stack for its own stack.&quot; -- [https://en.wikipedia.org/wiki/Stackless_Python]</li>
 <li>reify: to &quot;make real&quot;, i.e. materialize somehow in the computer or program;
 antonym: erasure: erasing information from being present in the program that
 had been determined in some prior phase like compilation</li>
-<li>translation unit:</li>
+<li><a href="https://en.wikipedia.org/wiki/Translation_unit_(programming)">translation
+unit</a>: the
+input that is processed by a single compiler invocation (akin to a &quot;module&quot;
+concept in languages with modules), serves as a natural scope for compiler
+optimizations</li>
 </ul>
     </main>
   </body>
