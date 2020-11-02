@@ -64,7 +64,7 @@
 <li>Will put errata up on <a href="https://tlbh.it/">the TLB Hit website</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Covert_channel">&quot;Sidechannels&quot;</a> via Twitter</li>
 </ul>
-<h2>00:01:45 What's the stack?</h2>
+<h2>00:01:42 What's the stack?</h2>
 <ul>
 <li>Episode is named <code>mov fp sp</code></li>
 <li><code>mov fp sp</code> in the prologue of functions</li>
@@ -87,7 +87,7 @@ wide</li>
 back to stack pointer, &quot;undoing&quot;, locally manipulating the stack pointer then
 rolling things back to where they previously were</li>
 </ul>
-<h2>00:03:53 Mechanisms in the processor</h2>
+<h2>00:03:50 Mechanisms in the processor</h2>
 <ul>
 <li>Frame pointer/base pointer (bp/fp), stack pointer (sp)</li>
 <li>Usual convention is that the frame pointer doesn't change during the course
@@ -97,7 +97,7 @@ pointer; e.g. <code>+4</code>, <code>+8</code>, etc.</li>
 <li>Stack is kind of like a linked list! Pointer of the stack that says &quot;this is
 where the frame pointer <em>used to be</em> before we came into this routine&quot;.</li>
 </ul>
-<h2>00:05:13 Comparison to an abstract stack machine</h2>
+<h2>00:05:10 Comparison to an abstract stack machine</h2>
 <ul>
 <li>In CS class you may learn about machines where you push two operands onto a
 stack then do an add operation that consumes the top two things on the stack</li>
@@ -107,7 +107,7 @@ single operation that makes a bunch of slots at once</li>
 <li>Distinction of &quot;stack machine&quot; vs scratchpad-area style frame areas
 that happen in stack-like fashion for subroutine calls</li>
 </ul>
-<h2>00:06:15 Some instruction set considerations</h2>
+<h2>00:06:05 Some instruction set considerations</h2>
 <ul>
 <li>Considerations on modern machines for frequency of these operations and how
 they fit in our instruction cache; e.g. on x86 <code>push</code>/<code>pop</code> are single byte
@@ -117,7 +117,7 @@ do so commonly it may make some sense</li>
 <li>ARMv7 had instruction allowed to push 16 registers (all GPRs) and increment
 stack pointer. Yay RISC!</li>
 </ul>
-<h2>07:20:00 Compiler optimizations and stackiness</h2>
+<h2>00:07:09 Compiler optimizations and stackiness</h2>
 <ul>
 <li>By moving things onto the stack -- code is constantly working with the things
 in its stack frame</li>
@@ -137,7 +137,7 @@ stack you can eliminate whole objects and just track sub-fields inside of it</li
 <li>Allows you to just &quot;explode&quot; the object itself and think about its component
 fields individually and get rid of whatever doesn't matter in there</li>
 </ul>
-<h2>00:09:31 Eliding heap allocations in C++</h2>
+<h2>00:09:17 Eliding heap allocations in C++</h2>
 <ul>
 <li>Some compilers can also sometimes optimize local heap allocations, turn them
 into stacky allocation</li>
@@ -151,7 +151,7 @@ entire computation</li>
 <li>If you're thinking about things as objects instead of raw bytes having higher
 level understanding you can optimize based off of is pretty key it seems?</li>
 </ul>
-<h2>00:10:33 Frame pointer omission</h2>
+<h2>00:10:18 Frame pointer omission</h2>
 <ul>
 <li>When JF started programming there was &quot;frame pointer omission&quot; (FPO) which
 was cool because optmizers weren't as good as they are now</li>
@@ -165,7 +165,7 @@ where things are as an offset from a canonical (assumed unchanging) register</li
 micro-architectural register set -- not as worried about saving that one
 register as much of the time -- although in hot code you still might</li>
 </ul>
-<h2>00:12:02 &quot;Leaf&quot; functions</h2>
+<h2>00:11:49 &quot;Leaf&quot; functions</h2>
 <ul>
 <li>When you inline things you make bigger regions for analysis, ideally make big
 fat leaf functions</li>
@@ -183,7 +183,7 @@ do</li>
 <li>Small region in which you can analyze <em>everything</em>, like tiny little whole
 program analysis</li>
 </ul>
-<h2>00:13:33 Why do we have a stack again?</h2>
+<h2>00:13:10 Why do we have a stack again?</h2>
 <ul>
 <li>Why can't we inline everything?</li>
 <li>Two main issues: 1) don't necessarily know call graph for the whole program
@@ -219,7 +219,7 @@ recursion or virtual functions</li>
 fixed-value-types you can know everything about the world and really optimize
 everything based off of it -- fun mode to be in for scientific computing code</li>
 </ul>
-<h2>00:17:05 Considerations beyond recursion and indirect calls?</h2>
+<h2>00:16:34 Considerations beyond recursion and indirect calls?</h2>
 <ul>
 <li>Some languages use the stack for fast thread switching? Things like full
 stackful coroutines?</li>
@@ -241,7 +241,7 @@ allocated, started being stack allocated in last few years where they could</li>
 <li>Because stack is less constrained can live in different places, e.g. in Go</li>
 <li>In some cases you remove the allocation entirely</li>
 </ul>
-<h2>00:18:55 Scaling to millions of threads?</h2>
+<h2>00:18:25 Scaling to millions of threads?</h2>
 <ul>
 <li>If you want to be able to scale your concurrency assumptions to millions of
 threads, you don't want to have huge stacks</li>
@@ -254,7 +254,7 @@ per-thread context you have?</li>
 program was conceptually a thread, you wouldn't want to allocate 512KiB every
 time you did a tiny atomic operation</li>
 </ul>
-<h2>00:19:39 Managed languages putting frames on the heap</h2>
+<h2>00:19:10 Managed languages putting frames on the heap</h2>
 <ul>
 <li>On the term &quot;stackless&quot;: one of the <a href="https://greenlet.readthedocs.io/en/latest/">Python
 &quot;greenlet&quot;</a> (&quot;lightweight thread&quot;
@@ -275,7 +275,7 @@ concept of a stack, both of those things can also happen on the heap -- no
 reason this one virtual memory region that we call the stack is the place where
 that <em>has</em> to happen</li>
 </ul>
-<h2>00:20:50 Stack sizes in practice</h2>
+<h2>00:20:20 Stack sizes in practice</h2>
 <ul>
 <li>GPUs have thousands and thousands of threads (organized in warps), you end up
 wanting to not want huge stacks</li>
@@ -290,7 +290,7 @@ it may be way smaller, XNU: 16KiB</li>
 <li>Blowing the stack can be easy in these cases when you're handling interrupts
 -- can end up blowing stack pretty easily so have to be careful</li>
 </ul>
-<h2>00:21:58 What are the biggest stack programs?</h2>
+<h2>00:21:27 What are the biggest stack programs?</h2>
 <ul>
 <li>The reverse of &quot;tiny stacks&quot; environments is interesting -- what are the
 biggest stack programs that exist? Who does that?</li>
@@ -299,7 +299,7 @@ debug mode, you'll be spilling a bunch of things, and then you'll get a
 random segfault because the frame got bigger than the initial stack
 allocation was assuming or you hopped into the guard pages</li>
 </ul>
-<h2>00:22:36 Allocating default start size</h2>
+<h2>00:22:08 Allocating default start size</h2>
 <ul>
 <li>Conceptually, doesn't all have to be allocated at the start do you?</li>
 <li>Could grow on the fly as you determine that you need more space</li>
@@ -310,7 +310,7 @@ fault when they get accessed, then map them in as needed</li>
 <li>In managed languages when you know where all the pointers are you can
 relocate all the pointers that had anything to do with the stack locations</li>
 </ul>
-<h2>00:23:35 Stacks working nicely with LRU caches</h2>
+<h2>00:22:58 Stacks working nicely with LRU caches</h2>
 <ul>
 <li>Younger frames are recently touched</li>
 <li>Spatial and temporal locality are two things that caches exploit</li>
@@ -323,7 +323,7 @@ LRU caches and address predictors trying to prefetch things you're going to
 be pulling in</li>
 <li>Function's frame is usually in the cache in memory as &quot;recently used&quot;</li>
 </ul>
-<h2>00:24:30 Broader question: how does memory in a modern computer work at all?</h2>
+<h2>00:23:54 Broader question: how does memory in a modern computer work at all?</h2>
 <ul>
 <li>Talking to stick of DRAM there are values going over the wires, those are the
 physical addresses</li>
@@ -346,7 +346,7 @@ maybe you only have 4GiB (32b) of physical memory</li>
 to disk, take things that would be backed by physical memory and store them
 on disk: magic possibilities of the virtual memory subsystem!</li>
 </ul>
-<h2>00:26:15 TLB Hit!</h2>
+<h2>00:25:55 TLB Hit!</h2>
 <ul>
 <li>Each one of these accesses where I take a virtual address and turn it into a
 physical address</li>
@@ -364,7 +364,7 @@ detail!</li>
 <li>Stack is LRU-cache amenable structure, and other benefits to it as well</li>
 <li>Long winded way of describing how we ultimately arrive at TLB hits</li>
 </ul>
-<h2>00:27:38 Store-to-load forwarding of stack values</h2>
+<h2>00:27:00 Store-to-load forwarding of stack values</h2>
 <ul>
 <li>Other advantages to stack too -- registers are really fast, caches are fast,
 and go to main memory tier at some point</li>
@@ -375,7 +375,7 @@ there -- many stack accesses can hit in this, acting as an L0 cache</li>
 <li>[ed: alignment is another important property for being able to hit in the
 store to load forwarding pipeline!]</li>
 </ul>
-<h2>00:28:32 Multiprocessing teaser!</h2>
+<h2>00:27:57 Multiprocessing teaser!</h2>
 <ul>
 <li>Let's say I'm a CPU in a multi-core die and I do a store, and I do
 store-to-load forwarding, but some other processor stored to the same
@@ -388,7 +388,7 @@ than a common optimization.</li>
 <li>What properties do you want from your system? Are these single thread
 improvements &quot;great until they're not?!&quot;</li>
 </ul>
-<h2>00:29:38 Sparsity of stack slot usage</h2>
+<h2>00:29:00 Sparsity of stack slot usage</h2>
 <ul>
 <li>Each stage is contiguous</li>
 <li>How a function uses the stack can be super sparse!</li>
@@ -408,7 +408,7 @@ space to some degree?</li>
 <li>Probably they need to unify their understanding of the stack at any given
 program point</li>
 </ul>
-<h2>00:32:28 Where does the stack go?</h2>
+<h2>00:31:50 Where does the stack go?</h2>
 <ul>
 <li>Do addresses grow up or grow down?</li>
 <li>If A calls B is A's frame addresses bigger than B's frame addresses?</li>
@@ -422,7 +422,7 @@ growth</li>
 <li>There are these various convention(s) we adhere to based on ABI.</li>
 <li>Different implementations do different things when they implement the ABI.</li>
 </ul>
-<h2>00:36:45 Seemingly arbitrary choices in computer systems</h2>
+<h2>00:33:07 Seemingly arbitrary choices in computer systems</h2>
 <ul>
 <li>Always fun to see these -- little vs big endian, address map with 0 at top or
 bottom?</li>
@@ -435,7 +435,7 @@ interesting small issues [ed: tabs vs spaces, anybody?].</li>
 endianness of a machine is! If you can't observe the byte storage. Would need
 to fix alignment as well -- or only have word addresses. Word.</li>
 </ul>
-<h2>00:35:45 Unwinding</h2>
+<h2>00:35:05 Unwinding</h2>
 <ul>
 <li>Let's say you want to grab a backtrace from your program because it crashed
 or there's a bug or want to know where it is for diagnostic purposes, or in
@@ -455,7 +455,7 @@ unwinding facilities e.g. breakpad -- what code was executing when something
 bad like a crash happened?</li>
 <li>Ability to walk stack structure and ask questions about it is key!</li>
 </ul>
-<h2>00:00:00 Walking with frame pointer omission?</h2>
+<h2>00:36:40 Walking with frame pointer omission?</h2>
 <ul>
 <li>If you think about a basic unwinder, all you have to do is walk the stack
 itself -- tiptoe through the linked list.</li>
@@ -490,7 +490,7 @@ surprising</li>
 <li>So with SEH you can write a trap handler in a C program -- might use signals
 for in other environments like POSIX</li>
 </ul>
-<h2>00:41:15 What are setjmp/longjmp?</h2>
+<h2>00:40:35 What are setjmp/longjmp?</h2>
 <ul>
 <li>Way to save the current state of registers and where you are on the stack and
 such</li>
@@ -506,7 +506,7 @@ it and such to restore to make the local processor state look the way it was</li
 state away so the kernel can start doing its thing, then you can resume</li>
 <li>Abstract notion of continuations we may have to talk about at some future point</li>
 </ul>
-<h2>00:42:40 Variable sized stack entities!</h2>
+<h2>00:41:53 Variable sized stack entities!</h2>
 <ul>
 <li>We've been talking about frames being of a set size, but there are these
 functions in C and (kind of) C++, called <code>alloca</code>, and you also have variable
@@ -535,7 +535,7 @@ not sure, maybe part of POSIX.</li>
 <li>Within LLVM everything is represented as alloca and creates stack out of
 consolidated allocas, and put things into registers that it can.</li>
 </ul>
-<h2>00:46:17 Stack buffer overruns</h2>
+<h2>00:45:31 Stack buffer overruns</h2>
 <ul>
 <li>We put lots of things on the stack, we see some are variable sized</li>
 <li>Sometimes we put fixed size array on the stack and <em>think</em> we're writing into
@@ -564,7 +564,7 @@ will touch all the pages that the code might access. If you went to go access
 the end right away, might run afoul of the guard page (e.g. if it's a 4KiB
 single guard page).</li>
 </ul>
-<h2>00:49:34 What are guard pages?</h2>
+<h2>00:48:56 What are guard pages?</h2>
 <ul>
 <li>When the OS creates a thread it'll map a certain amount of stack</li>
 <li>It could do that lazily or eagerly</li>
@@ -587,7 +587,7 @@ extents.</li>
 <li>Brings up topics like how segment registers have evolved on x86: future
 episode!</li>
 </ul>
-<h2>00:52:00 The Red Zone</h2>
+<h2>00:51:20 The Red Zone</h2>
 <ul>
 <li>Speaking of x86 evolution! Sounds cool... <em>Red Zone</em>.</li>
 <li>Idea you can guarantee some space underneath your frame; e.g. 128B on x86-64,</li>
@@ -596,7 +596,7 @@ avoid accounting and clobber stuff relative to frame pointer without having
 to do accounting.</li>
 <li>Part of ABI that that extra space exists there.</li>
 </ul>
-<h2>00:52:45 Alignment!</h2>
+<h2>00:52:00 Alignment!</h2>
 <ul>
 <li>Usually you always try to have an aligned stack. Byte aligned stack is weird
 when most of the point is to spill registers and registers are 4B or 8B.</li>
@@ -617,7 +617,7 @@ efficiency of a modern machine.</li>
 <li>Just to say: some things can become more difficult as we start make this
 general process around how things are supposed to work.</li>
 </ul>
-<h2>00:54:34 Processes vs performance</h2>
+<h2>00:53:45 Processes vs performance</h2>
 <ul>
 <li>Establishing processes and conventions for &quot;how a machine is used&quot; vs
 performance</li>
@@ -633,7 +633,7 @@ full kernel thread</li>
 <li>Big space of conventions around performance and the stack that's always
 fascinating</li>
 </ul>
-<h2>00:56:20 Managed Virtual Machines: WebAssembly</h2>
+<h2>00:55:45 Managed Virtual Machines: WebAssembly</h2>
 <ul>
 <li>In WebAssembly all the code is totally separate from the data</li>
 <li>WebAssembly meant to be secure VM that can run inside of the browser</li>
@@ -655,12 +655,12 @@ registers!</li>
 <li>Functions can have infinite registers, can return infinite set of values</li>
 <li>&quot;Virtual register&quot; and &quot;variadic return value arity&quot;</li>
 <li>Functions have fixed number of inputs</li>
-<li>How does it do printf/va_lists?</li>
+<li>How does it do <code>printf</code>/<code>va_lists</code>?</li>
 <li>Compiler creates a stack in user accessible memory (the WebAssembly stack)
 you spill to</li>
 <li><code>printf</code> routine can access those stack spills into WebAssembly memory</li>
 </ul>
-<h2>00:59:30 Whole stack'o browser stacks</h2>
+<h2>00:58:48 Whole stack'o browser stacks</h2>
 <ul>
 <li>In full browser, there's native stack, JavaScript stack which JIT can unify
 with the native stack, also WebAssembly stack -- WebAssembly is also being
@@ -670,7 +670,7 @@ treatment of the general notion of stacks</li>
 <li>Like the glue that binds program execution together, in a way!</li>
 <li>Super integral to how we think about how machines are going to work today</li>
 </ul>
-<h2>01:00:15 Managed VM's rich stack choices</h2>
+<h2>00:59:30 Managed VM's rich stack choices</h2>
 <ul>
 <li>In managed VMs you can potentially put more invariants on the program being
 executed (you are managing what the language is doing)</li>
@@ -685,7 +685,7 @@ a big bag of bytes</li>
 <li>With typed arrays; are the typed arrays words or are they bytes, etc. Lots of
 variations on how we might think about them.</li>
 </ul>
-<h2>01:01:26 What happens at the end of the stack?</h2>
+<h2>01:00:40 What happens at the end of the stack?</h2>
 <ul>
 <li>In C++ when you stack overflow it's not defined where stack end is or what
 happens when you run out of stack</li>
@@ -712,7 +712,7 @@ great stuff, that's what you want</li>
 <li>Reducers are also the stars of the show -- getting the crisp short program
 that shows some key problem is always amazing to see</li>
 </ul>
-<h2>01:04:33 Stack limit!</h2>
+<h2>01:03:48 Stack limit!</h2>
 <ul>
 <li>More things we haven't talked about: rotating register windows, return
 predictors</li>
