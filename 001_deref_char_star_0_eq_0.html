@@ -64,24 +64,25 @@
 <audio id="audioplayer" src="https://traffic.libsyn.com/secure/tlbhit/tlbhit1.mp3" controls="controls" class="podcast-audio" preload="auto"></audio><div class="playback-rate-controls"><ul><li><a href="#" onclick="setPlaybackSpeed(0.5)">0.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1)">1⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.25)">1.25⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.5)">1.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.75)">1.75⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(2)">2⨉</a></li></ul></div>
 <h2>Intro [00:00]</h2>
 <ul>
-<li>Talked about TLBs last time, but didn't define what the acronym means last
-podcast</li>
-<li>Rectify that by talking about it way too much this time!</li>
+<li>Talked about TLBs last time, but didn't define what the acronym meant!</li>
+<li>Rectify that by talking about them way too much this time</li>
 <li>Episode title: <code>*(char*0) = 0</code>!</li>
 <li>Standard disclaimer: only know so much, will try not to say things that are
-wrong</li>
-<li>Feel free to give us feedback!</li>
+wrong, feel free to give us feedback</li>
 <li>Extensive show notes on the website (you're reading them right now!)</li>
 </ul>
 <h2>First Errata! [00:37]</h2>
 <ul>
-<li>Go no longer uses segmented stacks, does stack copying now</li>
-<li>Mistakes is how you learn! [thanks to Graydon for pointing it out]</li>
+<li>The Go Programming Language <a href="https://golang.org/doc/go1.3#stacks">no longer uses segmented
+stacks</a>, does stack
+copying now</li>
+<li>Mistakes: how you learn! <a href="https://twitter.com/graydon_pub/status/1323503245717692417">Thanks to Graydon for pointing it
+out!</a></li>
 </ul>
 <h2>The Program [01:15]</h2>
 <ul>
-<li>How are we going to get to talk about TLB hits today?</li>
-<li>Figure out how a program gets to a TLB hit, to help us defined what TLB is
+<li>How are we going to talk about TLB hits today?</li>
+<li>Figure out how a program gets to a TLB hit, to help us define what &quot;TLB&quot; is,
 and what hitting in it means</li>
 <li>Propose analyzing a C program:<pre><code class="language-c">int main() {
   *(char *)0 = 0;
@@ -94,7 +95,7 @@ and what hitting in it means</li>
 <li>deref-assigning it 0</li>
 </ul>
 </li>
-<li>In a nutshell: storing zero to address 0 <code>(as a char*)</code></li>
+<li>In a nutshell: storing zero to address 0 (as a <code>char*</code>)</li>
 <li>How can you not love this program?</li>
 </ul>
 <h2>What about its C++y cousin? [02:10]</h2>
@@ -107,7 +108,7 @@ and what hitting in it means</li>
 <li>Can't <code>reinterpret_cast</code> nullptr, so won't compile -- #JustC++Things</li>
 <li>As of C++20 can use <code>std::bit_cast</code>: just takes a value and moves the bits</li>
 <li>Not guaranteed what you get when you bitcast/memcpy the nullptr!</li>
-<li>Since <code>nullptr</code> is monostate (AKA existential) its contents are generally
+<li>Since <code>nullptr</code> is monostate [i.e. existential] its contents are generally
 irrelevant and thus not defined what its bit contents are</li>
 <li>Old ways a bit more clear here</li>
 </ul>
@@ -217,7 +218,9 @@ physical memory the interrupt vector table resides at address 0</li>
 </li>
 <li><p>Compiler explorer -- godbolt.org! gcc or llvm in different modes (x86, ARM)</p>
 </li>
-<li><p>Funny: without volatile, Clang on x86 just makes <code>ud2</code> (which just traps!)</p>
+<li><p>Funny: without volatile, <a href="https://godbolt.org/z/zxn88r">Clang on x86 just makes
+<code>ud2</code></a> (which just traps! [but also gives a
+nice warning])</p>
 </li>
 <li><p>Similarly makes <code>brk</code> on ARM64 which does similar</p>
 </li>
@@ -231,10 +234,12 @@ to do&quot; and then crashes afterwards</p>
 <pre><code class="language-c">int main() { *(volatile char*)0 = 0; }
 </code></pre>
 </li>
-<li><p>On x86 you'll get a <code>mov</code>, on ARM a <code>strb</code> (byte store).</p>
+<li><p>On x86 you'll get a <code>mov</code>, on <a href="https://godbolt.org/z/Gc3erb">ARM a <code>strb</code></a>
+(byte store).</p>
 </li>
 <li><p>What's extra funny is GCC stil emits <code>ud2</code> after the null dereference even if
-it's volatile. GCC even <em>ignores</em> the value being written! Changing to:</p>
+it's volatile. <a href="https://godbolt.org/z/3PMWsE">GCC even <em>ignores</em> the value being
+written!</a> Changing to:</p>
 <pre><code class="language-c">int main() { *(volatile char*)0 = 42; }
 </code></pre>
 <p>Still tries to store value 0!</p>
@@ -462,7 +467,8 @@ result in several memory accesses</li>
 instruction and data TLBs</li>
 <li>Different TLBs for instruction and data memory fetch paths, makes you wonder
 what instruction can cause the most memory accesses on its own?!</li>
-<li>Folks on the internet showed MMUs are turing complete, which ruins the fun
+<li><a href="https://github.com/jbangert/trapcc">Folks on the internet showed MMUs are Turing
+complete</a>, which ruins the fun
 question -- if you stopped at &quot;simple&quot; instructions, then how could we
 generate the most loads and stores from a single instruction</li>
 <li>Say a scatter or gather instruction in the vector unit -- if that misses in
@@ -608,6 +614,18 @@ such varied performance characteristics in the von Neumann machine model</li>
 <ul>
 <li>A lot for now! Until next time...</li>
 </ul>
+<h2>Things we didn't get to!</h2>
+<ul>
+<li><code>perf stat</code> <a href="https://perf.wiki.kernel.org/index.php/Tutorial#Events">shows iTLB and dTLB
+events</a>, but you do
+always have to be careful looking up what the counters mean for your
+particular architecture</li>
+<li>One of the cool things about open cores like BOOM is you can just link to the
+[implementation of a TLB implemented in</li>
+</ul>
+<p>Chisel](https://github.com/riscv-boom/riscv-boom/blob/1cb1596224c5681b839b8b115c1fbf6d802cc512/src/main/scala/lsu/tlb.scala)
+  and <a href="https://github.com/chipsalliance/rocket-chip/blob/407496940311a0f0e8ec24627d93a7b839692ac6/src/main/scala/rocket/PTW.scala#L156">a page table
+walker</a>!</p>
     </main>
     <script>const setPlaybackSpeed = speed => { [].slice.call(document.querySelectorAll('audio,video')).map((e, idx) => { e.playbackRate = speed; }); }</script>
   </body>

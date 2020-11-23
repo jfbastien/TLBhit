@@ -4,24 +4,25 @@
 
 ## Intro [00:00]
 
-* Talked about TLBs last time, but didn't define what the acronym means last
-  podcast
-* Rectify that by talking about it way too much this time!
+* Talked about TLBs last time, but didn't define what the acronym meant!
+* Rectify that by talking about them way too much this time
 * Episode title: `*(char*0) = 0`!
 * Standard disclaimer: only know so much, will try not to say things that are
-  wrong
-* Feel free to give us feedback!
+  wrong, feel free to give us feedback
 * Extensive show notes on the website (you're reading them right now!)
 
 ## First Errata! [00:37]
 
-* Go no longer uses segmented stacks, does stack copying now
-* Mistakes is how you learn! [thanks to Graydon for pointing it out]
+* The Go Programming Language [no longer uses segmented
+  stacks](https://golang.org/doc/go1.3#stacks), does stack
+  copying now
+* Mistakes: how you learn! [Thanks to Graydon for pointing it
+  out!](https://twitter.com/graydon_pub/status/1323503245717692417)
 
 ## The Program [01:15]
 
-* How are we going to get to talk about TLB hits today?
-* Figure out how a program gets to a TLB hit, to help us defined what TLB is
+* How are we going to talk about TLB hits today?
+* Figure out how a program gets to a TLB hit, to help us define what "TLB" is,
   and what hitting in it means
 * Propose analyzing a C program:
   ```c
@@ -33,7 +34,7 @@
   * main entry point
   * taking zero, turning it into a char star
   * deref-assigning it 0
-* In a nutshell: storing zero to address 0 `(as a char*)`
+* In a nutshell: storing zero to address 0 (as a `char*`)
 * How can you not love this program?
 
 ## What about its C++y cousin? [02:10]
@@ -48,7 +49,7 @@ int main() {
 * Can't `reinterpret_cast` nullptr, so won't compile -- #JustC++Things
 * As of C++20 can use `std::bit_cast`: just takes a value and moves the bits
 * Not guaranteed what you get when you bitcast/memcpy the nullptr!
-* Since `nullptr` is monostate (AKA existential) its contents are generally
+* Since `nullptr` is monostate [i.e. existential] its contents are generally
   irrelevant and thus not defined what its bit contents are
 * Old ways a bit more clear here
 
@@ -151,7 +152,9 @@ int main() {
 * We talked about what the assembly would look like
 * Good to try it out in reality and see if you were wrong
 * Compiler explorer -- godbolt.org! gcc or llvm in different modes (x86, ARM)
-* Funny: without volatile, Clang on x86 just makes `ud2` (which just traps!)
+* Funny: without volatile, [Clang on x86 just makes
+  `ud2`](https://godbolt.org/z/zxn88r) (which just traps! [but also gives a
+  nice warning])
 * Similarly makes `brk` on ARM64 which does similar
 * Code after optimization: enter main, then crash! (If you don't use volatile)
 * GCC a little "nicer" -- instead of just emitting `ud2` or `brk` it'll store
@@ -161,9 +164,12 @@ int main() {
   ```c
   int main() { *(volatile char*)0 = 0; }
   ```
-* On x86 you'll get a `mov`, on ARM a `strb` (byte store).
+* On x86 you'll get a `mov`, on [ARM a `strb`](https://godbolt.org/z/Gc3erb)
+  (byte store).
 * What's extra funny is GCC stil emits `ud2` after the null dereference even if
-  it's volatile. GCC even *ignores* the value being written! Changing to:
+  it's volatile. [GCC even *ignores* the value being
+  written!](https://godbolt.org/z/3PMWsE) Changing to:
+
   ```c
   int main() { *(volatile char*)0 = 42; }
   ```
@@ -387,7 +393,8 @@ to people around `volatile`, but!
   instruction and data TLBs
 * Different TLBs for instruction and data memory fetch paths, makes you wonder
   what instruction can cause the most memory accesses on its own?!
-* Folks on the internet showed MMUs are turing complete, which ruins the fun
+* [Folks on the internet showed MMUs are Turing
+  complete](https://github.com/jbangert/trapcc), which ruins the fun
   question -- if you stopped at "simple" instructions, then how could we
   generate the most loads and stores from a single instruction
 * Say a scatter or gather instruction in the vector unit -- if that misses in
@@ -532,3 +539,15 @@ to people around `volatile`, but!
 ## Until Next Time [45:00]
 
 * A lot for now! Until next time...
+
+## Things we didn't get to!
+
+* `perf stat` [shows iTLB and dTLB
+  events](https://perf.wiki.kernel.org/index.php/Tutorial#Events), but you do
+  always have to be careful looking up what the counters mean for your
+  particular architecture
+* One of the cool things about open cores like BOOM is you can just link to the
+  [implementation of a TLB implemented in
+Chisel](https://github.com/riscv-boom/riscv-boom/blob/1cb1596224c5681b839b8b115c1fbf6d802cc512/src/main/scala/lsu/tlb.scala)
+  and [a page table
+walker](https://github.com/chipsalliance/rocket-chip/blob/407496940311a0f0e8ec24627d93a7b839692ac6/src/main/scala/rocket/PTW.scala#L156)!
