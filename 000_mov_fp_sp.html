@@ -73,13 +73,13 @@
 <ul>
 <li>We're lifelong learners, only know so much!</li>
 <li>Will put errata up on <a href="https://tlbh.it/">the TLB Hit website</a></li>
-<li><a href="https://en.wikipedia.org/wiki/Covert_channel">"Sidechannels"</a> via Twitter</li>
+<li><a href="https://en.wikipedia.org/wiki/Covert_channel">&quot;Sidechannels&quot;</a> via Twitter</li>
 </ul>
 <h2>00:01:42 What's the stack?</h2>
 <ul>
 <li>Episode is named <code>mov fp sp</code></li>
 <li><code>mov fp sp</code> in the prologue of functions</li>
-<li>Epilogue has "reverse" <code>mov sp fp</code></li>
+<li>Epilogue has &quot;reverse&quot; <code>mov sp fp</code></li>
 <li>Instructions that manipulate <em>the stack</em>!</li>
 <li>Compiler spills values that registers can't hold onto the stack</li>
 <li>Functions do it a lot -- have their own [local] state, call functions that
@@ -88,14 +88,14 @@ have their own state</li>
 registers</li>
 <li>Often different kinds of registers: arithmetic value registers, floating
 point registers</li>
-<li>Registers contain fairly arbitrary "stuff": pointers to data, pointers to
+<li>Registers contain fairly arbitrary &quot;stuff&quot;: pointers to data, pointers to
 code, return addresses, etc.</li>
 <li>Stack is <em>usually</em> contiguous and allocated on a per-thread basis</li>
-<li>Idea of "GPRs": general purpose registers, though some machines have
+<li>Idea of &quot;GPRs&quot;: general purpose registers, though some machines have
 dedicated registers for floating point values as well, or SIMD for really
 wide</li>
 <li>Prologue moves stack pointer to base pointer, epilogue moves base pointer
-back to stack pointer, "undoing", locally manipulating the stack pointer then
+back to stack pointer, &quot;undoing&quot;, locally manipulating the stack pointer then
 rolling things back to where they previously were</li>
 </ul>
 <h2>00:03:50 Mechanisms in the processor</h2>
@@ -103,10 +103,10 @@ rolling things back to where they previously were</li>
 <li>Frame pointer/base pointer (bp/fp), stack pointer (sp)</li>
 <li>Usual convention is that the frame pointer doesn't change during the course
 of the function's execution</li>
-<li>Generated code addresses "slots" relative (at offsets from) the frame
+<li>Generated code addresses &quot;slots&quot; relative (at offsets from) the frame
 pointer; e.g. <code>+4</code>, <code>+8</code>, etc.</li>
-<li>Stack is kind of like a linked list! Pointer of the stack that says "this is
-where the frame pointer <em>used to be</em> before we came into this routine".</li>
+<li>Stack is kind of like a linked list! Pointer of the stack that says &quot;this is
+where the frame pointer <em>used to be</em> before we came into this routine&quot;.</li>
 </ul>
 <h2>00:05:10 Comparison to an abstract stack machine</h2>
 <ul>
@@ -115,7 +115,7 @@ stack then do an add operation that consumes the top two things on the stack</li
 <li>Compare to traditional processor we use today: expanding the stack as a
 single operation that makes a bunch of slots at once</li>
 <li>The slots don't need to be consumed in a strictly stack-order fashion</li>
-<li>Distinction of "stack machine" vs scratchpad-area style frame areas
+<li>Distinction of &quot;stack machine&quot; vs scratchpad-area style frame areas
 that happen in stack-like fashion for subroutine calls</li>
 </ul>
 <h2>00:06:05 Some instruction set considerations</h2>
@@ -123,7 +123,7 @@ that happen in stack-like fashion for subroutine calls</li>
 <li>Considerations on modern machines for frequency of these operations and how
 they fit in our instruction cache; e.g. on x86 <code>push</code>/<code>pop</code> are single byte
 opcodes</li>
-<li>On ARM we may have a "push multiple values" instruction; little CISC-y but you
+<li>On ARM we may have a &quot;push multiple values&quot; instruction; little CISC-y but you
 do so commonly it may make some sense</li>
 <li>ARMv7 had instruction allowed to push 16 registers (all GPRs) and increment
 stack pointer. Yay RISC!</li>
@@ -135,17 +135,17 @@ in its stack frame</li>
 <li>Locality, but also avoiding memory allocation subroutines (100s or 1000s of
 cycle depending)</li>
 <li>In scratchpad area values are tracked precisely in dataflow sort of style</li>
-<li>Bring them "in" to the compiler, values becomes more trackable</li>
+<li>Bring them &quot;in&quot; to the compiler, values becomes more trackable</li>
 <li>SSA values vs arbitrary memory references</li>
 <li>When structs are brought onto the stack the individual fields inside can be
 broken apart and the component fields can be tracked as individual values</li>
-<li>Often called "scalar replacement of aggregates" (e.g. in LLVM)</li>
+<li>Often called &quot;scalar replacement of aggregates&quot; (e.g. in LLVM)</li>
 <li>When we home them on the stack we can do our common optimizations, CSE, DCE;
 if on the heap, may be a lot harder to to do</li>
 <li>In managed languages (e.g. JavaScript, Java) would do escape analysis to show
 it doesn't escape via heap to an unknown subroutine -- once placed on the
 stack you can eliminate whole objects and just track sub-fields inside of it</li>
-<li>Allows you to just "explode" the object itself and think about its component
+<li>Allows you to just &quot;explode&quot; the object itself and think about its component
 fields individually and get rid of whatever doesn't matter in there</li>
 </ul>
 <h2>00:09:17 Eliding heap allocations in C++</h2>
@@ -164,19 +164,19 @@ level understanding you can optimize based off of is pretty key it seems?</li>
 </ul>
 <h2>00:10:18 Frame pointer omission</h2>
 <ul>
-<li>When JF started programming there was "frame pointer omission" (FPO) which
+<li>When JF started programming there was &quot;frame pointer omission&quot; (FPO) which
 was cool because optmizers weren't as good as they are now</li>
 <li>Back when you only had 8 registers for x86 the extra register could go a long
 way potentially -- stack is hot in cache but doing stores and loads to memory
 locations</li>
-<li>Was known to some as "that flag that makes the debugger way worse" -- debug
+<li>Was known to some as &quot;that flag that makes the debugger way worse&quot; -- debug
 information has to be a lot more prescriptive when you can't simply describe
 where things are as an offset from a canonical (assumed unchanging) register</li>
 <li>Modern CPUs doing register renaming under the hood against a much bigger
 micro-architectural register set -- not as worried about saving that one
 register as much of the time -- although in hot code you still might</li>
 </ul>
-<h2>00:11:49 "Leaf" functions</h2>
+<h2>00:11:49 &quot;Leaf&quot; functions</h2>
 <ul>
 <li>When you inline things you make bigger regions for analysis, ideally make big
 fat leaf functions</li>
@@ -226,7 +226,7 @@ single stack</li>
 <li>Programming in FORTRAN is cool, for scientific code often trying to
 solve a specific physics problem don't <em>usually</em> need those tools like
 recursion or virtual functions</li>
-<li>When everything is "monomorphized" -- you have big arrays of
+<li>When everything is &quot;monomorphized&quot; -- you have big arrays of
 fixed-value-types you can know everything about the world and really optimize
 everything based off of it -- fun mode to be in for scientific computing code</li>
 </ul>
@@ -242,7 +242,7 @@ and the next function has another frame -- can put multiple functions in one
 allocation</li>
 <li>Used to have really bad perf if you were in a hot loop and happened to
 straddle that boundary</li>
-<li>Coroutines in some languages ended up having some "stackless" stuff like
+<li>Coroutines in some languages ended up having some &quot;stackless&quot; stuff like
 this, where the closure is heap allocated instead</li>
 <li>C++ coroutines try to do away with all the heap allocations, but depends on
 optimization level whether it can do that or not</li>
@@ -267,20 +267,20 @@ time you did a tiny atomic operation</li>
 </ul>
 <h2>00:19:10 Managed languages putting frames on the heap</h2>
 <ul>
-<li>On the term "stackless": one of the <a href="https://greenlet.readthedocs.io/en/latest/">Python
-"greenlet"</a> ("lightweight thread"
+<li>On the term &quot;stackless&quot;: one of the <a href="https://greenlet.readthedocs.io/en/latest/">Python
+&quot;greenlet&quot;</a> (&quot;lightweight thread&quot;
 terminology) attempts was called <a href="https://github.com/stackless-dev/stackless/wiki">Stackless
 Python</a></li>
 <li>In managed languages like Python the frames can be allocated on the heap;
 e.g. in CPython the frames are allocated on the heap</li>
 <li>But you still have a native stack for your native program that's doing the
 managed VM execution! (e.g. the interpreter code written in C)</li>
-<li>Something that JITs can do is unify the stacks; so that the "interpreted"
+<li>Something that JITs can do is unify the stacks; so that the &quot;interpreted&quot;
 code uses the same stack space as the virtual machine -- single native thread
 of stack space</li>
 <li>[ed: on <em>deoptimization</em> the JIT code can be reified into a
-managed stack frame on the heap through a process called "On Stack
-Invalidation"]</li>
+managed stack frame on the heap through a process called &quot;On Stack
+Invalidation&quot;]</li>
 <li>Frame is really just some space, spaces get linked together in the abstract
 concept of a stack, both of those things can also happen on the heap -- no
 reason this one virtual memory region that we call the stack is the place where
@@ -295,15 +295,15 @@ Linux, Windows)</li>
 <li>Allocated at thread startup</li>
 <li>Most platforms have API to change the size -- some can only do at runtime,
 some can only do at startup</li>
-<li>Being able to change the stack size is this "uneven" thing across platforms</li>
-<li>That's common "userspace": if you look at kernel threads or embedded systems
+<li>Being able to change the stack size is this &quot;uneven&quot; thing across platforms</li>
+<li>That's common &quot;userspace&quot;: if you look at kernel threads or embedded systems
 it may be way smaller, XNU: 16KiB</li>
 <li>Blowing the stack can be easy in these cases when you're handling interrupts
 -- can end up blowing stack pretty easily so have to be careful</li>
 </ul>
 <h2>00:21:27 What are the biggest stack programs?</h2>
 <ul>
-<li>The reverse of "tiny stacks" environments is interesting -- what are the
+<li>The reverse of &quot;tiny stacks&quot; environments is interesting -- what are the
 biggest stack programs that exist? Who does that?</li>
 <li>In some environments that set stack limit quite low, when you compile in
 debug mode, you'll be spilling a bunch of things, and then you'll get a
@@ -332,7 +332,7 @@ number of cycles / time)</li>
 -- we go down in addresses and pop back up -- lines up with CPU features like
 LRU caches and address predictors trying to prefetch things you're going to
 be pulling in</li>
-<li>Function's frame is usually in the cache in memory as "recently used"</li>
+<li>Function's frame is usually in the cache in memory as &quot;recently used&quot;</li>
 </ul>
 <h2>00:23:54 Broader question: how does memory in a modern computer work at all?</h2>
 <ul>
@@ -342,9 +342,9 @@ physical addresses</li>
 <li>Virtual memory introduced originally so we could share the physical memory on
 a system more easily in shared environments</li>
 <li>Also offer facilities like protection, etc.</li>
-<li>Virtual memory really means "I have some address" -- modern system
+<li>Virtual memory really means &quot;I have some address&quot; -- modern system
 [userspace] has effectively 47 bit addresses -- that value is really an
-"alias" -- it that turns into a real physical location</li>
+&quot;alias&quot; -- it that turns into a real physical location</li>
 <li>The alias is potentially unique to each program -- two different programs
 hypothetically could have different 47-bit values that the mapping could turn
 into the same physical location [ed: this property is the bane of virtually
@@ -360,7 +360,7 @@ on disk: magic possibilities of the virtual memory subsystem!</li>
 <h2>00:25:55 TLB Hit!</h2>
 <ul>
 <li>Each one of these accesses where I take a virtual address and turn it into a
-physical address </li>
+physical address</li>
 <li>Can be expensive because OS has to maintain/walk a big table of how that
 translation happens</li>
 <li>But there's a translation cache in the hardware called a TLB (Translation
@@ -379,9 +379,9 @@ detail!</li>
 <ul>
 <li>Other advantages to stack too -- registers are really fast, caches are fast,
 and go to main memory tier at some point</li>
-<li>Modern CPUs have store-to-load forwarding -- "cache" that forwards values
+<li>Modern CPUs have store-to-load forwarding -- &quot;cache&quot; that forwards values
 from recent stores to loads without having to ask the cache</li>
-<li>Store to load forwarding effectively an "L0" cache -- stack can often hit in
+<li>Store to load forwarding effectively an &quot;L0&quot; cache -- stack can often hit in
 there -- many stack accesses can hit in this, acting as an L0 cache</li>
 <li>[ed: alignment is another important property for being able to hit in the
 store to load forwarding pipeline!]</li>
@@ -391,20 +391,20 @@ store to load forwarding pipeline!]</li>
 <li>Let's say I'm a CPU in a multi-core die and I do a store, and I do
 store-to-load forwarding, but some other processor stored to the same
 location -- shouldn't I have seen the store that the other processor did?</li>
-<li>"Stuck" in "L0 cache" -- hasn't been written to cache yet -- will it snoop?
+<li>&quot;Stuck&quot; in &quot;L0 cache&quot; -- hasn't been written to cache yet -- will it snoop?
 Coherency is working at the cache level.</li>
 <li>How does it work, how can you think about it. Memory models! Once you're in
 multiprocessing world store-to-load forwarding can be even more interesting
 than a common optimization.</li>
 <li>What properties do you want from your system? Are these single thread
-improvements "great until they're not?!"</li>
+improvements &quot;great until they're not?!&quot;</li>
 </ul>
 <h2>00:29:00 Sparsity of stack slot usage</h2>
 <ul>
 <li>Each stage is contiguous</li>
 <li>How a function uses the stack can be super sparse!</li>
 <li>Compiler allocates a slot for each named value in your program</li>
-<li>"Coloring" problem -- some parts of the function might have disjoint use of
+<li>&quot;Coloring&quot; problem -- some parts of the function might have disjoint use of
 slots</li>
 <li>Similar to register allocation -- set of resources is stack memory</li>
 <li>Figures out which ones are mutually exclusion like register allocation</li>
@@ -412,7 +412,7 @@ slots</li>
 way you end up with parts of the stack that are unused</li>
 <li>You could split paths? But probably a lot more overhead for the compiler to
 track the paths / stack implications and know how to roll them back</li>
-<li>Do compilers ever split to optimize stack behavior? </li>
+<li>Do compilers ever split to optimize stack behavior?</li>
 <li>Compiler will do partial outlining to make cold code less intrusive, force
 any required spilling on that cold path -- maybe that reduces required stack
 space to some degree?</li>
@@ -439,7 +439,7 @@ growth</li>
 bottom?</li>
 <li>Endianness from Gulliver's Travels: Lilliputians crack and egg on one side or
 the other (big or little side) that led to holy war.</li>
-<li>We have a "war" over whether the low bytes of a multi byte word go at the low
+<li>We have a &quot;war&quot; over whether the low bytes of a multi byte word go at the low
 memory or high memory [byte] address, we similarly fight these wars over
 interesting small issues [ed: tabs vs spaces, anybody?].</li>
 <li>If you only had the ability to access a word, you wouldn't know what the
@@ -473,7 +473,7 @@ itself -- tiptoe through the linked list.</li>
 <li>But what if you elided frame pointers.</li>
 <li>Side data structure that tells you how to determine the frame size for each
 function.</li>
-<li>Compiler knows what it is, so can emit "side data" in the program.</li>
+<li>Compiler knows what it is, so can emit &quot;side data&quot; in the program.</li>
 <li>Unwinder needs to look at current program counter -- for callers that gets
 pushed onto the stack (for the call), callee pops it into the program counter
 to go back to where it was</li>
@@ -491,7 +491,7 @@ that on x86 to implement exception handling</li>
 pads are because those have the code that do the cleanup</li>
 <li>For exceptions you have to run code: destructors, catch blocks, etc</li>
 <li>Unwind one, look up landing pad, do some work, look up the next landing pad</li>
-<li>If you have an exception that happens during the "work", have to deal with
+<li>If you have an exception that happens during the &quot;work&quot;, have to deal with
 that</li>
 <li>On Windows it mixes Structured Exception Handling (SEH) with C++</li>
 <li>If you have faults or divide by zero floating point you can handle it with
@@ -507,7 +507,7 @@ for in other environments like POSIX</li>
 such</li>
 <li>setjmp buffer -- saves it, longjmp you give the buffer and it puts the state
 back the way it was before</li>
-<li>setjmp is a function that can return "twice" (a la <code>clone()</code>) -- first time
+<li>setjmp is a function that can return &quot;twice&quot; (a la <code>clone()</code>) -- first time
 it saves the state, when you longjmp back it tells you that the state has
 been restored -- a function that can return twice!</li>
 <li>Local state inside of the CPU, sometimes called a microcontext? Registers in
@@ -528,8 +528,8 @@ dynamic, and such!</li>
 <li>If you look at standard C++ there's no variable length arrays, common
 extension to support C VLAs in C++ but not officially a thing that exists</li>
 <li>Neat to be able to change the size of the stack frame at runtime</li>
-<li>Small stack buffer optimizations using alloca; e.g. "only up to 256 bytes of
-stuff, otherwise I'll heap allocate"</li>
+<li>Small stack buffer optimizations using alloca; e.g. &quot;only up to 256 bytes of
+stuff, otherwise I'll heap allocate&quot;</li>
 <li>alloca is kind of an extension to the language in a way</li>
 <li>alloca/malloc and then corresponding nothing/free before it exits the scope</li>
 <li>alloca(0) technically undefined behavior, as is VLAs of 0</li>
@@ -537,7 +537,7 @@ stuff, otherwise I'll heap allocate"</li>
 things!</li>
 <li>What about VLA of negative value? Can't un-grow the stack!</li>
 <li>Alloca/VLAs don't fail!</li>
-<li>Is it pronounced alloca or "alloh-ka"? We're not sure, but we do know JF is
+<li>Is it pronounced alloca or &quot;alloh-ka&quot;? We're not sure, but we do know JF is
 French-Canadian. Alloc, eh?</li>
 <li>Returns a pointer to the stack location, can it return null? Would have to be
 slower if it nominally could fail.</li>
@@ -555,7 +555,7 @@ the right way</li>
 a stack, then attacker gets you to clobber the return address -- write an
 address into there, and maybe jump to the data I had written if the stack
 were executable. Nowadays the stack is never executable.</li>
-<li>Pages in virtual memory have an "execute" bit on them that says whether you
+<li>Pages in virtual memory have an &quot;execute&quot; bit on them that says whether you
 can fetch instructions into the CPU out of that virtual memory location.</li>
 <li>Fairly new? CPUs 20 years ago couldn't do that</li>
 <li>Fascinating all the security/mitigations added recently in computer history.</li>
@@ -579,11 +579,11 @@ single guard page).</li>
 <ul>
 <li>When the OS creates a thread it'll map a certain amount of stack</li>
 <li>It could do that lazily or eagerly</li>
-<li>Imagine it eagerly allocates 16KiB, can put a 4KiB "guard page" at the end,
+<li>Imagine it eagerly allocates 16KiB, can put a 4KiB &quot;guard page&quot; at the end,
 marked as not readable or writable</li>
 <li>Intent is as you naturally run out of stack you'll fault, more will be
 provided with physical backing, and execution will be resumed</li>
-<li>Have been exploits in the past where programs just "jump over" accessing the
+<li>Have been exploits in the past where programs just &quot;jump over&quot; accessing the
 guard page and the exploit uses those accesses to do malicious things -- past
 that guard page is other memory, either another stack, or a heap, etc.</li>
 <li>Stack is just another part of the memory space!</li>
@@ -622,22 +622,22 @@ be to detect if something is trying to be exploited or going off the rails
 potentially.</li>
 <li>Invariants about how system should be operating get stronger.</li>
 <li>Prevents people from doing</li>
-<li>super-creative-if-somewhat-dangerous-in-the-general-case stuff like "futurist
-programming" idea: self modifying code tight inner loops to get all the
+<li>super-creative-if-somewhat-dangerous-in-the-general-case stuff like &quot;futurist
+programming&quot; idea: self modifying code tight inner loops to get all the
 efficiency of a modern machine.</li>
 <li>Just to say: some things can become more difficult as we start make this
 general process around how things are supposed to work.</li>
 </ul>
 <h2>00:53:45 Processes vs performance</h2>
 <ul>
-<li>Establishing processes and conventions for "how a machine is used" vs
+<li>Establishing processes and conventions for &quot;how a machine is used&quot; vs
 performance</li>
 <li>Classic considerations around what registers are saved by caller vs those
 saved by the callee, can have a big impact on performance</li>
 <li>On architectures that by convention had purposes on different machines could
 make these considerations even more interesting; mul using ecx, rep using edi</li>
-<li>Questions of "what do we save away when switching from userspace to
-kernelspace" -- some set of resources that's not too small but also not
+<li>Questions of &quot;what do we save away when switching from userspace to
+kernelspace&quot; -- some set of resources that's not too small but also not
 overly large</li>
 <li>Kernel threads having full separate stack once they leave interrupts to go to
 full kernel thread</li>
@@ -664,7 +664,7 @@ execution -- part of the ABI</li>
 <li>Extra neat: if you look at the virtual ISA it doesn't have a finite set of
 registers!</li>
 <li>Functions can have infinite registers, can return infinite set of values</li>
-<li>"Virtual register" and "variadic return value arity"</li>
+<li>&quot;Virtual register&quot; and &quot;variadic return value arity&quot;</li>
 <li>Functions have fixed number of inputs</li>
 <li>How does it do <code>printf</code>/<code>va_lists</code>?</li>
 <li>Compiler creates a stack in user accessible memory (the WebAssembly stack)
@@ -712,8 +712,8 @@ about the JIT-ed code not running out of stack similar to stack protector</li>
 and could violate the stack extent!</li>
 <li>Now need to throw into the JavaScript code from a out-of-stack condition
 inside native code</li>
-<li>Can be a source of bugs in JS VMs -- JS fuzzers can do a cute "recurse, call
-helper, unrecurse, call helper" to mess with VM to fuzz those runtime
+<li>Can be a source of bugs in JS VMs -- JS fuzzers can do a cute &quot;recurse, call
+helper, unrecurse, call helper&quot; to mess with VM to fuzz those runtime
 functions interacting with stack overflow</li>
 <li>Working on JS engine in FireFox you turn on the fuzzer when some feature is
 ready and you get the deluge of interesting things that are corner cases in
@@ -741,15 +741,15 @@ and associated runtime support that conceptually implements the abstract Python
 virtual machine; similarly for the Java Virtual Machine and so on.</li>
 <li>JIT: Just-in-Time compiler -- these are often used for speeding up managed
 language environments by compiling managed programs to native code at runtime</li>
-<li>"Stackless": "Stackless Python, or Stackless, is a Python programming
+<li>&quot;Stackless&quot;: &quot;Stackless Python, or Stackless, is a Python programming
 language interpreter, so named because it avoids depending on the C call
-stack for its own stack." -- [<a href="https://en.wikipedia.org/wiki/Stackless_Python">https://en.wikipedia.org/wiki/Stackless_Python</a>]</li>
-<li>reify: to "make real", i.e. materialize somehow in the computer or program;
+stack for its own stack.&quot; -- [https://en.wikipedia.org/wiki/Stackless_Python]</li>
+<li>reify: to &quot;make real&quot;, i.e. materialize somehow in the computer or program;
 antonym: erasure: erasing information from being present in the program that
 had been determined in some prior phase like compilation</li>
-<li><a href="https://en.wikipedia.org/wiki/Translation_unit_(programming">translation
-unit</a>): the
-input that is processed by a single compiler invocation (akin to a "module"
+<li><a href="https://en.wikipedia.org/wiki/Translation_unit_(programming)">translation
+unit</a>: the
+input that is processed by a single compiler invocation (akin to a &quot;module&quot;
 concept in languages with modules), serves as a natural scope for compiler
 optimizations</li>
 </ul>
