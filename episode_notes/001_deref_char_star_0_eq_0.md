@@ -1,5 +1,7 @@
 # Episode 1: `*(char*0) = 0`!
 
+<audio id="audioplayer" src="https://traffic.libsyn.com/secure/tlbhit/tlbhit1.mp3" controls="controls" class="podcast-audio" preload="auto"></audio><div class="playback-rate-controls"><ul><li><a href="#" onclick="setPlaybackSpeed(0.5)">0.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1)">1⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.25)">1.25⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.5)">1.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.75)">1.75⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(2)">2⨉</a></li></ul></div>
+
 ## Intro [00:00]
 
 * Talked about TLBs last time, but didn't define what the acronym means last
@@ -237,10 +239,16 @@ to people around `volatile`, but!
 
 * Memory accesses in user mode all dealing with virtual addresses, which we
   talked a bit about last time
-* 
-
+* Virtual addresses != physical addresses, the latter are morally linear "DRAM
+  locations" all lined up in physical memory
+* Each process in each guest VM has its own view of memory (virtual memory)
+  distinct from how others see it, all done through virtual memory address
+  layer
 * Two worlds of virtual and physical stuff, pretty complicated how one maps to
   another
+
+## Lots of memory access instructions! [18:25]
+
 * If you look at assembly, probably a third of instruction are memory accesses,
   that's a lot! Lots of complication and a third of instructions have to deal
   with it!
@@ -254,18 +262,27 @@ to people around `volatile`, but!
 * In the common case when you've addressed the memory location recently you
   want accesses to it to be fast, and caches are how this is made fast (we
   talked a bit about this last time)
+
+## Virtual vs physical addresses as cache keys [19:45]
+
 * Some caches can be addressed virtually using the virtual addresses to lookup
 * Some can be address physically using the physical address you resolved from
   the virtual address
 * Virtual address can be used for a "virtually addressed cache", of course also
-  using the process context as an (effective) additional key, since it has its
-  own view of memory
-* As soon as you address physically (and most caches are address physically)
-
-
-
-* On x86 we have hardware page table walkers and so there's a control register
+  using the process context as an [effective, if not materialized] additional
+  key, since it has its own view of memory
+* As soon as you address physically (and most caches are address physically),
+  need to somehow translate the virtual address to a physical one, and OS keeps
+  the mapping in a (hierarchical) table called the page table
+* Page table maps virtual address and process context/VM ID, mapping to
+  physical address and properties of memory location, like RWX permissions
+* At a high level organized as a tree, each level of tree is keyed off of bits
+  of the virtual address, because going to be pretty sparse, flattening would
+  make it huge, so needs a sparse (tree) layout
+* On x86 we have hardware page table walkers and there's a control register
   called CR3 that describes where the base of the page table structure lives
+* What's cool is the kernel puts stuff in memory and tells the hardware that
+  location is special, and the hardware can start walking that autonomously
 * As a userspace programmer you're not used to the hardware having a contract
   with your data structures, can be kind of mind boggling!
 * Granularity of the mapping we're talking about depends on memory pages, size
@@ -332,7 +349,8 @@ to people around `volatile`, but!
 
 ## Once physical translation is resolved [27:45]
 
-* On TLB hit then the hardware queries the cache and accesses the line if it's present; if not, cache protocol kicks in asking the next level
+* On TLB hit then the hardware queries the cache and accesses the line if it's
+  present; if not, cache protocol kicks in asking the next level
 * Should do an episode on how the caches line up and talk to each other
 * If not in any level will go fetch the line from DRAM
 * We should do a followup on DRAM row buffering and cache line replacement
@@ -341,29 +359,156 @@ to people around `volatile`, but!
 ## What about on TLB miss? [28:25]
 
 * If the TLB misses then a page table walk occurs -- either that'll find an
-  entry or it won't find the entry
+  entry or it won't find the entry (if there's no entry there)
 * So if the entry is found it'll be inserted into the TLB (want to find it next
   time)
+* Some TLBs are managed by hardware and some by software -- who adds it to the
+  TLB depends on what the hardware platform dictates
+* Don't need to have hardware page table walkers -- could ask the OS when you
+  page fault "can you walk this for me and put it into the TLB", then resume
+  the userspace program
+* Of course also have to check access permissions for the page; if you don't
+  have a "W" bit and you're doing a store, then a fault still needs to be
+  raised in that case
 
-## TODO
+## Code and data [29:30]
 
-* Programs install signal handlers for a variety of reasons
-* Can install to capture invalid memory accesses
-* Securing client code execution
-* "Managed" so prevent faulting
-* WebAssembly providing low level execution environment suitable for e.g. C++
-  or Rust 
+* Complication of separate data and instruction caches
+* Code itself lives in memory!
+* Code is effectively data, even though it may be cached differently [when it's
+  being pulled into the instruction dispatch path]
+* Executing an arithmetic instruction like an `add` might cause a memory
+  access, because that actual instruction needs to be fetched!
+* Roughly a third of instructions cause memory access when they execute, but
+  *any* instruction could cause a memory access to be fetched
+* And that fetch is from virtual memory so can cause a page table walk, and
+  result in several memory accesses
+* In addition to instruction and data caches, modern systems have both
+  instruction and data TLBs
+* Different TLBs for instruction and data memory fetch paths, makes you wonder
+  what instruction can cause the most memory accesses on its own?!
+* Folks on the internet showed MMUs are turing complete, which ruins the fun
+  question -- if you stopped at "simple" instructions, then how could we
+  generate the most loads and stores from a single instruction
+* Say a scatter or gather instruction in the vector unit -- if that misses in
+  the iTLB (say 4-5 accesses) and then the gather itself touches 8 or 16
+  locations, and each could miss in the dTLB/cache
+* Maybe folks on the intertubes have ideas of what the maximum number of memory
+  accesses you could do in an instruction?!
+* The AVX gather instruction has an astounding amount of memory level
+  parallelism -- cool to see as new instructions are introduced what it does in
+  terms of questioning the assumptions of what we usually do with scalar code
+* Mind boggling to think about stores on the data path can be storing into
+  memory locations that are cached inside of the instruction cache [perhaps uop
+  translated or in-flight!] -- if need to be kept coherent then immediately the
+  store needs to be observable by the instruction side of the machine
+* On other [i.e. non x86] machines you need to explicitly flush the instruction
+  cache to perform a (non-coherent) writes into your instruction memory
 
-## TODO
+## IOMMUs: virtualized memory for devices [32:25]
+ 
+* Devices can also get a view of memory that's virtualized that can help
+  prevent e.g. evil PCIe devices, like if I made a malicious FPGA card that
+  wanted to grab things out of physical memory
+* Notion of IOMMUs, I/O Memory Management Units, can maintain a virtual memory
+  view for these peripheral devices
+* How you keep them consistent and such probably too much for this episode!
 
+## Back to initial example [33:00]
+
+* Virtual address was zero!
+* Some operating systems map zero page without any permissions so it'll always
+  cause a fault for every process
+* Global bit you can set on these entries to say it pertains to everybody
+* We don't want to map anything there to catch bugs
+* When you do mmap and you try to map something at 0 it doesn't have to handle
+  it specially because the entry is already there
+* But ends up acting similarly to if we load from an address that wasn't mapped
+  at all, then the page table walk would fail saying "I don't see an entry for
+  this" and causing a segmentation fault
+
+## So what is a segmentation fault? [33:45]
+
+* Hardware does the walk, and then tells the OS "hey I couldn't find anything
+  (valid)"
+* What the hardware ends up doing is using an ABI (Application Binary
+  Interface) between the hardware and the OS where the hardware then knows to
+  "start executing $here"
+* ABI defines what values will be in what registers, and from the kernel's
+  perspective, looks similar to a function call with a calling convention when
+  that interrupt handler is invoked
+* Can look like a regular (C) functional call when you look at it
+* Perhaps you get an enum that tells you what kind of trap/fault, say page
+  fault, and the address at which it occurred, and some notion of process
+  context identification
+* You'd find that in the architecture handbook/manual of how to program this
+  kind of machine -- what exactly happens when a CPU exception happens?
+* OS figures out which process it corresponds to and then decides what to do
+* If OS itself created an unexpected page fault maybe it panics!
+* If OS itself running in hypervisor, hyerpvisor might get first dibs on
+  handling hardware exception, pass it to guest OS
+* Guest OS might say "that wasn't my problem", pass it on to the userspace
+  program in the form of a signal
+* Most userspace programs people don't really handle signals
+* Default signal handler gets triggered, and default handler might just say
+  "thanks for playing!" (e.g. "segfault happened at $location") and then stop
+  the program; i.e. call abort
+
+## Running in debuggers [36:38]
+
+* If running program under a debugger will have installed signal handlers [for
+  its inferior] and report the issue
+* After reporting the issue to the developer will go back to the debugger
+  prompt
+* gdb and lldb are programs, running with a thin "emulation" layer [ed: maybe
+  more like "supervisor"?]
+* They talk to the kernel and they let the program pretend everything is
+  executing regularly when really they're "inside"/"under" the debugger
+* Other programs that do this kind of thing for a variety of reasons
+
+## JS engines / WebAssembly [37:35]
+
+* JS engines in browsers optimize things like WebAssembly by installing signal
+  handlers to capture invalid memory accesses
+* Dive into that, sounds a bit odd
+* Managed virtual machine running untrusted code from the internet, but
+  execution has to be secure
+* JS is a dynamic language that has semantics should prevent faulting from
+  happening
+* WebAssembly wants to provide a VM for something that looks like low level
+  static code (C++/Rust)
+* Associated with WebAssembly "instance" w/continuous 4GiB-limited slab of
+  memory -- currently 32-bit process model
+* On startup will map 4GiB of *virtual* memory with a redzone after, but it's
+  not physically backed -- allocating page table entries
+* Everything can be done as `base+offset` memory accesses using that virtual
+  base
+* Instead of checking "have I mapped this" every time, everything mapped
+  `-RWX` (from the start), unless user code has asked to map them
+* Hardware is telling you if it hasn't been mapped!
+* Ride on the existing fast paths -- way most VMs implement WebAssembly these
+  days is by having the hardware letting it know if something isn't mapped,
+  since hardware is good at that
+* Have to be sure access doesn't go past the 4GiB, 128MiB (say) of redzone
+* If the JIT can prove may go past that it will explicitly do an OOB check, but
+  anything inside it will just let trap
+* Can prove most memory accesses are within that bound in practice, rare to
+  have really large (known) offsets on loads and stores
+* If wasm access faults, browser signal handler checks whether it was a wasm
+  program -- signal handlers are process wide, so browser needs to figure out
+  if it's a wasm memory access, if so, unwind wasm stack (as in last episode)
+  and throw JavaScript exception (from the wasm access that faulted in
+  hardware)
 * If indexing relative to a null object address, and you know the offset would
   still be within the null page, can just catch the faulty access (via fault
   handler) and resume by throwing a Java `NullPointerException` after that
   handler had run [Advanced note: also requires on-stack-invalidation to happen
   in the handler]
+* Common technique for (Language) Virtual Machines in general!
 
 ## Rough "Numbers to Know" [42:30]
 
+* We *did* cover what a TLB hit is, yay!
 * A lot of the numbers mostly similar to how they were when this talk was given
 * Talked about L1 cache hit could be order 3 cycles [edit: really 4 in modern
   Intel machines]
