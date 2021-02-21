@@ -60,28 +60,56 @@
 * Everybody has to deal in abstraction, one of the few fundamental human
   faculties.
 * [Hume had described a few different fundamental ways](https://iep.utm.edu/hume-ima/#SH3b) that humans come up with things like imagination, abstraction, and such.
-* Related: [powers of ten video from 1977](https://www.youtube.com/watch?v=0fKBhvDjuy0): shows expanding scale from a cell on somebody's hand up to the highest abstractions in the universe and down the smallest ones all in one dialog/visualization. Fun and enlightening!
-* Both abstraction and decomposing things into the smallest pieces you can both fun ways to learn.
+* Related: [powers of ten video from
+  1977](https://www.youtube.com/watch?v=0fKBhvDjuy0): shows expanding scale
+  from a cell on somebody's hand up to the highest abstractions in the universe
+  and down the smallest ones all in one dialog/visualization. Fun and
+  enlightening!
+* Both abstraction and decomposing things into the smallest pieces you can both
+  fun ways to learn.
 
 ### What was the question again? [04:15]
 
 * Back to the fun question for today!
-* What happens when you go to the browser's address bar, type "https://tlbh.it" and then hit enter.
+* What happens when you go to the browser's address bar, type "https://tlbh.it"
+  and then hit enter.
 * Have to start with the keypress, you pressed enter!
 * Out in physical world before physical I/O becomes digital I/O.
-* Some of us are familiar with this basic concepts from Tron (or Tron: Legacy, or its Draft Punk soundtrack), all of which will be helpful.
+* Some of us are familiar with this basic concepts from
+  [Tron](https://en.wikipedia.org/wiki/Tron) (or [Tron:
+  Legacy](https://en.wikipedia.org/wiki/Tron:_Legacy), or its [Draft Punk
+  soundtrack](https://en.wikipedia.org/wiki/Tron:_Legacy_(soundtrack))), all of
+  which will be helpful.
 
 ### Starting in physical IO space [04:50]
 
-* Keyboards! Fundamental component of computer I/O design e.g. for input of text (still more popular than footpedals)
-* All also (conceptually) based on switches! Just like internals of computer are based on switches -- took the idea and put them both inside the computer but also underneath your fingertips.
-* Going to go with mechanical keyboards because they're enjoyable, make a beautiful clacky noise.
-* Very classic keyboard was the IBM Model M keyboard (@cdleary had one of those!), had a "buckling spring" design -- buckling caused switch to close.
-* Modern keyboards instead have a little plastic "leaf" that prevents electrical connectivity, when you move it out of the way with your finger press electrical connectivity is established. Switch action: on/off, controlled by your finger.
-* Keyboard has a little microcontroller inside of it, it's looking for things that get pressed, usually done through a "general purpose input/output pin" (GPIO).
-* Microcontrollers can look at voltages / whether things are connected to it in order to ask "is this a zero or a one right now" via these GPIO pins. Some of them are configured to read (to look for a 0 or 1 voltage level and say which one is currently observed when it's sampled by the microcontroller).
-* Microcontroller reads these lines, then figures out what key (or set of keys) are pressed based on the 1s and 0s lines for the GPIO input lines that are 1s going to the microcontroller.
-* So in our case, it sees the row/column activated means that the "enter" key is pressed (because that's what the row and column I see "map to" in its firmware running on the microcontroller).
+* Keyboards! Fundamental component of computer I/O design e.g. for input of
+  text (still more popular than footpedals)
+* All also (conceptually) based on switches! Just like internals of computer
+  are based on switches -- took the idea and put them both inside the computer
+  but also underneath your fingertips.
+* Going to go with mechanical keyboards because they're enjoyable, make a
+  beautiful clacky noise.
+* Very classic keyboard was the [IBM Model M
+* keyboard](https://youtu.be/D7wmMZmMinM?t=212) (@cdleary had one of
+  those!), had a "buckling spring" design -- buckling caused switch to close.
+* Modern keyboards instead have a little plastic "leaf" that prevents
+  electrical connectivity, when you move it out of the way with your finger
+  press electrical connectivity is established. Switch action: on/off,
+  controlled by your finger.
+* Keyboard has a little microcontroller inside of it, it's looking for things
+  that get pressed, usually done through a ["general purpose input/output pin"
+  (GPIO)](https://en.wikipedia.org/wiki/General-purpose_input/output).
+* Microcontrollers can look at voltages / whether things are connected to it in
+  order to ask "is this a zero or a one right now" via these GPIO pins. Some of
+  them are configured to read (to look for a 0 or 1 voltage level and say which
+  one is currently observed when it's sampled by the microcontroller).
+* Microcontroller reads these lines, then figures out what key (or set of keys)
+  are pressed based on the 1s and 0s lines for the GPIO input lines that are 1s
+  going to the microcontroller.
+* So in our case, it sees the row/column activated means that the "enter" key
+  is pressed (because that's what the row and column I see "map to" in its
+  firmware running on the microcontroller).
 
 ### How can we relate this back to Tron though? [06:40]
 
