@@ -7,7 +7,7 @@
 * Our friends are all starting podcasts and they're better than us at getting episodes out quickly :-)
 * It's been a while... let's say we're going for more the artisinal hand-crafted thing
 * Only choice at this point is to claim we're going for quality over quantity... or something...
-* You can see the bubbles in our hand-crafted episode designs so you can tell they're made with love
+* You can see [the bubbles](https://en.wikipedia.org/wiki/Pipeline_stall) in our hand-crafted episode designs so you can tell they're made with love
 
 ### Standard disclaimer [00:30]
 
@@ -18,26 +18,47 @@
 
 ### The "silly" interview question [00:55]
 
-* Bunch of ideas for things to do
+* Bunch of ideas for things to talk about
 * Today we're going to go kind of a "silly" interview question
-* We've heard people ask this question!
-* Walk into the interview, interviewer says "tell me what happens when you put an address into the URL bar and hit enter **in as much detail as humanly possible**?!"
-* Probably not going to cover a lot of things, we're shooting for ~1 hour, everybody listening will know a bunch more than we do about these things, so tweet @TLBHit with more juicy details we can note in the show notes or in a future episode
-* Not going to start from Maxwell's equations / SPICE simulations of transistors, gonna start a *little* higher than that
+* We've heard people do ask this question!
+* Walk into the interview, interviewer says "tell me what happens when you put
+  an address into the URL bar and hit enter **in as much detail as humanly
+  possible**?!"
+* Probably not going to cover a lot of things, we're shooting for ~1 hour,
+  everybody listening will know a bunch more than we do about these things, so
+  tweet [@TLBHit](https://twitter.com/tlbhit) with more juicy details we can
+  note in the show notes or in a future episode
+* Not going to start from Maxwell's equations / SPICE simulations of
+  transistors, gonna start a *little* higher than that
 
 ### Timeless questions [02:00]
 
-* Related story: when working on chipsets knew person who would slam motherboard down on the table, point at it, and ask the candidate to describe how some aspect of it worked
+* Related story: when working on chipsets knew person who would slam
+  motherboard down on the table, point at it, and ask the candidate to describe
+  how some aspect of it worked
 * Not recommended, but fun concept, in the sense it's easy to lose yourself in all the wonderful details of a modern machine
 * Lots of complexity comes together to make these things happen (and some complexity we got via the evolutionary process!)
-* What's great about modern computers is how much of it is actually possible to understand and possibly even do yourself, projects doing PicoSoCs and things like this, open source software projects like QEMU where you can create a software emulation layer for an entire machine from scratch, things like asm.js or WebAssembly where you can create a familiar machine and operating system experience in a browser, etc.
+* What's great about modern computers is how much of it is actually possible to
+  understand and possibly even do yourself
+* Projects doing PicoSoCs
+* [Open source software projects like QEMU](https://en.wikipedia.org/wiki/QEMU) where you can create a
+  software emulation layer for an entire machine from scratch
+* Things like
+  asm.js or [WebAssembly where you can create a familiar machine and operating
+  system experience in a
+  browser](https://github.com/WebAssembly/tool-conventions/issues/27), etc.
 * All the visibility of modern computing systems and the fact you *can* understand everything down to nearly the transistors is in a way what's beautiful about working in computers.
-* But *just* as importantly you don't *need* to know it all to use them well -- we have these nice abstraction layers and you can keep diving down into the layer that interests you and snowball-up more knowledge and capabilities as you go.
+* But *just* as importantly you don't *need* to know it all to use them well --
+  we have these nice abstraction layers and you can keep diving down into the
+  layer that interests you and snowball-up more knowledge and capabilities as
+  you go.
 * This is really the power of abstraction.
-* So this interview question is well trodden in a sense and can apply to many different fields, adapted to different areas.
-* Everybody has to deal in abstraction, one of the few fundamental human faculties.
+* So this interview question is well trodden in a sense and can apply to many
+  different fields, adapted to different areas.
+* Everybody has to deal in abstraction, one of the few fundamental human
+  faculties.
 * [Hume had described a few different fundamental ways](https://iep.utm.edu/hume-ima/#SH3b) that humans come up with things like imagination, abstraction, and such.
-* Related: powers of ten video from 1977: shows expanding scale from a cell on somebody's hand up to the highest abstractions in the universe and down the smallest ones all in one dialog/visualization. Fun and enlightening!
+* Related: [powers of ten video from 1977](https://www.youtube.com/watch?v=0fKBhvDjuy0): shows expanding scale from a cell on somebody's hand up to the highest abstractions in the universe and down the smallest ones all in one dialog/visualization. Fun and enlightening!
 * Both abstraction and decomposing things into the smallest pieces you can both fun ways to learn.
 
 ### What was the question again? [04:15]
