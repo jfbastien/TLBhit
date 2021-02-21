@@ -7,7 +7,7 @@
 * Our friends are [all](https://adspthepodcast.com)
   [starting](https://www.twoscomplement.org) podcasts and they're better than
   us at getting episodes out quickly :-)
-* It's been a while... let's say we're going for more the artisinal hand-crafted thing
+* It's been a while... let's say we're going for an artisinal hand-crafted vibe
 * Only choice at this point is to claim we're going for quality over quantity... or something...
 * You can see [the bubbles](https://en.wikipedia.org/wiki/Pipeline_stall) in our hand-crafted episode designs so you can tell they're made with love
 
