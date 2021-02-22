@@ -7,59 +7,71 @@
 * Our friends are [all](https://adspthepodcast.com)
   [starting](https://www.twoscomplement.org) podcasts and they're better than
   us at getting episodes out quickly :-)
-* It's been a while... let's say we're going for an artisinal hand-crafted vibe
+* It's been a while... let's say we're going for an artisinal hand-crafted vibe.
 * Only choice at this point is to claim we're going for quality over quantity... or something...
-* You can see [the bubbles](https://en.wikipedia.org/wiki/Pipeline_stall) in our hand-crafted episode designs so you can tell they're made with love
+* You can see [the bubbles](https://en.wikipedia.org/wiki/Pipeline_stall) in
+  our hand-crafted episode designs so you can tell they're made with love.
 
 ### Standard disclaimer [00:30]
 
-* Standard disclaimer: here to share our love of random systems and systems-programming topics
-* But we only know so much! Will try not to say things that are wrong
-* Will followup with "errata" (corrections/clarifications) as we find out about them and put them up on (this) website
-* We do the "lifelong learners" thing, always trying to push the boundaries of things we know about and have conversations about what's interesting to develop and hone our understanding
+* Standard disclaimer: here to share our love of random systems and
+  systems-programming topics.
+* But we only know so much! Will try not to say things that are wrong.
+* Will followup with "errata" (corrections/clarifications) as we find out about
+  them and put them up on (this) website.
+* We do the "lifelong learners" thing, always trying to push the boundaries of
+  things we know about and have conversations about what's interesting to
+  develop and hone our understanding.
 
 ### The "silly" interview question [00:55]
 
-* Bunch of ideas for things to talk about
-* Today we're going to go kind of a "silly" interview question
+* *Bunch* of ideas for things to talk about...
+* Today we're going to go kind of a "silly" interview question.
 * We've heard people do ask this question!
 * Walk into the interview, interviewer says "tell me what happens when you put
-  an address into the URL bar and hit enter **in as much detail as humanly
+  an address into the URL bar and hit enter... **in as much detail as humanly
   possible**?!"
 * Probably not going to cover a lot of things, we're shooting for ~1 hour,
-  everybody listening will know a bunch more than we do about these things, so
-  tweet [@TLBHit](https://twitter.com/tlbhit) with more juicy details we can
-  note in the show notes or in a future episode
+  **everybody listening will know a bunch more than we do about these things**,
+  so tweet [@TLBHit](https://twitter.com/tlbhit) with more juicy details we can
+  note in the show notes or in a future episode.
 * Not going to start from Maxwell's equations / SPICE simulations of
-  transistors, gonna start a *little* higher than that
+  transistors, gonna start a *little* higher than that.
 
-### Timeless questions [02:00]
+### Timeless questions [01:55]
 
-* Related story: when working on chipsets knew person who would slam
+* Related story: when working on chipsets @cdleary had a buddy who would slam
   motherboard down on the table, point at it, and ask the candidate to describe
-  how some aspect of it worked
-* Not recommended, but fun concept, in the sense it's easy to lose yourself in all the wonderful details of a modern machine
-* Lots of complexity comes together to make these things happen (and some complexity we got via the evolutionary process!)
+  how some aspect of it worked.
+* Not recommended, but fun concept, in the sense it's easy to lose yourself in
+  all the wonderful details of a modern machine.
+* Lots of complexity comes together to make these things happen (and some
+  complexity we got via the evolutionary process!).
 * What's great about modern computers is how much of it is actually possible to
-  understand and possibly even do yourself
-* Projects doing PicoSoCs
+  understand and possibly even do yourself.
+* Projects doing [PicoSoCs](https://github.com/cliffordwolf/picorv32) [using
+  entirely open source tooling!]
 * [Open source software projects like QEMU](https://en.wikipedia.org/wiki/QEMU) where you can create a
-  software emulation layer for an entire machine from scratch
+  software emulation layer for an entire machine from scratch.
 * Things like
   asm.js or [WebAssembly where you can create a familiar machine and operating
   system experience in a
   browser](https://github.com/WebAssembly/tool-conventions/issues/27), etc.
-* All the visibility of modern computing systems and the fact you *can* understand everything down to nearly the transistors is in a way what's beautiful about working in computers.
+* All the visibility of modern computing systems and the fact you *can*
+  understand everything down to nearly the transistors is, in a way, what's
+  beautiful about working in computers
 * But *just* as importantly you don't *need* to know it all to use them well --
   we have these nice abstraction layers and you can keep diving down into the
   layer that interests you and snowball-up more knowledge and capabilities as
   you go.
-* This is really the power of abstraction.
+* This is really the power of abstraction!
 * So this interview question is well trodden in a sense and can apply to many
   different fields, adapted to different areas.
 * Everybody has to deal in abstraction, one of the few fundamental human
   faculties.
-* [Hume had described a few different fundamental ways](https://iep.utm.edu/hume-ima/#SH3b) that humans come up with things like imagination, abstraction, and such.
+* [Hume had described a few different fundamental
+  ways](https://iep.utm.edu/hume-ima/#SH3b) that humans come up with things
+  like imagination, abstraction, and such.
 * Related: [powers of ten video from
   1977](https://www.youtube.com/watch?v=0fKBhvDjuy0): shows expanding scale
   from a cell on somebody's hand up to the highest abstractions in the universe
@@ -84,7 +96,7 @@
 ### Starting in physical IO space [04:50]
 
 * Keyboards! Fundamental component of computer I/O design e.g. for input of
-  text (still more popular than footpedals)
+  text (still more popular than footpedals).
 * All also (conceptually) based on switches! Just like internals of computer
   are based on switches -- took the idea and put them both inside the computer
   but also underneath your fingertips.
@@ -93,10 +105,10 @@
 * Very classic keyboard was the [IBM Model M
 * keyboard](https://youtu.be/D7wmMZmMinM?t=212) (@cdleary had one of
   those!), had a "buckling spring" design -- buckling caused switch to close.
-* Modern keyboards instead have a little plastic "leaf" that prevents
-  electrical connectivity, when you move it out of the way with your finger
-  press electrical connectivity is established. Switch action: on/off,
-  controlled by your finger.
+* Modern keyboards instead have [a little plastic "leaf" that prevents
+  electrical connectivity](https://youtu.be/vLGklanzQIc?t=59), when you move it
+  out of the way with your finger press electrical connectivity is established.
+  Switch action: on/off, controlled by your finger.
 * Keyboard has a little microcontroller inside of it, it's looking for things
   that get pressed, usually done through a ["general purpose input/output pin"
   (GPIO)](https://en.wikipedia.org/wiki/General-purpose_input/output).
@@ -113,20 +125,36 @@
 
 ### How can we relate this back to Tron though? [06:40]
 
-* This is the grid from Tron presumably? And the lightcycles will need to come in to take us to the computer proper.
+* This is the grid from Tron presumably? And the lightcycles will need to come
+  in to take us to the computer proper.
 * Gotta send stuff over to the computer!
-* In modern era USB devices talk this standard USB Human Interface Device (HID) protocol that's layered on top of USB transactions.
-* What you do is send packets to a *standard driver* inside of your computer that knows how to talk to these human interface devices.
-* Good we've standardized on at least how keyboards and mice tend to work at this point in computer history. (Joysticks: let's not go there.)
+* In modern era USB devices talk this standard USB Human Interface Device (HID)
+  protocol that's layered on top of USB transactions.
+* What you do is send packets to a *standard driver* inside of your computer
+  that knows how to talk to these human interface devices.
+* Good we've standardized on at least how keyboards and mice tend to work at
+  this point in computer history. (Joysticks: let's not go there.)
 
 ### Brief intro to USB [07:15]
 
-* USB is a neat, modern, minimal-number-of-wires protocol for peripherals talking to computers.
-* What you do is wiggle these differential transmission lines -- in order to get good signal integrity there's common ways to do these protocols for things talking over wires to computers (differential transmission, NRZI & long-term-balanced balanced codings, etc).
-* You're able to wiggle these transmission lines at pretty high speeds these days -- lots of work has gone into figuring out how to make the minimal number of wires to go quickly when toggling between zeros and ones.
-* @cdleary only knows about low(/full/high) speed USB from a random project I had worked on in the past, USB 3 may be interestingly different to achieve such high speeds.
-* Serial engine that turns signals into packets and packets turn into transactions, OSI-style model of different layers of the communication protocol pieces.
-* Few different types of transfers in USB: keyboard firmware going to shove scan code into interrupt transfer that goes to the host, and that goes out to the host, on the wire (via the lightcycle :-)
+* USB is a neat, modern, minimal-number-of-wires protocol for peripherals
+  talking to computers.
+* What you do is wiggle these differential transmission lines -- in order to
+  get good signal integrity there's common ways to do these protocols for
+  things talking over wires to computers (differential transmission, NRZI &
+  long-term-balanced balanced codings, etc).
+* You're able to wiggle these transmission lines at pretty high speeds these
+  days -- lots of work has gone into figuring out how to make the minimal
+  number of wires to go quickly when toggling between zeros and ones.
+* @cdleary only knows about low(/full/high) speed USB from a random project I
+  had worked on in the past, USB 3 may be interestingly different to achieve
+  such high speeds.
+* Serial engine that turns signals into packets and packets turn into
+  transactions, OSI-style model of different layers of the communication
+  protocol pieces.
+* Few different types of transfers in USB: keyboard firmware going to shove
+  scan code into interrupt transfer that goes to the host, and that goes out to
+  the host, on the wire (via the lightcycle :-)
 
 ### Enter vs return? [08:30]
 
@@ -173,7 +201,7 @@
 
 [Note: for low latency communication between peripherals and userspace folks often do map registers from the device's PCIe memory space directly into userspace (as uncacheable memory) and have a protocol for interacting with the device so that you don't need to go through filesystem syscall overheads, folks are continuing to try to build reusable abstractions for this like `io_uring`.]
 
-### Through the window manager to the browser-UI-owning process ~12:15
+### Through the window manager to the browser-UI-owning process [~12:15]
 
 * In our particular case we'll notice the interrupt came from the keyboard device
 * We'll serve it up to the driver which will push that event over that file descriptor
@@ -191,54 +219,132 @@
 * Reuse across content and chrome inside of the Firefox browser architecture
 * Similar things happen for native widget toolkits as well
 * This "chrome" is part of the root window for the process
-* But modern browsers have processes that manage groups of tabs for isolation so things like crashes are not effecting all web pages running inside of the project, that's been done through various initiatives like electrolysis in Firefox
+* But modern browsers have processes that manage groups of tabs for isolation
+  so things like crashes are not effecting all web pages running inside of the
+  project, that's been done through various initiatives like electrolysis in
+  Firefox.
 
 ### Which parts of the browser might share a process? [~15:15]
 
 * Interesting: what parts of the browser are sharing across processes?
-* Chris Palmer presentation at Enigma talking about how sandboxing works for Chrome
-* One process for browser root, one for GPU process, bunch of separate renderer, networking, storage processes
-* Evolved over time which parts have their own process or not
-* Sometimes will put things in the same process to save resources
-* ... thousands of tabs maybe, but don't want thousands of processes!
-* Interesting tradeoff that they do
+* [Chris Palmer presentation at
+  Enigma](https://www.usenix.org/conference/enigma2021/presentation/palmer)
+  talking about how sandboxing works for Chrome.
+* One process for browser root, one for GPU process, bunch of separate
+  renderer, networking, storage processes.
+* Evolved over time which parts have their own process or not.
+* Sometimes will put things in the same process to save resources.
+* ...thousands of tabs maybe, but don't want thousands of processes!
+* Interesting tradeoff that they do.
 
 ### Inter-Process Communication patterns [16:20]
 
-* Classic question of how do you when you split things into processes, how do you not pay the penalty; e.g. retain fast communication even though we separated them into process isolated bits
-* Interesting part of the design of a browser (or a general multi-process application architecture!)
-* When you can have asynchrony you can have but but when you want fast communication between processes how do you avoid getting slammed by context switch overheads
-* Funny that Chrome is named after the part that's been minimized / that you're not supposed to see!
-* Depending on how keypress notification is handled, may have one process sending to another process, e.g. one displaying currently displayed tab
-* Tell it to "please navigate to the target URL because enter was pressed"
-* Cross process messaging, can be done in a bunch of ways
-* Can use something like pipes, but in a lot of cases you want to use something like shared memory
-* Shared memory itself is really neat, and not just because it involves TLB hits!
-* Also shared memory is an interesting way that two processes can share physical pages at (potentially) different virtual addresses
-* Interesting: shared memory is not something that C/C++ acknowledge really exist in the machine model
-* Same way in C/C++ before C++11, threads didn't exist in the abstract machine model described by the language
-* In *reality* they exist of course, but question of what's directly addressed by language semantics / model
-* The way it's modeled right now is it's basically addressed like external modifications, so really ought to use volatile to do shared memory accesses
-* Probably need a separate synchronization primitive, at least hypothetically, to do cross-process locking say -- because needs different guarantees from ones you get from threads which *do* live inside of the abstract machine model
+* Classic question of how do you when you split things into processes, how do
+  you not pay the penalty; e.g. retain fast communication even though we
+  separated them into process isolated bits.
+* Interesting part of the design of a browser (or a general multi-process
+  application architecture!).
+* When you can have asynchrony you can have but but when you want fast
+  communication between processes how do you avoid getting slammed by context
+  switch overheads
+
+### The concept of "chrome" [16:55]
+
+* Funny/cute that Chrome is named after the part that's been minimized / that
+  you're not supposed to see!
+* Re: how to send messages from one process / window to another...
+* Depending on how the keypress notification is handled, may have one process
+  sending to another process, e.g. one displaying currently displayed tab.
+* Tell it to "please navigate to the target URL because enter was pressed".
+* Cross-process messaging potentially, can be done in a bunch of ways!
+* Can use something like pipes, but in a lot of cases you want to use something
+  like shared memory.
+* Shared memory itself is really neat, and *not just* because it involves TLB
+  hits!
+* Also shared memory is an interesting way that two processes can share
+  physical pages at (potentially) different virtual addresses.
+* Interesting: shared memory is not something that C/C++ acknowledge really
+  exist in the machine model.
+* Same way in C/C++ before C++11, threads didn't exist in the abstract machine
+  model described by the language.
+* In *reality* they exist of course, but question of what's directly addressed
+  by language semantics / model.
+* The way it's modeled right now is it's basically addressed like external
+  modifications, so really ought to use volatile to do shared memory accesses.
+* Probably need a separate synchronization primitive, at least hypothetically,
+  to do cross-process locking say -- because needs different guarantees from
+  ones you get from threads which *do* live inside of the abstract machine
+  model.
 
 ### Tabs and back/forward cache [19:20]
 
-* One thing about tabs, they have a navigation cache for going backwards and forwards
-* When we're updating the location -- say we're starting on a blank tab, which are their own entity in the browser universe, they may take you to a special display page or similar
-* Then when you navigate it away to a particular website (like tlbh.it) then if you hit the back button it may take you back to the blank tab page or where you were before the navigation happened
-* What's funny is apparently one of the most complicated pages in the whole browser is about:blank -- weirdly complicated for some reason!
+* One thing about tabs, they have a navigation cache for going backwards and
+  forwards.
+* When we're updating the location -- say we're starting on a blank tab, which
+  are their own entity in the browser universe, they may take you to a special
+  display page or similar.
+* Then when you navigate it away to a particular website (like tlbh.it) then if
+  you hit the back button it may take you back to the blank tab page or where
+  you were before the navigation happened.
+* What's funny is apparently one of the most complicated pages in the whole
+  browser is about:blank -- weirdly complicated for some reason?!
+
+### What's in a URL? [20:10]
+
+* Out of the whole keyboard realm, got the keys that were pressed, and we've
+  got a URL -- the tab's content-frame-thingy is trying to navigate to the URL.
+* First thing we need to do is parse the URL that the user wrote.
+* Perhaps surprising that URL parsing ain't easy!
+* First thing you do is look at the protocol if one is specified; e.g. if you
+  wrote `https://`. If you didn't the browser usually infers a protocol.
+* Depending on the protocol has different ways of parsing things; `file://` and
+  `gopher://` and whatever else.
+* We're going to focus on the `http[s]://`, others have similar inner workings.
+* The way http-like ones work you kind of parse them inside-out...
+* There's a bunch of weird things in the URL; where's the Top Level Domain
+  (TLD)? Where's the domain? Where's the subdomains? This is going in
+  *leftwards* into the URL, assuming left-to-right text is being used.
+* On the left of *that* might have a username and a password inside the URL...
+* After the TLD might have a port, might have a slash with a path, then query
+  parameters, then query fragments.
+* All adds up to: URL parsing itself is really tricky!
+* Guess things like `file://` is more of a pseudo-protocol than a real
+  protocol, need to handle things like backslashes and such on Windows for
+  example vs in a web URL.
+* *Don't* want to just take the file path and hand it to the OS -- there are
+  some paths in the OS itself that are special; in the early days of Chrome
+  some undocumented things in the guts of Windows that, if not filtered out,
+  could be the source of exploits (e.g. some special device thing).
 
 ### Working at places and not knowing everything [22:40]
 
-* Funny to work for a browser company (Mozilla in @cdleary's case) but mostly because of working on the JS engine learn things as they pertain to that one part that @cdleary had worked on
-* Learn maybe about some of the interfacing parts, like how DOM nodes get reflected into JS objects or how interop with the browser-level cycle collector is supposed to happen
-
-
-* Notion that Isaac Newton was perhaps the last person to know all of human knowledge at one time
-* Who was the last person to know all of CS?
-* Kind of winging it, not sure how interviewer would feel about our answer
-* We'll just assume we're doing well on the interview and keep going on
-* Benefit of doing our own podcast is we pretty much have to be here no matter how badly we do on the interview question
+* Funny to work for a browser company (Mozilla in @cdleary's case) but mostly
+  because of working on the JS engine learn things as they pertain to that one
+  part that @cdleary had worked on.
+* Learn maybe about some of the interfacing parts, like how DOM nodes get
+  reflected into JS objects or how interop with the browser-level cycle
+  collector is supposed to do.
+* Similar working for a GPU company where you're primarily working on CPU
+  oriented things, still probably can't adequately describe how the rendering
+  pipeline for a GPU.
+* Everybody has these interesting blind spots that can be counterintuive given
+  their work experience, where everybody is going through the [xkcd "mentos and
+  coke: you're one of the lucky 10,000 people to be learning this fact
+  today"](https://xkcd.com/1053/) experiences over and over again...
+* Notion that Isaac Newton was perhaps the last person to know all of human
+  knowledge at one time.
+* Who was even the last person to know all of CS?
+* Kind of winging this interview question so far, not sure how interviewer
+  would feel about our answer...
+* Our hypothetical interviewer could ask about subtleties in distinctions like
+  "what's the difference between Universal Resource Locator (URL) and Universal
+  Resource Indicator (URI)", and maybe nobody knows? Maybe was important to
+  know the distinction 20 years ago? Everybody tends to say URL, and some
+  people say URI just to nerd-snipe each other. We'll just ignore some of these
+  perhaps lower-order-bit distinctions.
+* We'll just assume we're doing well on the interview and keep going on.
+* Benefit of doing our own podcast is we pretty much have to be here no matter
+  how badly we do on the interview question.
 
 ### Domain name to IP resolution [24:40]
 
