@@ -348,7 +348,8 @@
 
 ### Domain name to IP resolution [24:40]
 
-* Now that we've parsed the URL we have the TLD, the domain, the subdomains (none)
+* Now that we've parsed the URL we have the TLD, the domain, the subdomains
+  (none in our particular case).
 * Going to ignore the rest of the request for now, how do we talk to that server?
 * Have to figure out how to talk to the server that name corresponds to?
 * Resolve via DNS (Domain Name Service) resolution
@@ -357,38 +358,250 @@
 * They do more than IP addresses but by and large this is what we care about here
 * What's interesting: DNS resolution is notoriously totally insecure! Done in the clear, uses UDP packets
 * Going to need to craft and send out a packet here (haven't talked about packets yet)
-* Bunch of things on top of this basic concept: recently Firefox rolled out DNS resolution over https, used CloudFlare to do resolution
+* Bunch of things on top of this basic concept: recently Firefox rolled out DNS
+  resolution over https, used CloudFlare to do resolution
 
 ### Stacks of trust and probabilistic data structures [26:15]
 
-* All stacks of trust right? Between "trust no one ideal" where you would only have to trust yourself how do you stack things on top and keep everything copacetic
-* Not just roots of trust all the way down also caches all the way down (as we know cache invalidation is hard!)
-* First thing browser does before it reaches out, asks whether it had looked up the domain name before
-* When it hasn't looked up the domain name before asks "is this URL a known malicious website?"
-* Has a list of websites you just don't want to go to, will suggest that it looks malicious
-* Something called Google Safe Browsing inside of Chrome that's also used by other browsers
+* All stacks of trust right? Between "trust no one ideal" where you would only
+  have to trust yourself how do you stack things on top and keep everything
+  copacetic.
+* Not just roots of trust all the way down also caches all the way down (as we
+  know cache invalidation is hard!).
+* First thing browser does before it reaches out, asks whether it had looked up
+  the domain name before.
+* When it hasn't looked up the domain name before asks, "Is this URL a known
+  malicious website?"
+* Has a list of websites you just don't want to go to, will suggest that it
+  looks malicious.
+* Something called Google Safe Browsing inside of Chrome that's also used by
+  other browsers.
 * There's a *lot* of websites and the list changes pretty frequently
 * Instead of local browser having full list of all malicious sites...
-* Google fun interview tip is to know about bloom filters ;-)
+* Google fun-interview-tip is to read up on bloom filters. ;-)
 * Originally implementation of safe browsing used bloom filters:
-  * You ask whether domain is safe, it will either say "yes" or "I'm not sure"
-  * When "not sure" asks a separate server with the full list (Google central server) whether it is or in
-* When your browser already has it cached doesn't have to do that extra round trip
-* WebKit noted they were going to start proxying safe-browsing requests through separate server led to a lot of discussion
+  * You ask whether domain is safe, it will either say "yes" or "I'm not sure".
+  * When "not sure" asks a separate server with the full list (Google central
+    server) whether it is or in.
+* When your browser already has it cached doesn't have to do that extra round
+  trip.
+* WebKit a few weeks ago noted they were going to start [proxying safe-browsing
+  requests through a separate server, led to a lot of
+  discussion](https://the8-bit.com/apple-proxies-google-safe-browsing-privacy/).
+* Interesting things to talk about in this space of how the caches work and how
+  to properly check certain properties.
 
 ### Protocol changes/upgrade [28:45]
 
-* We were talking about how to parse a given protocol
+* We were talking about how to parse a given protocol's URL, but there's also
+  the idea of protocol *changes* when you look up the URL.
+* Thing called HSTS which can *change* an HTTP request to an HTTPS request.
+  "Upgrade" you from an insecure in-the-clear to a secure connection.
+* One way this is done is called HSTS Preload: all the HTTP-to-HTTPS domains
+  are pre-loaded into the browser. Browser just has a list of all the domains
+  that have said "I am HTTPS only!"
+* What's interesting there is that the domain owners tell the browser vendors
+  to always do HTTPS connections for them.
+* e.g. google.com would refuse to connect to your browser without using HTTPS.
+* Not google.com-only that can do that, not just a given domain, can have
+  entire TLDs opted in; e.g. a `.dev` or a `.google` TLD is opted in to have
+  HTTPS-only for not only themselves but all subdomains.
+* If you reserve a `.dev` domain (under the `.dev` TLD) then you have to have
+  HTTPS.
+* If you don't have the capability of doing only-HSTS-Preload there's a thing
+  called HTTP headers: once client connects to you can respond with a bunch of
+  headers, one of which is "Strict Transport Security".
+* If you reply with that header it says "next time you talk to me, do HTTPS!"
 
-### Surprisingly nuanced: unicode domains [~32:30]
+### Building security in, bolting it on, the space inbetween [30:30]
 
-* Unicode and domain names
-* Cyrillic characters might look exactly like what you would expect from roman alphabet
+* It's a big stack of caches! These things are in the browser's cache, some of
+  them have timers that expire after a while.
+* Super complex because the internet is large, and security/privacy weren't
+  really built into the Internet from the beginning. Origins as a researchy
+  military project thing. Not well understood what security and privacy
+  actually would mean at the time.
+* Main desiderata was, we think, "if a nuke hits the Internet it continues
+  routing packets to the desired endpoints"?!
+* Because security features were surprising to the designers, weren't built in
+  from the beginning -- even now, we look back and say "well the Internet
+  should have been designed differently!", even now, as these things are
+  designed we add security layers that themselves can have privacy holes.
+* Things like **supercookies**, which use some of the caches and preloadings to
+  create not a *traditional* cookie (where you browser stores some information
+  as requested by a website), but supercookies could allow external entities to
+  infer that you've talked to this client before.
+* Can, say, measure latency or figure out "did you talk to me over HTTP or
+  HTTPS this time around". If you reserve a certain number of subdomains and do
+  HSTS or things like this, you can potentially make these supercookies.
+* Security built on top of a nominally originally-insecure system and
+  privacy-insensitive system, trying to fit those properties back into the
+  system tend to not-always work out the way it was intended.
+* Kind of cute... there's a lot of weird, odd things on the Internet that
+  weren't necessarily designed a priori but rather evolved over time.
+* [Supercookies] sound delicious, but are emblematic of trying to introduce a
+  mechanism into a complex system and try to see all the use cases that can
+  possibly arise for it.
+
+### Surprisingly nuanced: unicode domains [32:30]
+
+* Similarly you'd think, "Hey I want more than english speakers to be able
+  to use the internet -- can we support unicode in domain names?"
+* We talked about parsing a URL being difficult and that was perhaps using a mental model that URL is ASCII, but it's not!
+* Nowadays the ways URLs work, they support unicode. Very different between
+  TLDs. Up to TLDs to decide what subset of unicode they support. But unicode
+  itself is quite complicated.
+* For example, whole topic of canonicalization of unicode: for JF's name,
+  there's a C-cedilla. Can write as `<c> <combining-character> <cedilla>` or
+  as the `<c-cedilla>` character.
+* There's also multiple ways to *canonicalize* unicode.
+* So if you have two domain names that look *visually* exactly the same, but
+  they are actually different characters, are they the same domain?
+* To a user it seems like it kind of ought to be, but to a computer it's not.
+* Very tricky to figure out whether two strings are "the same" for the
+  definition of "the same" we're interested in here.
+* From user perspective it might be obviously whether they're the same, but
+  from a program perspective it's difficult.
+* Something called "punycode" which is used to encode URLs in ASCII deriving
+  from the unicode equivalent of their encoding.
+* For example domain with cyrillic characters some of them might look exactly
+  the same as ASCII characters. Could make something that looks like google.com
+  or yourbankname.com but with cyrillic characters and in those cases they
+  would be confusable.
+* We don't want that to be possible, browsers have heuristics to try to prevent
+  confusable URLs from being displayed.
+* Unicode consortium has whole technical report on this, called [Technical
+  Report 36 on unicode security
+  considerations](http://unicode.org/reports/tr36/).
+* Maybe if there was a secure connection there would be a secure connection
+  registrar telling you whether a domain looks too much like some other domain.
+* Even what is secure is hard to explain to users. "There's a lock on there,
+  what does it even mean?"
+* [Adrienne Porter Felt (of Google Chrome) noted her sister asked her what the
+  handbag sign was](https://twitter.com/__apf__/status/634858452309831680), and
+  she realized she was referring to the lock icon.
+* Even the fact there's a lock: how discoverable are these properties? For
+  people who are not technical exposing security in a way that makes sense (via
+  education, UI / discoverability, etc).
+* To some extent security and convenience are often in tension: "Wait, it might
+  be insecure, click through these three different things to pass!" If things
+  are *supposed* to be working it's quite an inconvenience, but it's worth it
+  to indicate to people "this may not be what you're trying to do, this might be
+  something very bad happening".
+* As tech professionals we can see places we've trained users to click through
+  like, "Yeah, ok whatever, let me through". Hard to train users not to click
+  "yes" on everything!
+* Funny is IE6 or maybe IE5 when you used the browser and you used
+  an HTTP connection it'd pop up a dialog that said "your connection is secure"
+  and you had to click the OK button or a more info button. Reverse of what you
+  have nowadays! Used to have an *alert* when the connection was secure.
+* Things have surely evolved over the last 20-25 years.
+* Constantly evolving and growing ecosystem as considerations arise.
+
+### Back to the question: UDP sockets for DNS [37:40]
+
+* Maybe you've tried out socket programming before.
+* Open a "socket" which is a connection that lets you leave the machine via the
+  network. Can do IP level, TCP level connection, all possibilities when we're
+  doing this socket level programming.
+* Sockets look like file descriptors (piggybacking more on this abstraction of
+  files and file descriptors).
+* Create a UDP connection -- a "connectionless connection" [or connectionless
+  socket, is maybe less confusing to say], not a persistent connection, just
+  throwing the packets against some potential endpoint.
+* Then we talk to our DNS resolution endpoint: "Hey I have this text here
+  `tlbh.it`, I need to figure out what internet address this corresponds to."
+* Maybe browser knows about TLD inherently so just need to figure out the
+  second part...
+* This is about where we're at!
+
+### Establishing HTTPS after name resolution [38:45]
+
+* We're doing HTTPS so it has to be secure, and we're got to use some
+  encryption scheme to talk to the endpoint, to do the HTTP request.
+* Have to talk about "crypto": unfortunately nothing to do with cryptocurrency,
+  cryptology, cryptnomicon, game stop, or whatever else. We mean cryptography
+  here.
+* Generally the browser is going to talk to the server through Transport
+  Layer Security (TLS).
+* Start with a handshake where the browser and server negotiate how to crypto
+  at each other. Server then gives certificate back, browser checks certificate
+  is legitimate, using a root store of certificates (signed by Certificate
+  Authorities). Someone trusted by the OS signed off on the server's certificate
+  so the browser trusts it.
+* Fancy math that's easy to verify in one direction but very hard or
+  effectively impossible to reverse.
+* Once trust is established between those two the browser users the server's
+  *public* key, which is *asymmetric* encryption to establish a session key,
+  which is a *symmetric* key, to communicate with less overhead going forward.
+* Provides reliability on top of the transport: get a packet, decrypt the data,
+  and if there was a random bit flip you would fail to authenticate the packet
+  itself. Prevents people from tampering but also nature from tampering with
+  random bit flips or what have you.
+* Some of the math in there known to be pretty secure for now, probably secure
+  for next 15-20 years. Some of the math also known to be super insecure by
+  now -- if you look back at the *old* protocols some of them are known to be
+  broken. Super tricky to do properly and lots of corner cases.
+* General idea is to use fancy math [and a trust network] to determine "how can
+  I trust this person is who they say they are".
+* Layer of trust that has been created over time.
+
+### Accelerated primitives on modern HW [41:35]
+
+* We use crypto all the tim in browsers as well as other places.
+* A lot of the primitive operations are accelerated by modern hardware.
+* Same way we talk about TLB hits there's also these crypto acceleration
+  facilities inside of the CPU.
+* Crypto by and large tends to shuffle bits around a bunch, do it in a bunch of rounds, do some math with it.
+* Things like AES, one round of AES might be accelerated by a CPU and you call that instruction back to back.
+* Instructions have been added to CPUs in the past bunch of years to do things
+  like AES or CRC32C to checksum data in ethernet packets.
+* CPU and network protocol co-evolution going on here!
+* Even things like randomness, things that grab entropy from CPU's thermals and
+  uses that as its entropy pool, expose it as an instruction.
+* Randomness in a CPU also one of those frought-with-peril things where it
+  sounds good but how do you verify it's actually random, doesn't have a bias
+  or anything else, hasn't been tampered with, lots of tricky stuff.
+
+### A little sumpthin server-side [47:25]
+
+* Now we have the server looking at the path that was requested.
+* Eventually the request -- the HTTP GET request -- arrived for the base URL of our
+  website (the content at `/`).
+* Server gets that request, sees its HTTPS, tries to figure out what it's
+  supposed to do in order to serve up this request, for whatever the base page
+  is.
+* If you've tried to write web servers, perhaps using a web server *framework*,
+  what you'll do is configure *routes*, those routes will cause certain things
+  to happen within the server process to serve that request on that particular
+  path.
+* If I did `/foo` I might invoke a `FooHandler` that kicks in as a function
+  that serves the connection that was made from this client.
+* Beyond that you can do things like keep persistent connections and things
+  like this, but basic query-response model is HTTP GET which has a complete
+  response with a data payload.
+* Responses also have status codes, you'll be familiar with HTTP 404. :-)
+  * Informational responses: 100-199
+  * Successful responses: 200-299
+  * Redirects: 300-399
+  * Client errors: 400-499
+  * Server errors: 500-599
+* JF's personal favorite, HTTP 418 "I'm a teapot".
 
 ### Signoff [56:10]
 
 * Took a while to record this "episode 2", hope we take less time to record the next one
-* If people have questions/answers/comments / things they want us to talk about / errata to suggest hit us up on twitter @TLBHit
+* If people have questions/answers/comments / things they want us to talk about
+  / errata to suggest hit us up on [Twitter @TLBHit](https://twitter.com/TLBhit).
 * We don't know how email works
 * Whole nother episode, how does email work
 * Every program has to grow until it does email
+
+### Sideband References
+
+* [X Window System Advanced Window Techniques](https://magcius.github.io/xplain/article/window-tree.html) describes how input is delivered.
+* [Example of the kernel seeing weird scan codes and dropping them](https://unix.stackexchange.com/questions/143757/linux-kernel-dropping-custom-keyboard-scan-codes)
+* [Brief walkthrough to keyboard.c in the Linux kernel](https://unix.stackexchange.com/questions/63688/what-happens-when-ctrl-alt-fnum-is-pressed/63700#63700)
+* [Linux's "input drivers" documentation](https://www.kernel.org/doc/Documentation/input/input.txt)
+* [evdev for input device events](https://en.wikipedia.org/wiki/Evdev)
+* Some good discussion on [southbridge to CPU core / DRAM traversal](https://forums.tomshardware.com/threads/questions-regarding-the-pcie-root-complex-pcie-lanes-and-the-pch.2115479/)

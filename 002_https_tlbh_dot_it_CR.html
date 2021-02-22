@@ -162,9 +162,9 @@ are based on switches -- took the idea and put them both inside the computer
 but also underneath your fingertips.</li>
 <li>Going to go with mechanical keyboards because they're enjoyable, make a
 beautiful clacky noise.</li>
-<li>Very classic keyboard was the [IBM Model M</li>
-<li>keyboard](https://youtu.be/D7wmMZmMinM?t=212) (@cdleary had one of
-those!), had a &quot;buckling spring&quot; design -- buckling caused switch to close.</li>
+<li>Very classic keyboard was the <a href="https://youtu.be/D7wmMZmMinM?t=212">IBM Model M  keyboard</a>
+(@cdleary had one of those!), had a &quot;buckling spring&quot; design -- buckling
+caused switch to close.</li>
 <li>Modern keyboards instead have <a href="https://youtu.be/vLGklanzQIc?t=59">a little plastic &quot;leaf&quot; that prevents
 electrical connectivity</a>, when you move it
 out of the way with your finger press electrical connectivity is established.
@@ -409,7 +409,8 @@ how badly we do on the interview question.</li>
 </ul>
 <h3>Domain name to IP resolution [24:40]</h3>
 <ul>
-<li>Now that we've parsed the URL we have the TLD, the domain, the subdomains (none)</li>
+<li>Now that we've parsed the URL we have the TLD, the domain, the subdomains
+(none in our particular case).</li>
 <li>Going to ignore the rest of the request for now, how do we talk to that server?</li>
 <li>Have to figure out how to talk to the server that name corresponds to?</li>
 <li>Resolve via DNS (Domain Name Service) resolution</li>
@@ -418,43 +419,257 @@ how badly we do on the interview question.</li>
 <li>They do more than IP addresses but by and large this is what we care about here</li>
 <li>What's interesting: DNS resolution is notoriously totally insecure! Done in the clear, uses UDP packets</li>
 <li>Going to need to craft and send out a packet here (haven't talked about packets yet)</li>
-<li>Bunch of things on top of this basic concept: recently Firefox rolled out DNS resolution over https, used CloudFlare to do resolution</li>
+<li>Bunch of things on top of this basic concept: recently Firefox rolled out DNS
+resolution over https, used CloudFlare to do resolution</li>
 </ul>
 <h3>Stacks of trust and probabilistic data structures [26:15]</h3>
 <ul>
-<li>All stacks of trust right? Between &quot;trust no one ideal&quot; where you would only have to trust yourself how do you stack things on top and keep everything copacetic</li>
-<li>Not just roots of trust all the way down also caches all the way down (as we know cache invalidation is hard!)</li>
-<li>First thing browser does before it reaches out, asks whether it had looked up the domain name before</li>
-<li>When it hasn't looked up the domain name before asks &quot;is this URL a known malicious website?&quot;</li>
-<li>Has a list of websites you just don't want to go to, will suggest that it looks malicious</li>
-<li>Something called Google Safe Browsing inside of Chrome that's also used by other browsers</li>
+<li>All stacks of trust right? Between &quot;trust no one ideal&quot; where you would only
+have to trust yourself how do you stack things on top and keep everything
+copacetic.</li>
+<li>Not just roots of trust all the way down also caches all the way down (as we
+know cache invalidation is hard!).</li>
+<li>First thing browser does before it reaches out, asks whether it had looked up
+the domain name before.</li>
+<li>When it hasn't looked up the domain name before asks, &quot;Is this URL a known
+malicious website?&quot;</li>
+<li>Has a list of websites you just don't want to go to, will suggest that it
+looks malicious.</li>
+<li>Something called Google Safe Browsing inside of Chrome that's also used by
+other browsers.</li>
 <li>There's a <em>lot</em> of websites and the list changes pretty frequently</li>
 <li>Instead of local browser having full list of all malicious sites...</li>
-<li>Google fun interview tip is to know about bloom filters ;-)</li>
+<li>Google fun-interview-tip is to read up on bloom filters. ;-)</li>
 <li>Originally implementation of safe browsing used bloom filters:<ul>
-<li>You ask whether domain is safe, it will either say &quot;yes&quot; or &quot;I'm not sure&quot;</li>
-<li>When &quot;not sure&quot; asks a separate server with the full list (Google central server) whether it is or in</li>
+<li>You ask whether domain is safe, it will either say &quot;yes&quot; or &quot;I'm not sure&quot;.</li>
+<li>When &quot;not sure&quot; asks a separate server with the full list (Google central
+server) whether it is or in.</li>
 </ul>
 </li>
-<li>When your browser already has it cached doesn't have to do that extra round trip</li>
-<li>WebKit noted they were going to start proxying safe-browsing requests through separate server led to a lot of discussion</li>
+<li>When your browser already has it cached doesn't have to do that extra round
+trip.</li>
+<li>WebKit a few weeks ago noted they were going to start <a href="https://the8-bit.com/apple-proxies-google-safe-browsing-privacy/">proxying safe-browsing
+requests through a separate server, led to a lot of
+discussion</a>.</li>
+<li>Interesting things to talk about in this space of how the caches work and how
+to properly check certain properties.</li>
 </ul>
 <h3>Protocol changes/upgrade [28:45]</h3>
 <ul>
-<li>We were talking about how to parse a given protocol</li>
+<li>We were talking about how to parse a given protocol's URL, but there's also
+the idea of protocol <em>changes</em> when you look up the URL.</li>
+<li>Thing called HSTS which can <em>change</em> an HTTP request to an HTTPS request.
+&quot;Upgrade&quot; you from an insecure in-the-clear to a secure connection.</li>
+<li>One way this is done is called HSTS Preload: all the HTTP-to-HTTPS domains
+are pre-loaded into the browser. Browser just has a list of all the domains
+that have said &quot;I am HTTPS only!&quot;</li>
+<li>What's interesting there is that the domain owners tell the browser vendors
+to always do HTTPS connections for them.</li>
+<li>e.g. google.com would refuse to connect to your browser without using HTTPS.</li>
+<li>Not google.com-only that can do that, not just a given domain, can have
+entire TLDs opted in; e.g. a <code>.dev</code> or a <code>.google</code> TLD is opted in to have
+HTTPS-only for not only themselves but all subdomains.</li>
+<li>If you reserve a <code>.dev</code> domain (under the <code>.dev</code> TLD) then you have to have
+HTTPS.</li>
+<li>If you don't have the capability of doing only-HSTS-Preload there's a thing
+called HTTP headers: once client connects to you can respond with a bunch of
+headers, one of which is &quot;Strict Transport Security&quot;.</li>
+<li>If you reply with that header it says &quot;next time you talk to me, do HTTPS!&quot;</li>
 </ul>
-<h3>Surprisingly nuanced: unicode domains [~32:30]</h3>
+<h3>Building security in, bolting it on, the space inbetween [30:30]</h3>
 <ul>
-<li>Unicode and domain names</li>
-<li>Cyrillic characters might look exactly like what you would expect from roman alphabet</li>
+<li>It's a big stack of caches! These things are in the browser's cache, some of
+them have timers that expire after a while.</li>
+<li>Super complex because the internet is large, and security/privacy weren't
+really built into the Internet from the beginning. Origins as a researchy
+military project thing. Not well understood what security and privacy
+actually would mean at the time.</li>
+<li>Main desiderata was, we think, &quot;if a nuke hits the Internet it continues
+routing packets to the desired endpoints&quot;?!</li>
+<li>Because security features were surprising to the designers, weren't built in
+from the beginning -- even now, we look back and say &quot;well the Internet
+should have been designed differently!&quot;, even now, as these things are
+designed we add security layers that themselves can have privacy holes.</li>
+<li>Things like <strong>supercookies</strong>, which use some of the caches and preloadings to
+create not a <em>traditional</em> cookie (where you browser stores some information
+as requested by a website), but supercookies could allow external entities to
+infer that you've talked to this client before.</li>
+<li>Can, say, measure latency or figure out &quot;did you talk to me over HTTP or
+HTTPS this time around&quot;. If you reserve a certain number of subdomains and do
+HSTS or things like this, you can potentially make these supercookies.</li>
+<li>Security built on top of a nominally originally-insecure system and
+privacy-insensitive system, trying to fit those properties back into the
+system tend to not-always work out the way it was intended.</li>
+<li>Kind of cute... there's a lot of weird, odd things on the Internet that
+weren't necessarily designed a priori but rather evolved over time.</li>
+<li>[Supercookies] sound delicious, but are emblematic of trying to introduce a
+mechanism into a complex system and try to see all the use cases that can
+possibly arise for it.</li>
+</ul>
+<h3>Surprisingly nuanced: unicode domains [32:30]</h3>
+<ul>
+<li>Similarly you'd think, &quot;Hey I want more than english speakers to be able
+to use the internet -- can we support unicode in domain names?&quot;</li>
+<li>We talked about parsing a URL being difficult and that was perhaps using a mental model that URL is ASCII, but it's not!</li>
+<li>Nowadays the ways URLs work, they support unicode. Very different between
+TLDs. Up to TLDs to decide what subset of unicode they support. But unicode
+itself is quite complicated.</li>
+<li>For example, whole topic of canonicalization of unicode: for JF's name,
+there's a C-cedilla. Can write as <code>&lt;c&gt; &lt;combining-character&gt; &lt;cedilla&gt;</code> or
+as the <code>&lt;c-cedilla&gt;</code> character.</li>
+<li>There's also multiple ways to <em>canonicalize</em> unicode.</li>
+<li>So if you have two domain names that look <em>visually</em> exactly the same, but
+they are actually different characters, are they the same domain?</li>
+<li>To a user it seems like it kind of ought to be, but to a computer it's not.</li>
+<li>Very tricky to figure out whether two strings are &quot;the same&quot; for the
+definition of &quot;the same&quot; we're interested in here.</li>
+<li>From user perspective it might be obviously whether they're the same, but
+from a program perspective it's difficult.</li>
+<li>Something called &quot;punycode&quot; which is used to encode URLs in ASCII deriving
+from the unicode equivalent of their encoding.</li>
+<li>For example domain with cyrillic characters some of them might look exactly
+the same as ASCII characters. Could make something that looks like google.com
+or yourbankname.com but with cyrillic characters and in those cases they
+would be confusable.</li>
+<li>We don't want that to be possible, browsers have heuristics to try to prevent
+confusable URLs from being displayed.</li>
+<li>Unicode consortium has whole technical report on this, called <a href="http://unicode.org/reports/tr36/">Technical
+Report 36 on unicode security
+considerations</a>.</li>
+<li>Maybe if there was a secure connection there would be a secure connection
+registrar telling you whether a domain looks too much like some other domain.</li>
+<li>Even what is secure is hard to explain to users. &quot;There's a lock on there,
+what does it even mean?&quot;</li>
+<li><a href="https://twitter.com/__apf__/status/634858452309831680">Adrienne Porter Felt (of Google Chrome) noted her sister asked her what the
+handbag sign was</a>, and
+she realized she was referring to the lock icon.</li>
+<li>Even the fact there's a lock: how discoverable are these properties? For
+people who are not technical exposing security in a way that makes sense (via
+education, UI / discoverability, etc).</li>
+<li>To some extent security and convenience are often in tension: &quot;Wait, it might
+be insecure, click through these three different things to pass!&quot; If things
+are <em>supposed</em> to be working it's quite an inconvenience, but it's worth it
+to indicate to people &quot;this may not be what you're trying to do, this might be
+something very bad happening&quot;.</li>
+<li>As tech professionals we can see places we've trained users to click through
+like, &quot;Yeah, ok whatever, let me through&quot;. Hard to train users not to click
+&quot;yes&quot; on everything!</li>
+<li>Funny is IE6 or maybe IE5 when you used the browser and you used
+an HTTP connection it'd pop up a dialog that said &quot;your connection is secure&quot;
+and you had to click the OK button or a more info button. Reverse of what you
+have nowadays! Used to have an <em>alert</em> when the connection was secure.</li>
+<li>Things have surely evolved over the last 20-25 years.</li>
+<li>Constantly evolving and growing ecosystem as considerations arise.</li>
+</ul>
+<h3>Back to the question: UDP sockets for DNS [37:40]</h3>
+<ul>
+<li>Maybe you've tried out socket programming before.</li>
+<li>Open a &quot;socket&quot; which is a connection that lets you leave the machine via the
+network. Can do IP level, TCP level connection, all possibilities when we're
+doing this socket level programming.</li>
+<li>Sockets look like file descriptors (piggybacking more on this abstraction of
+files and file descriptors).</li>
+<li>Create a UDP connection -- a &quot;connectionless connection&quot; [or connectionless
+socket, is maybe less confusing to say], not a persistent connection, just
+throwing the packets against some potential endpoint.</li>
+<li>Then we talk to our DNS resolution endpoint: &quot;Hey I have this text here
+<code>tlbh.it</code>, I need to figure out what internet address this corresponds to.&quot;</li>
+<li>Maybe browser knows about TLD inherently so just need to figure out the
+second part...</li>
+<li>This is about where we're at!</li>
+</ul>
+<h3>Establishing HTTPS after name resolution [38:45]</h3>
+<ul>
+<li>We're doing HTTPS so it has to be secure, and we're got to use some
+encryption scheme to talk to the endpoint, to do the HTTP request.</li>
+<li>Have to talk about &quot;crypto&quot;: unfortunately nothing to do with cryptocurrency,
+cryptology, cryptnomicon, game stop, or whatever else. We mean cryptography
+here.</li>
+<li>Generally the browser is going to talk to the server through Transport
+Layer Security (TLS).</li>
+<li>Start with a handshake where the browser and server negotiate how to crypto
+at each other. Server then gives certificate back, browser checks certificate
+is legitimate, using a root store of certificates (signed by Certificate
+Authorities). Someone trusted by the OS signed off on the server's certificate
+so the browser trusts it.</li>
+<li>Fancy math that's easy to verify in one direction but very hard or
+effectively impossible to reverse.</li>
+<li>Once trust is established between those two the browser users the server's
+<em>public</em> key, which is <em>asymmetric</em> encryption to establish a session key,
+which is a <em>symmetric</em> key, to communicate with less overhead going forward.</li>
+<li>Provides reliability on top of the transport: get a packet, decrypt the data,
+and if there was a random bit flip you would fail to authenticate the packet
+itself. Prevents people from tampering but also nature from tampering with
+random bit flips or what have you.</li>
+<li>Some of the math in there known to be pretty secure for now, probably secure
+for next 15-20 years. Some of the math also known to be super insecure by
+now -- if you look back at the <em>old</em> protocols some of them are known to be
+broken. Super tricky to do properly and lots of corner cases.</li>
+<li>General idea is to use fancy math [and a trust network] to determine &quot;how can
+I trust this person is who they say they are&quot;.</li>
+<li>Layer of trust that has been created over time.</li>
+</ul>
+<h3>Accelerated primitives on modern HW [41:35]</h3>
+<ul>
+<li>We use crypto all the tim in browsers as well as other places.</li>
+<li>A lot of the primitive operations are accelerated by modern hardware.</li>
+<li>Same way we talk about TLB hits there's also these crypto acceleration
+facilities inside of the CPU.</li>
+<li>Crypto by and large tends to shuffle bits around a bunch, do it in a bunch of rounds, do some math with it.</li>
+<li>Things like AES, one round of AES might be accelerated by a CPU and you call that instruction back to back.</li>
+<li>Instructions have been added to CPUs in the past bunch of years to do things
+like AES or CRC32C to checksum data in ethernet packets.</li>
+<li>CPU and network protocol co-evolution going on here!</li>
+<li>Even things like randomness, things that grab entropy from CPU's thermals and
+uses that as its entropy pool, expose it as an instruction.</li>
+<li>Randomness in a CPU also one of those frought-with-peril things where it
+sounds good but how do you verify it's actually random, doesn't have a bias
+or anything else, hasn't been tampered with, lots of tricky stuff.</li>
+</ul>
+<h3>A little sumpthin server-side [47:25]</h3>
+<ul>
+<li>Now we have the server looking at the path that was requested.</li>
+<li>Eventually the request -- the HTTP GET request -- arrived for the base URL of our
+website (the content at <code>/</code>).</li>
+<li>Server gets that request, sees its HTTPS, tries to figure out what it's
+supposed to do in order to serve up this request, for whatever the base page
+is.</li>
+<li>If you've tried to write web servers, perhaps using a web server <em>framework</em>,
+what you'll do is configure <em>routes</em>, those routes will cause certain things
+to happen within the server process to serve that request on that particular
+path.</li>
+<li>If I did <code>/foo</code> I might invoke a <code>FooHandler</code> that kicks in as a function
+that serves the connection that was made from this client.</li>
+<li>Beyond that you can do things like keep persistent connections and things
+like this, but basic query-response model is HTTP GET which has a complete
+response with a data payload.</li>
+<li>Responses also have status codes, you'll be familiar with HTTP 404. :-)<ul>
+<li>Informational responses: 100-199</li>
+<li>Successful responses: 200-299</li>
+<li>Redirects: 300-399</li>
+<li>Client errors: 400-499</li>
+<li>Server errors: 500-599</li>
+</ul>
+</li>
+<li>JF's personal favorite, HTTP 418 &quot;I'm a teapot&quot;.</li>
 </ul>
 <h3>Signoff [56:10]</h3>
 <ul>
 <li>Took a while to record this &quot;episode 2&quot;, hope we take less time to record the next one</li>
-<li>If people have questions/answers/comments / things they want us to talk about / errata to suggest hit us up on twitter @TLBHit</li>
+<li>If people have questions/answers/comments / things they want us to talk about
+/ errata to suggest hit us up on <a href="https://twitter.com/TLBhit">Twitter @TLBHit</a>.</li>
 <li>We don't know how email works</li>
 <li>Whole nother episode, how does email work</li>
 <li>Every program has to grow until it does email</li>
+</ul>
+<h3>Sideband References</h3>
+<ul>
+<li><a href="https://magcius.github.io/xplain/article/window-tree.html">X Window System Advanced Window Techniques</a> describes how input is delivered.</li>
+<li><a href="https://unix.stackexchange.com/questions/143757/linux-kernel-dropping-custom-keyboard-scan-codes">Example of the kernel seeing weird scan codes and dropping them</a></li>
+<li><a href="https://unix.stackexchange.com/questions/63688/what-happens-when-ctrl-alt-fnum-is-pressed/63700#63700">Brief walkthrough to keyboard.c in the Linux kernel</a></li>
+<li><a href="https://www.kernel.org/doc/Documentation/input/input.txt">Linux's &quot;input drivers&quot; documentation</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Evdev">evdev for input device events</a></li>
+<li>Some good discussion on <a href="https://forums.tomshardware.com/threads/questions-regarding-the-pcie-root-complex-pcie-lanes-and-the-pch.2115479/">southbridge to CPU core / DRAM traversal</a></li>
 </ul>
     </main>
     <script>const setPlaybackSpeed = speed => { [].slice.call(document.querySelectorAll('audio,video')).map((e, idx) => { e.playbackRate = speed; }); }</script>
