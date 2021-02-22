@@ -102,9 +102,9 @@
   but also underneath your fingertips.
 * Going to go with mechanical keyboards because they're enjoyable, make a
   beautiful clacky noise.
-* Very classic keyboard was the [IBM Model M
-* keyboard](https://youtu.be/D7wmMZmMinM?t=212) (@cdleary had one of
-  those!), had a "buckling spring" design -- buckling caused switch to close.
+* Very classic keyboard was the [IBM Model M  keyboard](https://youtu.be/D7wmMZmMinM?t=212)
+  (@cdleary had one of those!), had a "buckling spring" design -- buckling
+  caused switch to close.
 * Modern keyboards instead have [a little plastic "leaf" that prevents
   electrical connectivity](https://youtu.be/vLGklanzQIc?t=59), when you move it
   out of the way with your finger press electrical connectivity is established.
