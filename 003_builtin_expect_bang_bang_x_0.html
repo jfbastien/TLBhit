@@ -220,11 +220,9 @@
 <li>If you had an oracle it would tell you &quot;you can speculate on this and it will definitely help you make forward progress&quot;, but we don't have oracles, those are the idealizations.</li>
 <li>What if I wanted to increase my Instructions Per Clock <em>without</em> getting more useful work done?</li>
 <li>Fun to figure out how to write &quot;power viruses&quot; for an ISA -- how do you max out the power consumption. To do something like that really have to write assembly to precisely control the machine.</li>
-<li><strong>Ultimately</strong>, want to optimize code size differently for a real program if something is very unlikely. Imagine you were writing the assembly, again, you would put it on a cold path, you'd generate smaller code, you'd force extra spills to happen when you entered that path.<ul>
-<li>Keep the registers in place for the common case, and if the unlikely thing actually happened, spill a bunch of stuff to the stack and patch it up and make it look the way I want it to.</li>
-<li>Let the straightline code in the common case have all the registers.</li>
-</ul>
-</li>
+<li><strong>Ultimately</strong>, want to optimize code size differently for a real program if something is very unlikely. Imagine you were writing the assembly, again, you would put it on a cold path, you'd generate smaller code, you'd force extra spills to happen when you entered that path.
+      * Keep the registers in place for the common case, and if the unlikely thing actually happened, spill a bunch of stuff to the stack and patch it up and make it look the way I want it to.
+      * Let the straightline code in the common case have all the registers.</li>
 <li>Tradeoff here: &quot;we're going to be grossing up code [with these annotations] and it could be wrong!&quot;</li>
 <li>Sometimes you might hear in code review, if you were trying to write general purpose code that had a lot of these likely/unlikely annotations, that it might be premature optimization and you could actually be wrong about your annotation.</li>
 <li>Counterbalance is that you're grossing up code with things you <em>suspect</em> to be the case, but we all have limited insight/foresight.</li>
@@ -264,7 +262,9 @@
 <h2>PGO Examples [22:20]</h2>
 <ul>
 <li>Also remember Firefox got some good mileage out of its Profile Guided Optimization builds [in terms of benchmark performance].</li>
-<li>Another cool system called GWP (Google Wide Profiling) -- has a system called AutoFDO, with a really neat paper.</li>
+<li>Another cool system called GWP (Google Wide Profiling) -- has a <a href="https://research.google/pubs/pub45290/">system
+called AutoFDO, with a really neat
+paper</a>.</li>
 <li>Keeps a continuous pipeline going collecting information from applications that are running throughout Google and actually describes in the paper how performance drops off as a function of time using stale data.</li>
 <li>If you capture data for the symbols in a binary on a given day and you wait a couple of weeks later, the code is constantly changing and evolving, so the effectiveness of the data you collected drops off over time.</li>
 <li>Actually shows how effective it remains as a function of time.</li>
@@ -356,16 +356,27 @@
 <li>Effective forming things that, to me, look like VLIW (Very Long Instruction Word) bundles.</li>
 <li>Take code that's in a big sequence, figure out which ones are really going to run, turn them horizontal to run [concurrently] as micro-operations against all these datapaths that you have, and you do this on the fly using the natural size of basic blocks that exist and the reservation station scoreboarding algorithms that exist inside of the machine.</li>
 <li>There's also interesting things like, how do you form <em>regions</em> out of these little traces of code that get executed, in the literature.</li>
-<li>Ties into things like the Reorder Buffer size: CPUs have this big set of instructions that they can reorder to execute, reorder buffering and region formation are related concepts.</li>
-<li>Challenges of dispatching out of a really big reorder buffer. Things like the Apple M1 silicon have been pushing the limits here.</li>
-<li>Going back to historical papers, cool things like the trace cache in the Pentium 4 that shows the spectrum between approaches. It was a hardware structure that was storing uop-decoded tracelets that it strung together using all hardware primitives.</li>
+<li>Ties into things like the Re-order Buffer size: CPUs have this big set of instructions that they can reorder to execute, reorder buffering and region formation are related concepts.</li>
+<li>Challenges of dispatching out of a really big re-order buffer. Things like
+the <a href="https://www.anandtech.com/show/16226/apple-silicon-m1-a14-deep-dive/2">Apple M1 silicon have been pushing the limits
+here</a>.</li>
+<li>Going back to historical papers, cool things like <a href="http://www.eecs.harvard.edu/cs146-246/micro.trace-cache.pdf">the trace cache in the
+Pentium 4</a> that
+shows the spectrum between approaches. It was a hardware structure that was
+storing uop-decoded tracelets that it strung together using all hardware
+primitives.</li>
 </ul>
 <h2>So Much Left To Discuss... [37:00]</h2>
 <ul>
-<li>Many more topics related to all this: vector predicated masks, SIMT, vector-threading, Cray-style scalar runahead, branch target prediction for indirect branches.</li>
-<li>How do branch predictors take address bits and use those to track the history? What's the aliasing in the subset of bits you use to track branches? How do you do use global/local history data in branch prediction schemes?</li>
+<li>Many more topics related to all this: vector predicated masks, SIMT,
+vector-threading, Cray-style scalar runahead, branch target prediction for
+indirect branches.</li>
+<li>How do branch predictors take address bits and use those to track the
+history? What's the aliasing in the subset of bits you use to track branches?
+How do you do use global/local history data in branch prediction schemes?</li>
 <li>Hybrid global/local branch predictor mixes.</li>
-<li>&quot;Virtuals as ultimate control structure&quot;, relying on devirtualization: how would you bias a virtual dispatch if you were using it in lieu of a switch?</li>
+<li>&quot;Virtuals as ultimate control structure&quot;, relying on devirtualization: how
+would you bias a virtual dispatch if you were using it in lieu of a switch?</li>
 </ul>
 <h2>When you assume... [37:45]</h2>
 <ul>
