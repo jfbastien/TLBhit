@@ -7,10 +7,10 @@
 * Been a while!
 * Let's talk about `__builtin_expected(!!x, 0)`.
 * Standard disclaimer!
-	* Only know so much...
-	* We *try* not to say things that are wrong!
-	* Follow up with errata / corrections / clarifications in the show notes.
-	* We do the "lifelong learners" thing -- always trying to push the boundaries of things we know about and have conversations about what's interesting to develop & hone our understanding.
+  * Only know so much...
+  * We *try* not to say things that are wrong!
+  * Follow up with errata / corrections / clarifications in the show notes.
+  * We do the "lifelong learners" thing -- always trying to push the boundaries of things we know about and have conversations about what's interesting to develop & hone our understanding.
 
 ## Programmers and Programs: What Do They Know? Do They Know Things? Let's Find Out! [00:30]
 
@@ -18,17 +18,17 @@
 * What is it we know statically?
 * What's effectively discoverable only at runtime?
 * How do we tell "the machine" (compiler and/or hardware):
-	* Things we *know* to be true...
-	* Things we *expect* to be true...
-	* Things we *expect* to be true but *want to do something about* when it's not...
-	* Things we have no idea about!
+  * Things we *know* to be true...
+  * Things we *expect* to be true...
+  * Things we *expect* to be true but *want to do something about* when it's not...
+  * Things we have no idea about!
 * How do we collect that information that we have no idea about?
 * What happens if we're wrong? What if the workload is inherently irregular?
 * In the limit, random noise could drive our control decisions!
 * We talked a bit about precise vs imprecise exceptions before and automatic reordering, and we've mentioned vector machines and auto-vectorization.
-	* All falls into the broader theme here, but we're always questioning what we can actually cover in an hour...
-	* We'll try to give it a go for a subset of these things!
-	* Time is often the limiting factor.
+  * All falls into the broader theme here, but we're always questioning what we can actually cover in an hour...
+  * We'll try to give it a go for a subset of these things!
+  * Time is often the limiting factor.
 
 ## Episode Title [01:30]
 
@@ -155,15 +155,15 @@
 * What if I wanted to increase my Instructions Per Clock *without* getting more useful work done?
 * Fun to figure out how to write "power viruses" for an ISA -- how do you max out the power consumption. To do something like that really have to write assembly to precisely control the machine.
 * **Ultimately**, want to optimize code size differently for a real program if something is very unlikely. Imagine you were writing the assembly, again, you would put it on a cold path, you'd generate smaller code, you'd force extra spills to happen when you entered that path.
-	* Keep the registers in place for the common case, and if the unlikely thing actually happened, spill a bunch of stuff to the stack and patch it up and make it look the way I want it to.
-	* Let the straightline code in the common case have all the registers.
+        * Keep the registers in place for the common case, and if the unlikely thing actually happened, spill a bunch of stuff to the stack and patch it up and make it look the way I want it to.
+        * Let the straightline code in the common case have all the registers.
 * Tradeoff here: "we're going to be grossing up code [with these annotations] and it could be wrong!"
 * Sometimes you might hear in code review, if you were trying to write general purpose code that had a lot of these likely/unlikely annotations, that it might be premature optimization and you could actually be wrong about your annotation.
 * Counterbalance is that you're grossing up code with things you *suspect* to be the case, but we all have limited insight/foresight. 
 * *Ideally* we wouldn't need to say *anything* that would turn out to be wrong and we could just key off evidence we actually observe, instead of using our intuition.
 * When you are wrong, you have to clean up the speculative things that you did; say, if you changed the state that wasn't committed to a register (at the CPU level more than at the compiler level).
 * Say we were logging things as "verbose logging", and that only got activated when "verbose logging" mode was on. We could put into our standard logging functions/macros the likely/unlikely annotations.
-	* In this case, it's unlikely I'm doing verbose logging in production.
+  * In this case, it's unlikely I'm doing verbose logging in production.
 * This helps the compiler know what slow paths are unlikely to be executed throughout the code base, and push those into cold code. 
 
 ## Profile Guided Optimizations [19:15]
@@ -194,7 +194,9 @@
 ## PGO Examples [22:20]
 
 * Also remember Firefox got some good mileage out of its Profile Guided Optimization builds [in terms of benchmark performance].
-* Another cool system called GWP (Google Wide Profiling) -- has a system called AutoFDO, with a really neat paper.
+* Another cool system called GWP (Google Wide Profiling) -- has a [system
+  called AutoFDO, with a really neat
+  paper](https://research.google/pubs/pub45290/).
 * Keeps a continuous pipeline going collecting information from applications that are running throughout Google and actually describes in the paper how performance drops off as a function of time using stale data.
 * If you capture data for the symbols in a binary on a given day and you wait a couple of weeks later, the code is constantly changing and evolving, so the effectiveness of the data you collected drops off over time.
 * Actually shows how effective it remains as a function of time.
@@ -286,16 +288,27 @@
 * Effective forming things that, to me, look like VLIW (Very Long Instruction Word) bundles.
 * Take code that's in a big sequence, figure out which ones are really going to run, turn them horizontal to run [concurrently] as micro-operations against all these datapaths that you have, and you do this on the fly using the natural size of basic blocks that exist and the reservation station scoreboarding algorithms that exist inside of the machine.
 * There's also interesting things like, how do you form *regions* out of these little traces of code that get executed, in the literature.
-* Ties into things like the Reorder Buffer size: CPUs have this big set of instructions that they can reorder to execute, reorder buffering and region formation are related concepts.
-* Challenges of dispatching out of a really big reorder buffer. Things like the Apple M1 silicon have been pushing the limits here.
-* Going back to historical papers, cool things like the trace cache in the Pentium 4 that shows the spectrum between approaches. It was a hardware structure that was storing uop-decoded tracelets that it strung together using all hardware primitives.
+* Ties into things like the Re-order Buffer size: CPUs have this big set of instructions that they can reorder to execute, reorder buffering and region formation are related concepts.
+* Challenges of dispatching out of a really big re-order buffer. Things like
+  the [Apple M1 silicon have been pushing the limits
+  here](https://www.anandtech.com/show/16226/apple-silicon-m1-a14-deep-dive/2).
+* Going back to historical papers, cool things like [the trace cache in the
+  Pentium 4](http://www.eecs.harvard.edu/cs146-246/micro.trace-cache.pdf) that
+  shows the spectrum between approaches. It was a hardware structure that was
+  storing uop-decoded tracelets that it strung together using all hardware
+  primitives.
 
 ## So Much Left To Discuss... [37:00]
 
-* Many more topics related to all this: vector predicated masks, SIMT, vector-threading, Cray-style scalar runahead, branch target prediction for indirect branches.
-* How do branch predictors take address bits and use those to track the history? What's the aliasing in the subset of bits you use to track branches? How do you do use global/local history data in branch prediction schemes?
+* Many more topics related to all this: vector predicated masks, SIMT,
+  vector-threading, Cray-style scalar runahead, branch target prediction for
+  indirect branches.
+* How do branch predictors take address bits and use those to track the
+  history? What's the aliasing in the subset of bits you use to track branches?
+  How do you do use global/local history data in branch prediction schemes?
 * Hybrid global/local branch predictor mixes.
-* "Virtuals as ultimate control structure", relying on devirtualization: how would you bias a virtual dispatch if you were using it in lieu of a switch?
+* "Virtuals as ultimate control structure", relying on devirtualization: how
+  would you bias a virtual dispatch if you were using it in lieu of a switch?
 
 ## When you assume... [37:45]
 
