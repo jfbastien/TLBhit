@@ -140,18 +140,46 @@
 <h2>Performance Cliffs, Performance Portability [06:15]</h2>
 <ul>
 <li>That mentions a bit the notion of performance cliffs.</li>
-<li>With scalar compilers (compilers for scalar C code like we're traditionally used to) the performance cliffs tend to be a little lower than if you had maybe an accelerator program.</li>
-<li>There's always this interesting question [ed: in compiler construction]. For the ML compiler I worked on where slowdowns could cost you several &quot;x&quot; in your computation, like 2x, 3x, or even more, you don't want to expose the <em>internals</em> too much because it slows down the progress/evolution of your compiler, but you also don't want to astonish the user by changing the way you think about these things in a way that would effectively discard their annotations.</li>
-<li>Lot of ways that annotations are used in compilers, things like auto-vectorization annotations that don't necessarily port equivalently between environments, or pragmas.</li>
-<li>Even cool compiler projects that have taken new approaches, like Halide made the physical-incarnation-of-the-functional-code a first class citizen called the schedule.</li>
-<li>Databases classically have these query planners which can talk about the mapping of their logical form into their physical form in terms of how they execute.</li>
-<li>Halide is a cool paper <em>and</em> it got productized, both Google and Adobe using a derivative of that, cool project used in a bunch of different things all over the place.</li>
-<li>Really great kernel generator for making these high performance kernels, trading off parallelization vs rematerialization there's always this tradeoff, <a href="https://www.youtube.com/watch?v=dnFccCGvT90#t=8m26s">jrk has a really good presentation about the three-space of things it's trading off</a> that everybody should go watch.</li>
+<li>With scalar compilers (compilers for scalar C code like we're traditionally
+used to) the performance cliffs tend to be a little lower than if you had
+maybe an accelerator program.</li>
+<li>There's always this interesting question [ed: in compiler construction].</li>
+<li>For the ML compiler I worked on where slowdowns could cost you several &quot;x&quot; in
+your computation, like 2x, 3x, or even more, you don't want to expose the
+<em>internals</em> too much because it slows down the progress/evolution of your
+compiler, but you also don't want to astonish the user by changing the way you
+think about these things in a way that would effectively discard their
+annotations.</li>
+<li>Lot of ways that annotations are used in compilers, things like
+auto-vectorization annotations that don't necessarily port equivalently
+between environments, or pragmas.</li>
+<li>There are even cool compiler projects that have taken new approaches, like
+Halide made the physical-incarnation-of-the-functional-code a first class
+citizen called the schedule.</li>
+<li>Databases classically have these query planners which can talk about the
+mapping of their logical form into their physical form in terms of how they
+execute.</li>
+<li>Halide is a cool paper <em>and</em> it got productized, both Google and Adobe using
+a derivative of that, cool project used in a bunch of different things all
+over the place.</li>
+<li>Really great kernel generator for making these high performance kernels,
+trading off parallelization vs rematerialization there's always this
+tradeoff, jrk has a really good presentation about
+<a href="https://www.youtube.com/watch?v=dnFccCGvT90#t=8m26s">the three-space of things it's trading off</a>
+that everybody should go watch.</li>
 </ul>
 <h2>Is this AoP?! [08:00]</h2>
 <ul>
-<li>In a way what we're tackling is kind of Aspect Oriented Programming (AoP), if folks have heard of that before. Challenge is &quot;how do I refer to a piece of a program and describe its attributes in a way that composes, but also stays relevant in the face of refactoring&quot;. And that's super hard!</li>
-<li>The compiler is effectively a tool that's automatically refactoring and reworking things for you under the hood, but if I change my program, how do I know what has remained stable even if the face of refactoring and changes in my program.</li>
+<li>In a way what we're tackling is kind of [static]
+<a href="https://scholar.google.com/scholar?cluster=9779963850037245965&amp;hl=en&amp;as_sdt=0,5">Aspect Oriented Programming</a>
+(AoP), if folks have heard of that before.</li>
+<li>Challenge is &quot;how do I refer to a piece of a
+program and describe its attributes in a way that composes, but also stays
+relevant in the face of refactoring&quot;. And that's super hard!</li>
+<li>The compiler is effectively a tool that's automatically refactoring and
+reworking things for you under the hood, but if I change my program, how do I
+know what has remained stable even in the face of refactoring and changes in
+my program.</li>
 </ul>
 <h2>Data flow vs control flow, conditional move [08:30]</h2>
 <ul>
@@ -176,7 +204,8 @@
 <ul>
 <li>Ties back to general theme of control on von Neumann style machines.</li>
 <li>You can imagine different machines to the ones we have today. Maybe you could make a pure dataflow machine.</li>
-<li>Not super familiar with the LISP machines people had created but they may be less von Neumann style?</li>
+<li>Not super familiar with the LISP machines people had created but they may be
+less von Neumann style?</li>
 <li>Von Neumann is characterized by the big backing store we're putting data back against (with frequent load/store instructions).</li>
 <li>As with everything there's this explore/expoit tradeoff and what we found over time as an industry discovered over time is that we could tune the heck out of imperative instructions executing little compute instructions against a register set, and doing loads/stores out of a (virtually) large backing store in a von Neumann style.</li>
 <li>Sometimes people talk about the idea of <a href="https://scholar.google.com/scholar?cluster=865646003534538949&amp;hl=en&amp;as_sdt=0,5">&quot;non Von&quot; for non Von Neumann machines</a>.</li>
@@ -262,9 +291,8 @@
 <h2>PGO Examples [22:20]</h2>
 <ul>
 <li>Also remember Firefox got some good mileage out of its Profile Guided Optimization builds [in terms of benchmark performance].</li>
-<li>Another cool system called GWP (Google Wide Profiling) -- has a <a href="https://research.google/pubs/pub45290/">system
-called AutoFDO, with a really neat
-paper</a>.</li>
+<li>Another cool system called GWP (Google Wide Profiling) -- has a
+<a href="https://research.google/pubs/pub45290/">system called AutoFDO, with a really neat paper</a>.</li>
 <li>Keeps a continuous pipeline going collecting information from applications that are running throughout Google and actually describes in the paper how performance drops off as a function of time using stale data.</li>
 <li>If you capture data for the symbols in a binary on a given day and you wait a couple of weeks later, the code is constantly changing and evolving, so the effectiveness of the data you collected drops off over time.</li>
 <li>Actually shows how effective it remains as a function of time.</li>
@@ -358,10 +386,8 @@ paper</a>.</li>
 <li>There's also interesting things like, how do you form <em>regions</em> out of these little traces of code that get executed, in the literature.</li>
 <li>Ties into things like the Re-order Buffer size: CPUs have this big set of instructions that they can reorder to execute, reorder buffering and region formation are related concepts.</li>
 <li>Challenges of dispatching out of a really big re-order buffer. Things like
-the <a href="https://www.anandtech.com/show/16226/apple-silicon-m1-a14-deep-dive/2">Apple M1 silicon have been pushing the limits
-here</a>.</li>
-<li>Going back to historical papers, cool things like <a href="http://www.eecs.harvard.edu/cs146-246/micro.trace-cache.pdf">the trace cache in the
-Pentium 4</a> that
+the <a href="https://www.anandtech.com/show/16226/apple-silicon-m1-a14-deep-dive/2">Apple M1 silicon have been pushing the limits here</a>.</li>
+<li>Going back to historical papers, cool things like <a href="http://www.eecs.harvard.edu/cs146-246/micro.trace-cache.pdf">the trace cache in the Pentium 4</a> that
 shows the spectrum between approaches. It was a hardware structure that was
 storing uop-decoded tracelets that it strung together using all hardware
 primitives.</li>

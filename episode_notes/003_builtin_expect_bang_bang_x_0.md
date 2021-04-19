@@ -98,14 +98,14 @@
   over the place.
 * Really great kernel generator for making these high performance kernels,
   trading off parallelization vs rematerialization there's always this
-  tradeoff, [jrk has a really good presentation about the three-space of things
-  it's trading off](https://www.youtube.com/watch?v=dnFccCGvT90#t=8m26s) that
-  everybody should go watch.
+  tradeoff, jrk has a really good presentation about
+  [the three-space of things it's trading off](https://www.youtube.com/watch?v=dnFccCGvT90#t=8m26s)
+  that everybody should go watch.
 
 ## Is this AoP?! [08:00]
 
-* In a way what we're tackling is kind of [static] [Aspect Oriented
-* Programming](https://scholar.google.com/scholar?cluster=9779963850037245965&hl=en&as_sdt=0,5)
+* In a way what we're tackling is kind of [static]
+  [Aspect Oriented Programming](https://scholar.google.com/scholar?cluster=9779963850037245965&hl=en&as_sdt=0,5)
   (AoP), if folks have heard of that before.
 * Challenge is "how do I refer to a piece of a
   program and describe its attributes in a way that composes, but also stays
@@ -223,9 +223,8 @@
 ## PGO Examples [22:20]
 
 * Also remember Firefox got some good mileage out of its Profile Guided Optimization builds [in terms of benchmark performance].
-* Another cool system called GWP (Google Wide Profiling) -- has a [system
-  called AutoFDO, with a really neat
-  paper](https://research.google/pubs/pub45290/).
+* Another cool system called GWP (Google Wide Profiling) -- has a
+  [system called AutoFDO, with a really neat paper](https://research.google/pubs/pub45290/).
 * Keeps a continuous pipeline going collecting information from applications that are running throughout Google and actually describes in the paper how performance drops off as a function of time using stale data.
 * If you capture data for the symbols in a binary on a given day and you wait a couple of weeks later, the code is constantly changing and evolving, so the effectiveness of the data you collected drops off over time.
 * Actually shows how effective it remains as a function of time.
@@ -319,10 +318,8 @@
 * There's also interesting things like, how do you form *regions* out of these little traces of code that get executed, in the literature.
 * Ties into things like the Re-order Buffer size: CPUs have this big set of instructions that they can reorder to execute, reorder buffering and region formation are related concepts.
 * Challenges of dispatching out of a really big re-order buffer. Things like
-  the [Apple M1 silicon have been pushing the limits
-  here](https://www.anandtech.com/show/16226/apple-silicon-m1-a14-deep-dive/2).
-* Going back to historical papers, cool things like [the trace cache in the
-  Pentium 4](http://www.eecs.harvard.edu/cs146-246/micro.trace-cache.pdf) that
+  the [Apple M1 silicon have been pushing the limits here](https://www.anandtech.com/show/16226/apple-silicon-m1-a14-deep-dive/2).
+* Going back to historical papers, cool things like [the trace cache in the Pentium 4](http://www.eecs.harvard.edu/cs146-246/micro.trace-cache.pdf) that
   shows the spectrum between approaches. It was a hardware structure that was
   storing uop-decoded tracelets that it strung together using all hardware
   primitives.
