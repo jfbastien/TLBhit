@@ -74,18 +74,46 @@
 ## Performance Cliffs, Performance Portability [06:15]
 
 * That mentions a bit the notion of performance cliffs.
-* With scalar compilers (compilers for scalar C code like we're traditionally used to) the performance cliffs tend to be a little lower than if you had maybe an accelerator program.
-* There's always this interesting question [ed: in compiler construction]. For the ML compiler I worked on where slowdowns could cost you several "x" in your computation, like 2x, 3x, or even more, you don't want to expose the *internals* too much because it slows down the progress/evolution of your compiler, but you also don't want to astonish the user by changing the way you think about these things in a way that would effectively discard their annotations.
-* Lot of ways that annotations are used in compilers, things like auto-vectorization annotations that don't necessarily port equivalently between environments, or pragmas.
-* Even cool compiler projects that have taken new approaches, like Halide made the physical-incarnation-of-the-functional-code a first class citizen called the schedule.
-* Databases classically have these query planners which can talk about the mapping of their logical form into their physical form in terms of how they execute.
-* Halide is a cool paper *and* it got productized, both Google and Adobe using a derivative of that, cool project used in a bunch of different things all over the place.
-* Really great kernel generator for making these high performance kernels, trading off parallelization vs rematerialization there's always this tradeoff, [jrk has a really good presentation about the three-space of things it's trading off](https://www.youtube.com/watch?v=dnFccCGvT90#t=8m26s) that everybody should go watch.
+* With scalar compilers (compilers for scalar C code like we're traditionally
+  used to) the performance cliffs tend to be a little lower than if you had
+  maybe an accelerator program.
+* There's always this interesting question [ed: in compiler construction].
+* For the ML compiler I worked on where slowdowns could cost you several "x" in
+  your computation, like 2x, 3x, or even more, you don't want to expose the
+  *internals* too much because it slows down the progress/evolution of your
+  compiler, but you also don't want to astonish the user by changing the way you
+  think about these things in a way that would effectively discard their
+  annotations.
+* Lot of ways that annotations are used in compilers, things like
+  auto-vectorization annotations that don't necessarily port equivalently
+  between environments, or pragmas.
+* There are even cool compiler projects that have taken new approaches, like
+  Halide made the physical-incarnation-of-the-functional-code a first class
+  citizen called the schedule.
+* Databases classically have these query planners which can talk about the
+  mapping of their logical form into their physical form in terms of how they
+  execute.
+* Halide is a cool paper *and* it got productized, both Google and Adobe using
+  a derivative of that, cool project used in a bunch of different things all
+  over the place.
+* Really great kernel generator for making these high performance kernels,
+  trading off parallelization vs rematerialization there's always this
+  tradeoff, [jrk has a really good presentation about the three-space of things
+  it's trading off](https://www.youtube.com/watch?v=dnFccCGvT90#t=8m26s) that
+  everybody should go watch.
 
 ## Is this AoP?! [08:00]
 
-* In a way what we're tackling is kind of Aspect Oriented Programming (AoP), if folks have heard of that before. Challenge is "how do I refer to a piece of a program and describe its attributes in a way that composes, but also stays relevant in the face of refactoring". And that's super hard!
-* The compiler is effectively a tool that's automatically refactoring and reworking things for you under the hood, but if I change my program, how do I know what has remained stable even if the face of refactoring and changes in my program.
+* In a way what we're tackling is kind of [static] [Aspect Oriented
+* Programming](https://scholar.google.com/scholar?cluster=9779963850037245965&hl=en&as_sdt=0,5)
+  (AoP), if folks have heard of that before.
+* Challenge is "how do I refer to a piece of a
+  program and describe its attributes in a way that composes, but also stays
+  relevant in the face of refactoring". And that's super hard!
+* The compiler is effectively a tool that's automatically refactoring and
+  reworking things for you under the hood, but if I change my program, how do I
+  know what has remained stable even in the face of refactoring and changes in
+  my program.
 
 ## Data flow vs control flow, conditional move [08:30]
 
@@ -110,7 +138,8 @@
 
 * Ties back to general theme of control on von Neumann style machines.
 * You can imagine different machines to the ones we have today. Maybe you could make a pure dataflow machine.
-* Not super familiar with the LISP machines people had created but they may be less von Neumann style?
+* Not super familiar with the LISP machines people had created but they may be
+  less von Neumann style?
 * Von Neumann is characterized by the big backing store we're putting data back against (with frequent load/store instructions).
 * As with everything there's this explore/expoit tradeoff and what we found over time as an industry discovered over time is that we could tune the heck out of imperative instructions executing little compute instructions against a register set, and doing loads/stores out of a (virtually) large backing store in a von Neumann style.
 * Sometimes people talk about the idea of ["non Von" for non Von Neumann machines](https://scholar.google.com/scholar?cluster=865646003534538949&hl=en&as_sdt=0,5).
