@@ -92,5 +92,40 @@
 * What it's going to do dynamically is check *on* the trace whether that was a bad assumption
 * It'll say: "Hey: I'm going to execute this all back to back, *and*, whenever convenient, I'm going to check whether any of those assumptions were wrong"
 * On the "cold path" -- again, when it's convenient -- it'll undo all the inapplicable things if it turns out the branches weren't true
-* Called a "bailout" [bailing out of the trace]
+* Called a "bailout" ["bailing out" of the trace]
 * What's interesting with a bailout is you're being surprised with "new information that you didnt expect"; e.g. something you didn't observe when you were tracing
+* You trust that everything you've trace is going to happen, it's all going to well, and you're going to be able to optimize for it
+* But then at runtime, when convenient, you're going to *check*, and then bail if you were wrong, and have the rollback on the cold path
+* So the hot path, the one you're *pretty sure* is going to execute, is quite optimal
+
+* That really captures the essence of what trace compilers are usually trying to go for!
+
+## Implementation Angles [08:50]
+
+* Interesting *implementation* angles to it as well
+* One of the chool things about trace compilation: you can "bolt" a tracer into an existing interpreter!
+* In a lot of language environments you'll *have* an interpreter that's executing "op at a time"
+* You can then hook in a tracer which observes what the interpreter is doing and "make some machine code on the side" based on how the interpreter ran
+* Also cool: you can implement just a *subset* of the operations [ed: you might call this property "compiler completeness" for your op set]
+* Let's say you have some very common bytecode operations inside of your environment and some uncommon ones
+* You could implement *only* the common ones and simply end your trace when you hit one that was not implemented, because it was uncommon
+* You can build up this trace JIT-ing capability over time, because the system is built with this assumption you can bail out of the trace for whatever reason and go back to "interpreter land"
+* Could imagine making a JIT that just:
+  * Covered `MUL`s and `ADD`s and could make fused/composite `MUL/ADD` bytecode combos
+  * Specialize that for one common type; e.g. if you have many types in your
+    language, could support that just for integer types, or just for FP ops
+    e.g. if it were numerical code, and then just bail if any other types showed up
+    at runtime; i.e. if you're in a dynamic programming language
+* To do this need in order to do this a way to record "what you assumed" and then your trace can say "oh no, I saw something I didn't assume", and then call back to the runtime for help, or go into interpreter mode
+* What *trace invariants* do, is they say, when traces call to other traces; e.g. I recorded some set of ops A, and some set of other ops B, and I'm jumping from A to B, I need to make sure that the assumptions between those two things are lining up -- called trace fusion or building *bridges* between traces
+  * Can do this if you know the *invariants* (i.e. "what must be true") on the exit from A and the entry to B are lining up / compatible with each other
+* Important to know because traces can represent the state of the program very differently; e.g. if you had different optimization levels, say, may be holding things in different register/stack locations; maybe A is putting everything on the stack and B assumes things come in register form and eliding stack slots, then transitioning from A to B requires mapping A's stacky view of the program into B's register view
+
+11:14
+
+* Can also do thing like burn-in global properties; e.g. things that were static values / global state, can burn those into the trace, but then also need to mark the trace as invalid if those global values were changed at some point
+  * Need to be able to say "I'm freezing this trace on the assumption global value `global_x` being equal to 42. Oh, somebody changed it to 43? Ok let me go note that trace is no longer valid."
+
+11:40
+
+* Lots of terms in dynamic compilation people might not be as familiar with

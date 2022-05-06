@@ -185,10 +185,54 @@ that you originally measured isn't representative anymore!</p>
 </li>
 <li><p>On the &quot;cold path&quot; -- again, when it's convenient -- it'll undo all the inapplicable things if it turns out the branches weren't true</p>
 </li>
-<li><p>Called a &quot;bailout&quot; [bailing out of the trace]</p>
+<li><p>Called a &quot;bailout&quot; [&quot;bailing out&quot; of the trace]</p>
 </li>
 <li><p>What's interesting with a bailout is you're being surprised with &quot;new information that you didnt expect&quot;; e.g. something you didn't observe when you were tracing</p>
 </li>
+<li><p>You trust that everything you've trace is going to happen, it's all going to well, and you're going to be able to optimize for it</p>
+</li>
+<li><p>But then at runtime, when convenient, you're going to <em>check</em>, and then bail if you were wrong, and have the rollback on the cold path</p>
+</li>
+<li><p>So the hot path, the one you're <em>pretty sure</em> is going to execute, is quite optimal</p>
+</li>
+<li><p>That really captures the essence of what trace compilers are usually trying to go for!</p>
+</li>
+</ul>
+<h2>Implementation Angles [08:50]</h2>
+<ul>
+<li>Interesting <em>implementation</em> angles to it as well</li>
+<li>One of the chool things about trace compilation: you can &quot;bolt&quot; a tracer into an existing interpreter!</li>
+<li>In a lot of language environments you'll <em>have</em> an interpreter that's executing &quot;op at a time&quot;</li>
+<li>You can then hook in a tracer which observes what the interpreter is doing and &quot;make some machine code on the side&quot; based on how the interpreter ran</li>
+<li>Also cool: you can implement just a <em>subset</em> of the operations [ed: you might call this property &quot;compiler completeness&quot; for your op set]</li>
+<li>Let's say you have some very common bytecode operations inside of your environment and some uncommon ones</li>
+<li>You could implement <em>only</em> the common ones and simply end your trace when you hit one that was not implemented, because it was uncommon</li>
+<li>You can build up this trace JIT-ing capability over time, because the system is built with this assumption you can bail out of the trace for whatever reason and go back to &quot;interpreter land&quot;</li>
+<li>Could imagine making a JIT that just:<ul>
+<li>Covered <code>MUL</code>s and <code>ADD</code>s and could make fused/composite <code>MUL/ADD</code> bytecode combos</li>
+<li>Specialize that for one common type; e.g. if you have many types in your
+language, could support that just for integer types, or just for FP ops
+e.g. if it were numerical code, and then just bail if any other types showed up
+at runtime; i.e. if you're in a dynamic programming language</li>
+</ul>
+</li>
+<li>To do this need in order to do this a way to record &quot;what you assumed&quot; and then your trace can say &quot;oh no, I saw something I didn't assume&quot;, and then call back to the runtime for help, or go into interpreter mode</li>
+<li>What <em>trace invariants</em> do, is they say, when traces call to other traces; e.g. I recorded some set of ops A, and some set of other ops B, and I'm jumping from A to B, I need to make sure that the assumptions between those two things are lining up -- called trace fusion or building <em>bridges</em> between traces<ul>
+<li>Can do this if you know the <em>invariants</em> (i.e. &quot;what must be true&quot;) on the exit from A and the entry to B are lining up / compatible with each other</li>
+</ul>
+</li>
+<li>Important to know because traces can represent the state of the program very differently; e.g. if you had different optimization levels, say, may be holding things in different register/stack locations; maybe A is putting everything on the stack and B assumes things come in register form and eliding stack slots, then transitioning from A to B requires mapping A's stacky view of the program into B's register view</li>
+</ul>
+<p>11:14</p>
+<ul>
+<li>Can also do thing like burn-in global properties; e.g. things that were static values / global state, can burn those into the trace, but then also need to mark the trace as invalid if those global values were changed at some point<ul>
+<li>Need to be able to say &quot;I'm freezing this trace on the assumption global value <code>global_x</code> being equal to 42. Oh, somebody changed it to 43? Ok let me go note that trace is no longer valid.&quot;</li>
+</ul>
+</li>
+</ul>
+<p>11:40</p>
+<ul>
+<li>Lots of terms in dynamic compilation people might not be as familiar with</li>
 </ul>
     </main>
     <script>const setPlaybackSpeed = speed => { [].slice.call(document.querySelectorAll('audio,video')).map((e, idx) => { e.playbackRate = speed; }); }</script>
