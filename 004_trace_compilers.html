@@ -111,92 +111,70 @@
 </ul>
 <h2>Dynamic Compilation vs Static Approach [04:25]</h2>
 <ul>
-<li><p>Dynamic compared to static: want to try to discover information</p>
-</li>
-<li><p>&quot;How do you find things out about a program&quot; we've talked about in previous episodes</p>
-</li>
-<li><p>In static compilation you look at the code and say, &quot;well, X is probably
+<li>Dynamic compared to static: want to try to discover information</li>
+<li>&quot;How do you find things out about a program&quot; we've talked about in previous episodes</li>
+<li>In static compilation you look at the code and say, &quot;well, X is probably
 generally true, so I'm going to favor it&quot;, but there's a fallback path (to
-handle ~X)</p>
-</li>
-<li><p>It's pretty rare in static compilation to do speculative optimizations at a large scale</p>
-</li>
-<li><p>You have code that's always &quot;correct&quot; / ready to handle all the possible
-cases, never have to &quot;undo&quot; any mistakes you made</p>
-</li>
-<li><p>You only really speculate on a few instructions [ed: that won't cause
-exceptions!] and then use something like a conditional move</p>
-</li>
-<li><p>With more dynamic approaches -- like &quot;trace monitoring&quot; -- it's a way to dynamically figure out what the real code is doing while executing</p>
-</li>
-<li><p>Instead of looking statically and saying &quot;I <em>think</em> the code is going to do
+handle ~X)</li>
+<li>It's pretty rare in static compilation to do speculative optimizations at a large scale</li>
+<li>You have code that's always &quot;correct&quot; / ready to handle all the possible
+cases, never have to &quot;undo&quot; any mistakes you made</li>
+<li>You only really speculate on a few instructions [ed: that won't cause
+exceptions!] and then use something like a conditional move</li>
+<li>With more dynamic approaches -- like &quot;trace monitoring&quot; -- it's a way to dynamically figure out what the real code is doing while executing</li>
+<li>Instead of looking statically and saying &quot;I <em>think</em> the code is going to do
 X, but this integer could hold a ton of different values&quot;, you can look at
 the values that are actually held and figure out &quot;this is what the code is
-doing when it's really executing&quot;</p>
-</li>
-<li><p>What's interesting is when you do that dynamically is it's very workload
+doing when it's really executing&quot;</li>
+</ul>
+<h2>Workloads and Phasic Behavior [05:20]</h2>
+<ul>
+<li>What's interesting is when you do that dynamically is it's very workload
 dependent -- dynamically you only measure what you
 actually see -- that can lead to sub-optimal choices if you make them
 &quot;forever&quot; -- record once, take it to the bank and lock in your observations
-&quot;forever&quot;</p>
-</li>
-<li><p>If your program has phases, where it does some kind of behavior for a
+&quot;forever&quot;</li>
+<li>If your program has phases, where it does some kind of behavior for a
 while, and then shifts to another behavior afterwards, then that workload
-that you originally measured isn't representative anymore!</p>
-</li>
-<li><p>We can do a comparison of this kind of dynamic tracing / recording of information to Profile Guided Optimization (PGO) that folks use in static compilation approaches.</p>
-</li>
-<li><p>When you do PGO you're supposed to do it on the entire program and it's supposed to be representative, whereas when you're tracing you're doing that live! So how do you know when you're tracing that <em>what you've recorded</em> is representative?</p>
-</li>
-<li><p>Inherent trade-off beneath the surface:</p>
+that you originally measured isn't representative anymore!</li>
+<li>We can do a comparison of this kind of dynamic tracing / recording of information to Profile Guided Optimization (PGO) that folks use in static compilation approaches.</li>
+<li>When you do PGO you're supposed to do it on the entire program and it's supposed to be representative, whereas when you're tracing you're doing that live! So how do you know when you're tracing that <em>what you've recorded</em> is representative?</li>
+</ul>
+<h2>Quick vs Confident [06:15]</h2>
 <ul>
+<li>Inherent trade-off beneath the surface:<ul>
 <li>You can trace a JIT compile very quickly [without observing as much] and then correct yourself later,</li>
 <li>Or you can wait longer to get more perfect information / more confidence in the information you've seen by observing the program for a longer period of time</li>
 <li>Have to trade these two things off</li>
 </ul>
 </li>
-<li><p>Interesting pipeline-like nature to tracing and JIT compilation</p>
-</li>
-<li><p>If you can be super low overhead then you can compile very quickly on things like mobile devices</p>
-</li>
-<li><p>Could make a &quot;no stage compiler&quot; where <em>as</em> the bytecodes are executing they are being &quot;splatted out&quot; as native machine code -- cool trade-off point in the space</p>
-</li>
-<li><p>Pop-up ideas:</p>
+<li>Interesting pipeline-like nature to tracing and JIT compilation</li>
+<li>If you can be super low overhead then you can compile very quickly on things like mobile devices</li>
+<li>Could make a &quot;no stage compiler&quot; where <em>as</em> the bytecodes are executing they are being &quot;splatted out&quot; as native machine code -- cool trade-off point in the space</li>
+</ul>
+<h2>Pop-Up Ideas In Specialization/Speculation [07:00]</h2>
 <ul>
+<li>Pop-up ideas:<ul>
 <li>How hard are we going to try to specialize for things that we saw</li>
 <li>What do we choose to bet on &quot;continuing to be true over time&quot;</li>
 <li>What does it cost for us to fall back and try something different when our speculation is off</li>
 <li>Again, we're tuning that &quot;speculation knob&quot;, how <em>aggressively</em> we're going to try to speculate, and <em>what</em> we choose to speculate on</li>
 </ul>
 </li>
-<li><p>Concept here is &quot;act on information you saw&quot;</p>
-</li>
-<li><p>You can do specialization and you can guard</p>
-</li>
-<li><p>In a linear trace the number of assumptions you're making accumulates as you execute [towards the end of the trace you have the most assumptions built up]</p>
-</li>
-<li><p>If you have an always-taken control flow, e.g. some virtual function call that's always calling the same actual function, a tracing compiler will treat all back-to-back branches as one set of straightline code</p>
-</li>
-<li><p>Always-taken or always jumping to the same function, it's <em>like</em> straightline code when you execute it dynamically!</p>
-</li>
-<li><p>What it's going to do dynamically is check <em>on</em> the trace whether that was a bad assumption</p>
-</li>
-<li><p>It'll say: &quot;Hey: I'm going to execute this all back to back, <em>and</em>, whenever convenient, I'm going to check whether any of those assumptions were wrong&quot;</p>
-</li>
-<li><p>On the &quot;cold path&quot; -- again, when it's convenient -- it'll undo all the inapplicable things if it turns out the branches weren't true</p>
-</li>
-<li><p>Called a &quot;bailout&quot; [&quot;bailing out&quot; of the trace]</p>
-</li>
-<li><p>What's interesting with a bailout is you're being surprised with &quot;new information that you didnt expect&quot;; e.g. something you didn't observe when you were tracing</p>
-</li>
-<li><p>You trust that everything you've trace is going to happen, it's all going to well, and you're going to be able to optimize for it</p>
-</li>
-<li><p>But then at runtime, when convenient, you're going to <em>check</em>, and then bail if you were wrong, and have the rollback on the cold path</p>
-</li>
-<li><p>So the hot path, the one you're <em>pretty sure</em> is going to execute, is quite optimal</p>
-</li>
-<li><p>That really captures the essence of what trace compilers are usually trying to go for!</p>
-</li>
+<li>Concept here is &quot;act on information you saw&quot;</li>
+<li>You can do specialization and you can guard</li>
+<li>In a linear trace the number of assumptions you're making accumulates as you execute [towards the end of the trace you have the most assumptions built up]</li>
+<li>If you have an always-taken control flow, e.g. some virtual function call that's always calling the same actual function, a tracing compiler will treat all back-to-back branches as one set of straightline code</li>
+<li>Always-taken or always jumping to the same function, it's <em>like</em> straightline code when you execute it dynamically!</li>
+<li>What it's going to do dynamically is check <em>on</em> the trace whether that was a bad assumption</li>
+<li>It'll say: &quot;Hey: I'm going to execute this all back to back, <em>and</em>, whenever convenient, I'm going to check whether any of those assumptions were wrong&quot;</li>
+<li>On the &quot;cold path&quot; -- again, when it's convenient -- it'll undo all the inapplicable things if it turns out the branches weren't true</li>
+<li>Called a &quot;bailout&quot; [&quot;bailing out&quot; of the trace]</li>
+<li>What's interesting with a bailout is you're being surprised with &quot;new information that you didnt expect&quot;; e.g. something you didn't observe when you were tracing</li>
+<li>You trust that everything you've trace is going to happen, it's all going to well, and you're going to be able to optimize for it</li>
+<li>But then at runtime, when convenient, you're going to <em>check</em>, and then bail if you were wrong, and have the rollback on the cold path</li>
+<li>So the hot path, the one you're <em>pretty sure</em> is going to execute, is quite optimal</li>
+<li>That really captures the essence of what trace compilers are usually trying to go for!</li>
 </ul>
 <h2>Implementation Angles [08:50]</h2>
 <ul>
@@ -222,20 +200,17 @@ at runtime; i.e. if you're in a dynamic programming language</li>
 </ul>
 </li>
 <li>Important to know because traces can represent the state of the program very differently; e.g. if you had different optimization levels, say, may be holding things in different register/stack locations; maybe A is putting everything on the stack and B assumes things come in register form and eliding stack slots, then transitioning from A to B requires mapping A's stacky view of the program into B's register view</li>
-</ul>
-<p>11:14</p>
-<ul>
 <li>Can also do thing like burn-in global properties; e.g. things that were static values / global state, can burn those into the trace, but then also need to mark the trace as invalid if those global values were changed at some point<ul>
 <li>Need to be able to say &quot;I'm freezing this trace on the assumption global value <code>global_x</code> being equal to 42. Oh, somebody changed it to 43? Ok let me go note that trace is no longer valid.&quot;</li>
 </ul>
 </li>
 </ul>
-<p>11:40</p>
+<h2>Tracing Through Some Terms [11:40]</h2>
 <ul>
 <li>Lots of terms in dynamic compilation people might not be as familiar with</li>
 <li>Go through a collection of concepts in the space to try to give a picture of the whole elephant</li>
 </ul>
-<p>11:55</p>
+<h2>Concept: Method Inlining [11:55]</h2>
 <ul>
 <li>Concept of &quot;method inlining&quot;</li>
 <li>In trace compiler you just execute <em>through</em> methods [to form a linear of trace of operations, e.g. back to a loop header]</li>
@@ -243,15 +218,19 @@ at runtime; i.e. if you're in a dynamic programming language</li>
 <li>Inlining kind of the natural path of compilation when doing trace compilation -- just linear execution where the jumps/calls/returns simply disappear</li>
 <li>This is one interest aspect of trace compilation, we do method inlining effectively &quot;by construction&quot;!</li>
 </ul>
-<p>12:15</p>
+<h2>Concept: Tail Duplication [11:55]</h2>
 <ul>
-<li>Concept of &quot;tail duplication&quot;</li>
-<li>As you run through different execution paths, the longer that path is, the more potential avenues that you're forming</li>
-<li>Like a road, and all these avenues you take down that road as you dynamically execute things</li>
-<li>What you end up doing as you do that dynamic execution is you duplicate what's called &quot;the tail&quot;;  i.e. the &quot;end path&quot; of each trace</li>
-<li>Imagine you're tracing through code, different traces will duplicate that tail, you'll have multiple copies of it between all these linear traces</li>
-<li>One clear example is if you have a conditional, and then a common return path, you would form one trace for one side and another trace for the other side of that condition, but they share the return path, so it's duplicated in both, and that's called tail duplication</li>
-</ul>
+<li><p>Concept of &quot;tail duplication&quot;</p>
+</li>
+<li><p>As you run through different execution paths, the longer that path is, the more potential avenues that you're forming</p>
+</li>
+<li><p>Like a road, and all these avenues you take down that road as you dynamically execute things</p>
+</li>
+<li><p>What you end up doing as you do that dynamic execution is you duplicate what's called &quot;the tail&quot;;  i.e. the &quot;end path&quot; of each trace</p>
+</li>
+<li><p>Imagine you're tracing through code, different traces will duplicate that tail, you'll have multiple copies of it between all these linear traces</p>
+</li>
+<li><p>One clear example is if you have a conditional, and then a common return path, you would form one trace for one side and another trace for the other side of that condition, but they share the return path, so it's duplicated in both, and that's called tail duplication</p>
 <pre><code>for (...) {
   if (OP_EQ(x, 42)) {
     OP_GETATTR $f00;
@@ -268,31 +247,40 @@ at runtime; i.e. if you're in a dynamic programming language</li>
 trace 1:            \-false:  OP_GETATTR $bar; OP_T; OP_A; OP_I; OP_L
                                                ^--------------------^--- tail duplicated ops
 </code></pre>
-<p>13:00</p>
-<ul>
-<li>What's interesting with tail duplication is it can be <em>good</em>, includes the &quot;provenance&quot; as a source of optimization; e.g. common path may execute differently based on where you came from</li>
-<li>But at the same time, what it does, is you are <em>duplicating</em> the code, potentially exponentially when you do that</li>
-<li>Can cause an exponential explosion in trace compilation: conditions can stack up causing a quick $2^N$ stacking, which is kind of a problem, so you have to find a balance</li>
+</li>
+<li><p><strong>13:00</strong> What's interesting with tail duplication is it can be <em>good</em>, includes the &quot;provenance&quot; as a source of optimization; e.g. common path may execute differently based on where you came from</p>
+</li>
+<li><p>But at the same time, what it does, is you are <em>duplicating</em> the code, potentially exponentially when you do that</p>
+</li>
+<li><p>Can cause an exponential explosion in trace compilation: conditions can stack up causing a quick $2^N$ stacking, which is kind of a problem, so you have to find a balance</p>
+</li>
 </ul>
 <p>[ed: Perhaps in summary, you can think about tail deuplication as de-aliasing control possibilities (via duplication) so you could potentially specialize for their differences aggressively along a particular linear path]</p>
-<p>13:30</p>
+<h2>Region Formation / Spectrum of &quot;Avoiding Strict Linearity&quot; [13:30]</h2>
 <ul>
-<li>A lot of what we're discussing here is what happens when you strictly linearly follow where the interpreter goes</li>
-<li>Interpreter executes at a Program Counter (PC), then it executes at the next PC, when you do a call you're kind of changing from one function's PC to the next function's PC</li>
-<li>This is within a spectrum of techniques we think of as &quot;region forming&quot;</li>
-<li>A linear region is one particular region you can form where it marches through the program order with one sequence of executed program counter values</li>
-<li>So that's trace formation: linear marching through the program</li>
-<li>More <em>generally</em> we refer to &quot;region formation&quot;: can say, &quot;hey I see a conditional in the source, I could go down both sides of the conditional abstractly... can I compile for both possibilities at once?&quot;</li>
-<li>Then there's <em>method JIT-ing</em>: you take a whole method/function and say &quot;there's a bunch of different paths I can go down in this method, can I compile for this whole method at the same time?&quot;</li>
-<li>So really in a sense you chop out pieces of a method to get a region, and chop down to one sequence of operations to get a linear trace</li>
-<li>You can see how this is a spectrum of chopping things out from the original source programming in a sense</li>
-<li>Or maybe &quot;inlining <em>plus</em> chopping things out&quot;, because tracing e.g. can jump between different functions and inline them all into one trace</li>
-</ul>
-<p>14:45</p>
-<ul>
-<li>So if two traces can join back together, say one trace can jump into [the middle of] another done in its linear sequence, that would form a region instead of a linear trace</li>
-<li>A trace is straightline, if they join together at some point, we'd consider that to be the more general &quot;region formation&quot; instead</li>
-</ul>
+<li><p>A lot of what we're discussing here is what happens when you strictly linearly follow where the interpreter goes</p>
+</li>
+<li><p>Interpreter executes at a Program Counter (PC), then it executes at the next PC, when you do a call you're kind of changing from one function's PC to the next function's PC</p>
+</li>
+<li><p>This is within a spectrum of techniques we think of as &quot;region forming&quot;</p>
+</li>
+<li><p>A linear region is one particular region you can form where it marches through the program order with one sequence of executed program counter values</p>
+</li>
+<li><p>So that's trace formation: linear marching through the program</p>
+</li>
+<li><p>More <em>generally</em> we refer to &quot;region formation&quot;: can say, &quot;hey I see a conditional in the source, I could go down both sides of the conditional abstractly... can I compile for both possibilities at once?&quot;</p>
+</li>
+<li><p>Then there's <em>method JIT-ing</em>: you take a whole method/function and say &quot;there's a bunch of different paths I can go down in this method, can I compile for this whole method at the same time?&quot;</p>
+</li>
+<li><p>So really in a sense you chop out pieces of a method to get a region, and chop down to one sequence of operations to get a linear trace</p>
+</li>
+<li><p>You can see how this is a spectrum of chopping things out from the original source programming in a sense</p>
+</li>
+<li><p>Or maybe &quot;inlining <em>plus</em> chopping things out&quot;, because tracing e.g. can jump between different functions and inline them all into one trace</p>
+</li>
+<li><p><strong>14:45</strong> So if two traces can join back together, say one trace can jump into [the middle of] another done in its linear sequence, that would form a region instead of a linear trace</p>
+</li>
+<li><p>A trace is straightline, if they join together at some point, we'd consider that to be the more general &quot;region formation&quot; instead</p>
 <p>Using the above example -- note the join point in both tracelet 1 and tracelet
 2 jumping to &quot;tracelet 3&quot;. [Note: a linear trace monitoring would never
 construct this, we'd need to monitor multiple control flow executions and
@@ -305,37 +293,42 @@ join.]</p>
  tracelet 2:                               OP_GETATTR $f00; jump tracelet3
  tracelet 3:                                                               OP_T; OP_A; OP_I; OP_L
 </code></pre>
-<p>15:00</p>
-<ul>
-<li>If you JIT'd only at method boundaries, you'd have a &quot;method JIT&quot;</li>
-<li>That's term of art what we'd call something that takes a method, maybe the
+</li>
+<li><p><strong>15:00</strong> If you JIT'd only at method boundaries, you'd have a &quot;method JIT&quot;</p>
+</li>
+<li><p>That's term of art what we'd call something that takes a method, maybe the
 methods it calls to / inlines them, but that &quot;whole method&quot; is a trivially
-(maximal) defined kind of region</li>
-<li>For the <em>hybrid</em> approach you could imagine forming a trace, observing what
+(maximal) defined kind of region</p>
+</li>
+<li><p>For the <em>hybrid</em> approach you could imagine forming a trace, observing what
 the interpreter did, forming a little line, and then trying to form the
 various lines of execution you observed together (e.g. with &quot;join points&quot;),
-and chopping out the paths we didn't actually take from the method</li>
-<li>So a conditional that was never executed one way after N times we had observed it, we can treat the other side of the conditional as dead code</li>
-<li>This is the way to think about the spectrum of &quot;region formation&quot;</li>
-</ul>
-<p>15:40</p>
-<ul>
-<li>Also a notion of packing as much known-hot code together, which can be more challenging when discovering things on the fly</li>
-<li>Like mentioned with tail duplication, generating potentially lots of new code with tail duplication</li>
-<li>We may have touched on systems like BOLT in the past, that are trying to pack together code into the closest regions they can for locality in instruction memory and having them be prefetchable so you get instruction cache TLB hits (!)</li>
-<li>But at the end of the day if we have to spread all this code out because we're discovering it on the fly, it can be a penalty for our instruction cache locality</li>
-</ul>
-<p>[Ed: but also note if you have hot trace bridges you can re-form the frequently
+and chopping out the paths we didn't actually take from the method</p>
+</li>
+<li><p>So a conditional that was never executed one way after N times we had observed it, we can treat the other side of the conditional as dead code</p>
+</li>
+<li><p>This is the way to think about the spectrum of &quot;region formation&quot;</p>
+</li>
+<li><p><strong>15:40</strong> Also a notion of packing as much known-hot code together, which can be more challenging when discovering things on the fly</p>
+</li>
+<li><p>Like mentioned with tail duplication, generating potentially lots of new code with tail duplication</p>
+</li>
+<li><p>We may have touched on systems like BOLT in the past, that are trying to pack together code into the closest regions they can for locality in instruction memory and having them be prefetchable so you get instruction cache TLB hits (!)</p>
+</li>
+<li><p>But at the end of the day if we have to spread all this code out because we're discovering it on the fly, it can be a penalty for our instruction cache locality</p>
+</li>
+<li><p>[Ed: but also note if you have hot trace bridges you can re-form the frequently
 taken trace paths into a new macro-trace that has locality, it just takes
 sophistication to recognize that and effectively trigger recompilation at an
 effective time vs eagerly bridging pieces of trace together as they're
 discovered.]</p>
-<p>16:15</p>
-<ul>
-<li>Idea of tracing through something like a switch statement, taking only 1/N of the paths in that switch, can become pretty rough when you have a pretty large N</li>
-<li>E.g. if you had a big switch like an interpreter itself, interpreter switch tends to have a lot of opcodes, can be rough to trace through 1/N</li>
+</li>
+<li><p><strong>16:15</strong> Idea of tracing through something like a switch statement, taking only 1/N of the paths in that switch, can become pretty rough when you have a pretty large N</p>
+</li>
+<li><p>E.g. if you had a big switch like an interpreter itself, interpreter switch tends to have a lot of opcodes, can be rough to trace through 1/N</p>
+</li>
 </ul>
-<p>16:35</p>
+<h2>When Do We Trigger Compilation? [16:35]</h2>
 <ul>
 <li>Important concept related to trace formation is <em>when</em> do you trigger compilation?</li>
 <li>Talking about &quot;JIT quickly&quot; vs &quot;record for a long time and then JIT&quot; -- when to trigger is really important</li>
@@ -361,9 +354,9 @@ responsive on the screen, could be kind of janky -- so had to JIT pretty
 quickly, and meant they couldn't optimize all that much [ed: at least in the
 &quot;quick&quot; tiers&quot;]</li>
 </ul>
-<p>18:35</p>
+<h2>How Do We Gather Information/Observations? [18:35]</h2>
 <ul>
-<li>How do we gather type and control information&gt;</li>
+<li>How do we gather type and control information?</li>
 <li>Some system: instead of compiled code JIT'd directly [a la splat / baseline
 JIT], and re-JIT it over time, might start with something like an interpreter</li>
 <li>If you're not sure -- you want to start executing but don't want to JIT
@@ -385,33 +378,43 @@ capabilities that come e.g.  with last branch record tables and similar in CPU
 architectures.]</p>
 <h2>Call Threaded Interpreters [20:30]</h2>
 <ul>
-<li>Also concept of choosing how aggressively to specialize traces for the <em>values</em> we observed</li>
-<li>What we could do is just make little blobs of assembly</li>
-<li>Then we could spit out function pointers [in an array] that call to these blobs of assembly all in a row</li>
-<li>This is called a &quot;call threaded interpreter&quot;</li>
-<li>You build up these &quot;ops&quot; as function pointers, and they have some convention for passing stuff to each other in registers, and then you call them in a big sequence</li>
-<li>What's neat is you don't necessarily even need to generate native code at all, you could just put a bunch of function pointers into a big array and then call them in sequence so that they can communicate to each other</li>
-<li>But then you need to form the calling convention for how these pass data to each other</li>
-<li>Can form the &quot;op set I'd like to have&quot; offline based on how you see things being used [e.g. if you see a lot of MUL-then-ADD you could make a composite MUL-ADD op as a function call and make that into a single function call in the call-threaded bytecode sequence, this composite opcode creation is also known as macro-op fusion]</li>
-</ul>
-<pre><code class="language-c++">void OpDup(Value* stack, uint32_t* stack_size);
-void OpPop(Value* stack, uint32_t* stack_size);
-void OpMulAdd(Value* stack, uint32_t stack_size);  // op we &quot;macro op fused&quot;
-void OpReturn(Value* stack, uint32_t* stack_size);
+<li><p>Also concept of choosing how aggressively to specialize traces for the <em>values</em> we observed</p>
+</li>
+<li><p>What we could do is just make little blobs of assembly</p>
+</li>
+<li><p>Then we could spit out function pointers [in an array] that call to these blobs of assembly all in a row</p>
+</li>
+<li><p>This is called a &quot;call threaded interpreter&quot;</p>
+</li>
+<li><p>You build up these &quot;ops&quot; as function pointers, and they have some convention for passing stuff to each other in registers, and then you call them in a big sequence</p>
+</li>
+<li><p>What's neat is you don't necessarily even need to generate native code at all, you could just put a bunch of function pointers into a big array and then call them in sequence so that they can communicate to each other</p>
+</li>
+<li><p>But then you need to form the calling convention for how these pass data to each other</p>
+</li>
+<li><p>Can form the &quot;op set I'd like to have&quot; offline based on how you see things being used [e.g. if you see a lot of MUL-then-ADD you could make a composite MUL-ADD op as a function call and make that into a single function call in the call-threaded bytecode sequence, this composite opcode creation is also known as macro-op fusion]</p>
+<pre><code class="language-c++">void OpDup(Value* stack, uint32_t* stack_size, Value* retval);
+void OpPop(Value* stack, uint32_t* stack_size, Value* retval);
+void OpMulAdd(Value* stack, uint32_t stack_size, Value* retval);  // op we &quot;macro op fused&quot;
+void OpReturn(Value* stack, uint32_t* stack_size, Value* retval);
 
-using CallThreadedOp = void(*)(Value*, uint32_t*);
+using CallThreadedOp = void(*)(Value*, uint32_t*, Value*);
 
 CallThreadedOp kMyProgram[4] = {&amp;OpDup, &amp;OpMulAdd, &amp;OpPop, &amp;OpReturn};
 
-void Interp(CallThreadedOp[] ops, size_t n) {
+Value Interp(CallThreadedOp[] ops, size_t n) {
   Value stack[128];
+  Value retval;
   uint32_t stack_size;
   for (size_t pc = 0; pc &lt; n; ++i) {
-    ops[i](&amp;stack, &amp;stack_size);
+    ops[i](&amp;stack, &amp;stack_size, &amp;retval);
   }
+  return retval;
 }
 </code></pre>
-<h2></h2>
+</li>
+</ul>
+<h2>How Aggressively To Specialize Traces For Observations [21:15]</h2>
 <ul>
 <li>Other fundamental questions like: &quot;hey I saw the integer 4 when I was monitoring, I saw it maybe 3 times now... do I want to assume that that value is always gonna be 4, or is it just an integer that <em>happened</em> to be the number 4 these past three times&quot;</li>
 <li>Kind of simple to think about if it's a parameter -- you can think about, &quot;do I want to specialize for this particular value for the function parameter I saw&quot; or how many times does it need to be before I'm convinced that the parameter is actually effectively a constant</li>
@@ -491,7 +494,7 @@ void Interp(CallThreadedOp[] ops, size_t n) {
 <li>Dovetails with things like user expectations for performance properties -- if I'm a user I want to be able to understand what this compiler system did for me and why -- been my experience people find it's harder to debug, hard to have a mental model for what the underlying system will do and why, versus method JIT'ing where methods are maybe more-clearly outlined -- could be one of the biggest downsides relative to more traditional method JIT'ing approach</li>
 <li>In classic fashion when trace compilation works well it's like <em>magic</em>: it's specializing perfectly for your key inner loop and speeding up most of the program with minimal effort and minimal compilation time, kind of amazing</li>
 </ul>
-<h2>Back to Episode 0: On Stacks [30:00]</h2>
+<h2>Popping Back to Episode 0: On Stacks [30:00]</h2>
 <ul>
 <li><p>Gotta revisit stacks just a little bit here</p>
 </li>
