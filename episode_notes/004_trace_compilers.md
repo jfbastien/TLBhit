@@ -2,7 +2,7 @@
 
 <audio id="audioplayer" src="https://traffic.libsyn.com/secure/tlbhit/tlbhit4.mp3" controls="controls" class="podcast-audio" preload="auto"></audio><div class="playback-rate-controls"><ul><li><a href="#" onclick="setPlaybackSpeed(0.5)">0.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1)">1⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.25)">1.25⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.5)">1.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.75)">1.75⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(2)">2⨉</a></li></ul></div>
 
-## Intro [00:00]
+## Prologue [00:00]
 
 * Haven't done an episode in a while, what's up with that
 * We now call it season 2... to make it sound totally intentional... which it was...
@@ -353,8 +353,105 @@ void Interp(CallThreadedOp[] ops, size_t n) {
   * Only have a small handful of instructions I'm doing my compilation for, not that expensive to redo compilation for a handful of instructions
   * Going to chop my traces into smaller pieces so I can revisit my assumptions more quickly and easily
 
-## Scary Concepts [24:40]
+## Some Spooky Concepts [24:40]
 
 * Trace compilers are very cool but also have some difficulties in their implementation
 * Concept of re-entering the virtual machine when you're in a trace
+* So you're executing your assembly code that's trace compiled
+* But then you need to call to the runtime for help
+* But *then* the runtime *itself* needs to compile some trace-compiled code
+* Now have nesting/recursion between code that you compiled and then runtime to then code you compiled ad nauseum
+* Then something goes wrong down way at the bottom -- in TraceMonkey I think they called these "deep bailouts"
+* You have to figure out how to unwind through all those various layers and get back to a safe point where you know "this is the set of assumptions that's ok to pass back to the interpreter at this time" even though you went through different native code and runtime a bunch of times over [each of which could have changed things in difficult-to-generally-reason-about ways]
+* Some of this is definitely some element of this which is complexity that's also present in method JITs, but I think tracers are even more interesting because they naturally may inline more method calls and burn in more assumptions over time, and so some of that is exposed to you in higher volume when you're building a trace compilation system
+* Another spooky thing I remember is if you conceptually trace compiled tail-looking calls to loops w/ bailouts -- might need to create 1,000 stack frames if something went wrong in the 1,001th iteration, so reifying all those stack frames can be scary
+* Also the fundamental aspect of, [if you use backedge targets as trace anchors,] when you start trace recording, you're assuming your trace will probably go back to a loop header [to complete it], and if it never does then you just get trace divergence where you run in monitoring mode for a really long time and never got return on investment of of the trace / recording that you made
 
+## Those Who Do Not Remember History Are Doomed To... Uh... Something [26:50]
+
+* When you record a bunch of decisions and they're invalidated -- so you don't overfit for those decisions again, you "learn a mistake"
+  * You traced and either it never happened, or it keeps changing / has multiple modes
+* You've learned something you don't want to do... but how long do you keep track of these mistakes, these things you "don't want to do", and how precise do you want to be as well?
+* Tricky: if you have lots of possible mistakes you can make, you don't want to use lots of memory to keep track of them
+* How long you keep track of them and how much memory you use to remember your mistakes are tricky aspects there [ed: and what mistakes you can / cannot even describe!]
+* On e.g. DBT machine can use a single word to represent this information: "in this region of code these are the types of problems that occur"
+  * e.g. lot of concurrency happening or a type of floating point math that's tricky to optimize; each bit represents a type of mistake / speculation to not make in that code generally
+* Blow away the list of mistakes from time to time, because some programs have phases -- if you're tracing a whole guest machine of instructions, maybe the program is doing something completely different
+* Just kind of periodically blow the information away
+* Have to feel like you're going to be re-deriving it quickly enough that the mistakes are not going to be biting you if you actually throw that information away
+
+## Long Tail Corpus / Flat Profiles [28:10]
+
+* Relates to: some scariness in having long tail of workloads, e.g. corpus of the whole web for TraceMonkey as an example
+* Kind of an assumption in trace compilers that maybe most of the time is spent in (relatively) inner loops
+* Run into the tyrrany of flat profiles -- if things actually have flat profiles may not actually get to focus on key inner loops that have most of the time spent running in the program
+* Have this question of: I start tracing after I see this loop do N backedges, i.e. N returns back to the top of the loop, what do you set that N value to be for the general world
+* Lots of fun related to TraceMonkey and JaegerMonkey around what to set these kinds of heuristic values to for the broader web and for benchmark sets
+* Also ties into things like inlining heuristics and things like this -- in compiler land we have some basic premises and some benchmarketing we have to do to make things look good on benchmarks, but hard to come up with a truly perfect set of numbers for things like inlining heuristics
+* Dovetails with things like user expectations for performance properties -- if I'm a user I want to be able to understand what this compiler system did for me and why -- been my experience people find it's harder to debug, hard to have a mental model for what the underlying system will do and why, versus method JIT'ing where methods are maybe more-clearly outlined -- could be one of the biggest downsides relative to more traditional method JIT'ing approach
+* In classic fashion when trace compilation works well it's like *magic*: it's specializing perfectly for your key inner loop and speeding up most of the program with minimal effort and minimal compilation time, kind of amazing
+
+## Back to Episode 0: On Stacks [30:00]
+
+* Gotta revisit stacks just a little bit here
+* Native stack running e.g. my C code
+* Virtual machines will often keep a managed stack [i.e. the bytecodes push/pop from]
+* Sometimes can smash the two together -- can keep track of your {Java,JavaScript,Python} machine stack values by keeping them on the native stack unifying the two [i.e. with frame links that are not pointing at heap objects, or eliding frames / reifying them lazily]
+
+* Speaking of stacks, another aspect we can talk about called On Stack Replacement (OSR) -- likely a whole episode on its own, but idea of jumping into newly JIT'd code at a loop entry point *when an existing frame is already running* (i.e. "on the stack")
+* Tracers are kind of saying "at this particular bytecode I'm going to start doing my bytecode execution which this chunk of code I made for the loop body", so with tracers OSR is less challenging than it is with method JIT compilation because tracers naturally have this OSR entry point formulation
+* But then there's still also On Stack Invalidation (OSI) -- when you're down in a lower level frame and some JIT code just became invalid, e.g. because I made some assumption invalid like "it assumed the static value is 42 and it became 43", but then two stack frames above the newest stack frame I have some JIT code that assumes it's always 42 -- that remains difficult in trace compilation mode, even when tracing into inline calls, you have to create multiple stack frames and invalidate everything appropriately
+
+## Notion of "Bolting the Tracer On" [31:42]
+
+* We talked about the fact you can "bolt a tracer in" to an interpreter [ed: which is both a superpower but also can yield complexities in what it does to the modularity of your interpreter and monitoring]
+* Can grab information from the guts of the interpreter that's not easy to re-derive statically, e.g. related to heap state queries at a particular bytecode execution time
+* To support the various ways we wanted to instrument the interpreter we had ifdefs in the JS interpreter C++ translation unit, and IIRC it was used in three different ways, could be a bit hairy
+
+## High Level Trade-offs Involved in Trace Compilation [32:15]
+
+* Always wondering:
+  * What's going to get compiled
+  * What's causes JIT compilation to start monitoring / continue monitoring / finish
+  * When do you trigger monitoring / compilation of bytecode execution -- after gathering a bunch of data but how much / how long
+  * What do you retain long term if there's phasic program behaviors
+  * What code / trace / information about mistakes you made do you retain across say a global garbage collection phase
+  * How do you decide when compilation is going to pay off or be interest or be stable -- what's the backedge trip count
+    * "I went back to this bytecode as part of this loop, how many times do I need to do that before I make a decision" and how that shows up in benchmarks
+* Cross cutting: performance vs user expectations, we're always trying to balance those
+* One thing we didn't mention at all in this whole dicussion is security and maintainability, which are huge issues when you talk about these types of programs -- want them to be very secure in most cases, and maintainability can be pretty tricky as you add new heuristics and learn new things about how you should optimize, it can get hard to maintain things if you're not careful
+* [Ed: the vast scope of runtime statefulness of the system can be challenging for e.g. understanding the heap state that led to a JIT code formation / crash where you just have a stack dump from long after the heap state that formed the JIT code seen on the stack]
+* Touched on the fact there's the spectrum from method JIT'ing with chopped out portions of the control graph to region formation to linear traces that go through multiple methods -- touched on each point in that spectrum
+* Essential difference vs method JIT'ing: method focus vs straight line code focus, chopping unused paths to maximize early assumptions
+* Resulting fact that, if things are stable and friendly to initial assumptions made then you can save a bunch of useless work / recompilation work, one of the classic tradeoffs in aggressive speculation
+
+## Sample Tracing JITs [34:15]
+
+* LuaJIT is really interesting, with a great talk by Slava -- notion of code bases that are super small, really compact and elegant in a way -- but can be really difficult to ramp up, kind of have to be a super genius with a lot of hours to ramp on it because it doesn't have the traditional modularity you'd expect out of more enterprise scale codebases
+  * We know cleverness can be a double edged sword but if you love to nerd out it's also hyper impressive and the resulting performance is often really nice as well
+  * Remember some cool things like a custom ABI between the interpreter ops that minimzed the amount of register shuffling around required
+  * Fun to note that interpreter loops are one of the examples where writing in hand crafted assembly can make sense because traditional register allocation can have a harder time ascribing meaning to registers when there's this giant soup of code and operations in a giant interpreter-loop switch
+  * So there *are* cases where register allocation, despite being a modern marvel, there are places where we can still sometimes do better by hand
+* Another cool thing to look into is PyPy and it's approach on "tracing the meta level"
+  * Have an interpreter implementation language and it can be fairly directly lowered to lower-level primitives
+  * But what's cool is being able to grab the representation of the program to form fragments of a broader trace
+  * Can annotate in the implementation language what values indicate that backedges are being formed
+* Holy grail in a sense -- objects you use to *build* your interpreter and the "guest" objects hosted *inside* your interpreter can be unified in their representation -- any implementation level objects are sharing unified GC infrastructure with the language implementation
+* Always an underlying implementation question of "how do we get reuse between these different execution modes" -- e.g. between interpreter, maybe baseline JIT, maybe opt JIT -- conceptually all have similar semantics and a shared runtime model
+* There's this notion you could have like a "copy paster" that took e.g. your C++ interpreter code and just turned it into a splatted-JIT mechanism [i.e. just cloning your C++ switch cases together in a sequence]
+* In practice we use self-hosted builtins; e.g. for native primitives like `Array.indexOf` we might define in JavaScript even though by the spec it's a "native" primitive
+
+## Meta-Circular Interpreters & Cool Trace JITs [36:50]
+
+* Gets towards the concept of meta-circular interpreters -- cool systems I got to play with like Narcissus at Mozilla (JS implemented in JS), and cool things heard about like Maxene JVM (Java virtual machine implemented in Java)
+
+* Hip Hop Virtual Machine tracelet based JIT machine doing aggressive specialization for things they really cared about in their PHP serving workload
+* Goes back to discussion on basic block vs region formation vs method JIT'ing possibility
+* Very rich and cool space out there!
+
+## Epilogue [37:20]
+
+* Glad we got to do another podcast again
+* Hoping we don't take too long to record another one again
+* Hopefully everybody likes this discussion on basics of trace compilation and tradeoffs involved there
+* Would be interested to hear questions/comments/errata on Twitter, @TLBHit

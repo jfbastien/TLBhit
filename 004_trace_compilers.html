@@ -62,7 +62,7 @@
     <main>
 <h1>Episode 4: <code>t-r-a-c-/e̅‾\-o-m-p-i-l-e</code></h1>
 <audio id="audioplayer" src="https://traffic.libsyn.com/secure/tlbhit/tlbhit4.mp3" controls="controls" class="podcast-audio" preload="auto"></audio><div class="playback-rate-controls"><ul><li><a href="#" onclick="setPlaybackSpeed(0.5)">0.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1)">1⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.25)">1.25⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.5)">1.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.75)">1.75⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(2)">2⨉</a></li></ul></div>
-<h2>Intro [00:00]</h2>
+<h2>Prologue [00:00]</h2>
 <ul>
 <li>Haven't done an episode in a while, what's up with that</li>
 <li>We now call it season 2... to make it sound totally intentional... which it was...</li>
@@ -148,7 +148,7 @@ that you originally measured isn't representative anymore!</p>
 </li>
 <li><p>When you do PGO you're supposed to do it on the entire program and it's supposed to be representative, whereas when you're tracing you're doing that live! So how do you know when you're tracing that <em>what you've recorded</em> is representative?</p>
 </li>
-<li><p>Inherent tradeoff beneath the surface:</p>
+<li><p>Inherent trade-off beneath the surface:</p>
 <ul>
 <li>You can trace a JIT compile very quickly [without observing as much] and then correct yourself later,</li>
 <li>Or you can wait longer to get more perfect information / more confidence in the information you've seen by observing the program for a longer period of time</li>
@@ -159,7 +159,7 @@ that you originally measured isn't representative anymore!</p>
 </li>
 <li><p>If you can be super low overhead then you can compile very quickly on things like mobile devices</p>
 </li>
-<li><p>Could make a &quot;no stage compiler&quot; where <em>as</em> the bytecodes are executing they are being &quot;splatted out&quot; as native machine code -- cool tradeoff point in the space</p>
+<li><p>Could make a &quot;no stage compiler&quot; where <em>as</em> the bytecodes are executing they are being &quot;splatted out&quot; as native machine code -- cool trade-off point in the space</p>
 </li>
 <li><p>Pop-up ideas:</p>
 <ul>
@@ -233,6 +233,345 @@ at runtime; i.e. if you're in a dynamic programming language</li>
 <p>11:40</p>
 <ul>
 <li>Lots of terms in dynamic compilation people might not be as familiar with</li>
+<li>Go through a collection of concepts in the space to try to give a picture of the whole elephant</li>
+</ul>
+<p>11:55</p>
+<ul>
+<li>Concept of &quot;method inlining&quot;</li>
+<li>In trace compiler you just execute <em>through</em> methods [to form a linear of trace of operations, e.g. back to a loop header]</li>
+<li>Go through operations... don't really care you've traversed to run within a new function/method or not</li>
+<li>Inlining kind of the natural path of compilation when doing trace compilation -- just linear execution where the jumps/calls/returns simply disappear</li>
+<li>This is one interest aspect of trace compilation, we do method inlining effectively &quot;by construction&quot;!</li>
+</ul>
+<p>12:15</p>
+<ul>
+<li>Concept of &quot;tail duplication&quot;</li>
+<li>As you run through different execution paths, the longer that path is, the more potential avenues that you're forming</li>
+<li>Like a road, and all these avenues you take down that road as you dynamically execute things</li>
+<li>What you end up doing as you do that dynamic execution is you duplicate what's called &quot;the tail&quot;;  i.e. the &quot;end path&quot; of each trace</li>
+<li>Imagine you're tracing through code, different traces will duplicate that tail, you'll have multiple copies of it between all these linear traces</li>
+<li>One clear example is if you have a conditional, and then a common return path, you would form one trace for one side and another trace for the other side of that condition, but they share the return path, so it's duplicated in both, and that's called tail duplication</li>
+</ul>
+<pre><code>for (...) {
+  if (OP_EQ(x, 42)) {
+    OP_GETATTR $f00;
+  } else {
+    OP_GETATTR $bar;
+  }
+  OP_T;
+  OP_A;
+  OP_I;
+  OP_L;
+}
+</code></pre>
+<pre><code>trace 0: OP_EQ; guard--true: OP_GETATTR $f00;  OP_T; OP_A; OP_I; OP_L
+trace 1:            \-false:  OP_GETATTR $bar; OP_T; OP_A; OP_I; OP_L
+                                               ^--------------------^--- tail duplicated ops
+</code></pre>
+<p>13:00</p>
+<ul>
+<li>What's interesting with tail duplication is it can be <em>good</em>, includes the &quot;provenance&quot; as a source of optimization; e.g. common path may execute differently based on where you came from</li>
+<li>But at the same time, what it does, is you are <em>duplicating</em> the code, potentially exponentially when you do that</li>
+<li>Can cause an exponential explosion in trace compilation: conditions can stack up causing a quick $2^N$ stacking, which is kind of a problem, so you have to find a balance</li>
+</ul>
+<p>[ed: Perhaps in summary, you can think about tail deuplication as de-aliasing control possibilities (via duplication) so you could potentially specialize for their differences aggressively along a particular linear path]</p>
+<p>13:30</p>
+<ul>
+<li>A lot of what we're discussing here is what happens when you strictly linearly follow where the interpreter goes</li>
+<li>Interpreter executes at a Program Counter (PC), then it executes at the next PC, when you do a call you're kind of changing from one function's PC to the next function's PC</li>
+<li>This is within a spectrum of techniques we think of as &quot;region forming&quot;</li>
+<li>A linear region is one particular region you can form where it marches through the program order with one sequence of executed program counter values</li>
+<li>So that's trace formation: linear marching through the program</li>
+<li>More <em>generally</em> we refer to &quot;region formation&quot;: can say, &quot;hey I see a conditional in the source, I could go down both sides of the conditional abstractly... can I compile for both possibilities at once?&quot;</li>
+<li>Then there's <em>method JIT-ing</em>: you take a whole method/function and say &quot;there's a bunch of different paths I can go down in this method, can I compile for this whole method at the same time?&quot;</li>
+<li>So really in a sense you chop out pieces of a method to get a region, and chop down to one sequence of operations to get a linear trace</li>
+<li>You can see how this is a spectrum of chopping things out from the original source programming in a sense</li>
+<li>Or maybe &quot;inlining <em>plus</em> chopping things out&quot;, because tracing e.g. can jump between different functions and inline them all into one trace</li>
+</ul>
+<p>14:45</p>
+<ul>
+<li>So if two traces can join back together, say one trace can jump into [the middle of] another done in its linear sequence, that would form a region instead of a linear trace</li>
+<li>A trace is straightline, if they join together at some point, we'd consider that to be the more general &quot;region formation&quot; instead</li>
+</ul>
+<p>Using the above example -- note the join point in both tracelet 1 and tracelet
+2 jumping to &quot;tracelet 3&quot;. [Note: a linear trace monitoring would never
+construct this, we'd need to monitor multiple control flow executions and
+decide to compile them together, or have static analysis that detected the
+condition was present then create facilities that can compile with a known
+join.]</p>
+<pre><code>region:
+ tracelet 0: OP_EQ; JMPIF trace1 or trace2
+ tracelet 1:                               OP_GETATTR $f00; jump tracelet3
+ tracelet 2:                               OP_GETATTR $f00; jump tracelet3
+ tracelet 3:                                                               OP_T; OP_A; OP_I; OP_L
+</code></pre>
+<p>15:00</p>
+<ul>
+<li>If you JIT'd only at method boundaries, you'd have a &quot;method JIT&quot;</li>
+<li>That's term of art what we'd call something that takes a method, maybe the
+methods it calls to / inlines them, but that &quot;whole method&quot; is a trivially
+(maximal) defined kind of region</li>
+<li>For the <em>hybrid</em> approach you could imagine forming a trace, observing what
+the interpreter did, forming a little line, and then trying to form the
+various lines of execution you observed together (e.g. with &quot;join points&quot;),
+and chopping out the paths we didn't actually take from the method</li>
+<li>So a conditional that was never executed one way after N times we had observed it, we can treat the other side of the conditional as dead code</li>
+<li>This is the way to think about the spectrum of &quot;region formation&quot;</li>
+</ul>
+<p>15:40</p>
+<ul>
+<li>Also a notion of packing as much known-hot code together, which can be more challenging when discovering things on the fly</li>
+<li>Like mentioned with tail duplication, generating potentially lots of new code with tail duplication</li>
+<li>We may have touched on systems like BOLT in the past, that are trying to pack together code into the closest regions they can for locality in instruction memory and having them be prefetchable so you get instruction cache TLB hits (!)</li>
+<li>But at the end of the day if we have to spread all this code out because we're discovering it on the fly, it can be a penalty for our instruction cache locality</li>
+</ul>
+<p>[Ed: but also note if you have hot trace bridges you can re-form the frequently
+taken trace paths into a new macro-trace that has locality, it just takes
+sophistication to recognize that and effectively trigger recompilation at an
+effective time vs eagerly bridging pieces of trace together as they're
+discovered.]</p>
+<p>16:15</p>
+<ul>
+<li>Idea of tracing through something like a switch statement, taking only 1/N of the paths in that switch, can become pretty rough when you have a pretty large N</li>
+<li>E.g. if you had a big switch like an interpreter itself, interpreter switch tends to have a lot of opcodes, can be rough to trace through 1/N</li>
+</ul>
+<p>16:35</p>
+<ul>
+<li>Important concept related to trace formation is <em>when</em> do you trigger compilation?</li>
+<li>Talking about &quot;JIT quickly&quot; vs &quot;record for a long time and then JIT&quot; -- when to trigger is really important</li>
+<li>Different papers have policies on what they found to make a lot of sense</li>
+<li>Honestly ends up very workload dependent when you should actually compile</li>
+<li>If doing DBT machines a la Transmeta finding a universal solution is not obvious</li>
+<li>But might be a different solution from a JIT for a very specific workload and can find optimal parameters for your workload</li>
+<li>Imagine you have a <em>generic</em> machine that does trace compilation -- supposed to run <em>everything</em>!<ul>
+<li>So really comes down to what the &quot;everything&quot; is -- what does the user actually do with the machine</li>
+</ul>
+</li>
+<li>Touched on it in the past: dynamic binary translation is a very difficult
+problem because you're pretending to be a particular architecture or kind of
+machine, and have to generate new assembly, and need to do that very quickly
+if you want kind of &quot;machine level&quot; repsonsiveness; maybe where it gets most
+tricky vs something like Java virtual machine or language-level virtual
+machine where there's some assumption latency might be incurred for JIT
+facilities</li>
+<li>Story from ex-Transmeta people: &quot;when&quot; trigger had to be pretty early for
+them because they didn't know for example when they were JIT'ing the mouse
+driver code, and if they didn't JIT it fast enough then the mouse wasn't
+responsive on the screen, could be kind of janky -- so had to JIT pretty
+quickly, and meant they couldn't optimize all that much [ed: at least in the
+&quot;quick&quot; tiers&quot;]</li>
+</ul>
+<p>18:35</p>
+<ul>
+<li>How do we gather type and control information&gt;</li>
+<li>Some system: instead of compiled code JIT'd directly [a la splat / baseline
+JIT], and re-JIT it over time, might start with something like an interpreter</li>
+<li>If you're not sure -- you want to start executing but don't want to JIT
+everything, you can interpret values coming in and then start tracing through
+that</li>
+<li>Can imagine e.g. if your operations are super generic -- getting a property in Python for example, can visit a ton of different objects and do a ton of different things, so in order to specialize it you probably want to see what it does the first time, and once you have confidence then you might JIT for it</li>
+<li>This is a concept called monitoring -- we &quot;look at&quot; what happens when we're in interpreter mode</li>
+<li>So we go into &quot;monitoring mode&quot; where we start recording things that happened into a side buffer</li>
+<li>Or you <em>can</em> JIT on the fly... but if you want to make sure that when you JIT compile something into native code that you did something that will be reusable over time [ed: &quot;amortizes&quot;] you would wait longer as we've been discussing</li>
+<li>Monitoring mode slows you down a lot because you're recording stuff into a side buffer</li>
+<li>But recording this info so you can make better choices and get return on your investment of writing this stuff down</li>
+<li>Also the idea of type-based stubs, so e.g. in dynamic language you don't know necessarily what the types of object are, so stubs are things that can record the type that was seen; e.g. inline inside the bytecode or &quot;on the side&quot; [ed: inline cache] as part of the baseline JIT compiled code</li>
+<li>Nothing stops you from having on-disk info about what happened in previous executions that you could mix with your new runtime observations, but often in practice we just expect the JIT will discover that stuff over time -- we just kind of toss it all away, load the program back up and have the interpreter re-derive it from scratch</li>
+</ul>
+<p>[Ed: we didn't talk about a) monomorphism which is a nice property that types
+observed one time in dynamic language code are often the one type you'll ever
+observe, or b) the related idea of &quot;free&quot; monitoring mode side buffer
+capabilities that come e.g.  with last branch record tables and similar in CPU
+architectures.]</p>
+<h2>Call Threaded Interpreters [20:30]</h2>
+<ul>
+<li>Also concept of choosing how aggressively to specialize traces for the <em>values</em> we observed</li>
+<li>What we could do is just make little blobs of assembly</li>
+<li>Then we could spit out function pointers [in an array] that call to these blobs of assembly all in a row</li>
+<li>This is called a &quot;call threaded interpreter&quot;</li>
+<li>You build up these &quot;ops&quot; as function pointers, and they have some convention for passing stuff to each other in registers, and then you call them in a big sequence</li>
+<li>What's neat is you don't necessarily even need to generate native code at all, you could just put a bunch of function pointers into a big array and then call them in sequence so that they can communicate to each other</li>
+<li>But then you need to form the calling convention for how these pass data to each other</li>
+<li>Can form the &quot;op set I'd like to have&quot; offline based on how you see things being used [e.g. if you see a lot of MUL-then-ADD you could make a composite MUL-ADD op as a function call and make that into a single function call in the call-threaded bytecode sequence, this composite opcode creation is also known as macro-op fusion]</li>
+</ul>
+<pre><code class="language-c++">void OpDup(Value* stack, uint32_t* stack_size);
+void OpPop(Value* stack, uint32_t* stack_size);
+void OpMulAdd(Value* stack, uint32_t stack_size);  // op we &quot;macro op fused&quot;
+void OpReturn(Value* stack, uint32_t* stack_size);
+
+using CallThreadedOp = void(*)(Value*, uint32_t*);
+
+CallThreadedOp kMyProgram[4] = {&amp;OpDup, &amp;OpMulAdd, &amp;OpPop, &amp;OpReturn};
+
+void Interp(CallThreadedOp[] ops, size_t n) {
+  Value stack[128];
+  uint32_t stack_size;
+  for (size_t pc = 0; pc &lt; n; ++i) {
+    ops[i](&amp;stack, &amp;stack_size);
+  }
+}
+</code></pre>
+<h2></h2>
+<ul>
+<li>Other fundamental questions like: &quot;hey I saw the integer 4 when I was monitoring, I saw it maybe 3 times now... do I want to assume that that value is always gonna be 4, or is it just an integer that <em>happened</em> to be the number 4 these past three times&quot;</li>
+<li>Kind of simple to think about if it's a parameter -- you can think about, &quot;do I want to specialize for this particular value for the function parameter I saw&quot; or how many times does it need to be before I'm convinced that the parameter is actually effectively a constant</li>
+<li>Can seem like a far-fetched thing -- why would I want to assume that an integer that can hold 32 bits of value would always be 4?!</li>
+<li>Imagine you're tracing an interpreter -- that's the running program (being traced) -- kind of inception here...</li>
+<li>Some dynamic language like Python that you're running inside of trace compilation [e.g. CPython running on a DBT machine]</li>
+<li>You might notice 4 is a really important bytecode number</li>
+<li>That happens pretty often when you look at actual programs, where sure the integers can span any value, but many of them are just used to determine control or avenues that code is going to take</li>
+<li>So again: how many times do you want to see 4 before you believe that it's always going to be 4, what do you do there</li>
+</ul>
+<h2>Splat JIT'ing [22:50]</h2>
+<ul>
+<li>More interesting terminology you often hear is the term &quot;splat JIT'ing&quot;, goes to what we were talking about earlier</li>
+<li>Bit like what QEMU does, QEMU being the &quot;virtual machine emulator thing&quot;</li>
+<li>Does JIT'ing basic block by basic block, i.e. no direct jumps taken in between</li>
+<li>Generates those block dynamically but kind of &quot;splats&quot; them out flat one after another</li>
+<li>As opposed to something that works harder to optimize bigger regions before code generation; e.g. trying to join multiple basic blocks together</li>
+</ul>
+<h2>Tiers and JIT speed [23:20]</h2>
+<ul>
+<li>Especially in JIT compiler environment where you have different &quot;tiers&quot; [levels of time spent JIT compiling aggressively]</li>
+<li>In splat JIT level you might measure &quot;how many cycles does it take me to compile this many ops&quot;</li>
+<li>Really want it to be as fast as possible so you're just blitting stuff into a buffer that you can use as your JIT compiled program</li>
+<li>This is avoiding the interpreter dispatch overhead</li>
+<li>If you have a big switch before every op you run and indirect branch overhead that's very unpredictable, that's going to cost you something</li>
+<li>Managing the protocol for passing things between these different bytecode operations</li>
+<li>These are the things that usually cost you that you want to avoid as early as possible because they'll definitely slow you down [ed: &quot;standard interpreter overheads&quot;]</li>
+</ul>
+<h3>Chopping Traces [24:00]</h3>
+<ul>
+<li>Another things you can do [re: compile time trade-offs] is chop bigger linear traces into smaller trace<em>lets</em>; e.g. tracing &quot;just basic blocks&quot; (which QEMU does)</li>
+<li>Means that you can revisit your assumptions made for the basic block and potentially pay a less-large cost because you are revising/recompiling a smaller amount of stuff<ul>
+<li>Only have a small handful of instructions I'm doing my compilation for, not that expensive to redo compilation for a handful of instructions</li>
+<li>Going to chop my traces into smaller pieces so I can revisit my assumptions more quickly and easily</li>
+</ul>
+</li>
+</ul>
+<h2>Some Spooky Concepts [24:40]</h2>
+<ul>
+<li>Trace compilers are very cool but also have some difficulties in their implementation</li>
+<li>Concept of re-entering the virtual machine when you're in a trace</li>
+<li>So you're executing your assembly code that's trace compiled</li>
+<li>But then you need to call to the runtime for help</li>
+<li>But <em>then</em> the runtime <em>itself</em> needs to compile some trace-compiled code</li>
+<li>Now have nesting/recursion between code that you compiled and then runtime to then code you compiled ad nauseum</li>
+<li>Then something goes wrong down way at the bottom -- in TraceMonkey I think they called these &quot;deep bailouts&quot;</li>
+<li>You have to figure out how to unwind through all those various layers and get back to a safe point where you know &quot;this is the set of assumptions that's ok to pass back to the interpreter at this time&quot; even though you went through different native code and runtime a bunch of times over [each of which could have changed things in difficult-to-generally-reason-about ways]</li>
+<li>Some of this is definitely some element of this which is complexity that's also present in method JITs, but I think tracers are even more interesting because they naturally may inline more method calls and burn in more assumptions over time, and so some of that is exposed to you in higher volume when you're building a trace compilation system</li>
+<li>Another spooky thing I remember is if you conceptually trace compiled tail-looking calls to loops w/ bailouts -- might need to create 1,000 stack frames if something went wrong in the 1,001th iteration, so reifying all those stack frames can be scary</li>
+<li>Also the fundamental aspect of, [if you use backedge targets as trace anchors,] when you start trace recording, you're assuming your trace will probably go back to a loop header [to complete it], and if it never does then you just get trace divergence where you run in monitoring mode for a really long time and never got return on investment of of the trace / recording that you made</li>
+</ul>
+<h2>Those Who Do Not Remember History Are Doomed To... Uh... Something [26:50]</h2>
+<ul>
+<li>When you record a bunch of decisions and they're invalidated -- so you don't overfit for those decisions again, you &quot;learn a mistake&quot;<ul>
+<li>You traced and either it never happened, or it keeps changing / has multiple modes</li>
+</ul>
+</li>
+<li>You've learned something you don't want to do... but how long do you keep track of these mistakes, these things you &quot;don't want to do&quot;, and how precise do you want to be as well?</li>
+<li>Tricky: if you have lots of possible mistakes you can make, you don't want to use lots of memory to keep track of them</li>
+<li>How long you keep track of them and how much memory you use to remember your mistakes are tricky aspects there [ed: and what mistakes you can / cannot even describe!]</li>
+<li>On e.g. DBT machine can use a single word to represent this information: &quot;in this region of code these are the types of problems that occur&quot;<ul>
+<li>e.g. lot of concurrency happening or a type of floating point math that's tricky to optimize; each bit represents a type of mistake / speculation to not make in that code generally</li>
+</ul>
+</li>
+<li>Blow away the list of mistakes from time to time, because some programs have phases -- if you're tracing a whole guest machine of instructions, maybe the program is doing something completely different</li>
+<li>Just kind of periodically blow the information away</li>
+<li>Have to feel like you're going to be re-deriving it quickly enough that the mistakes are not going to be biting you if you actually throw that information away</li>
+</ul>
+<h2>Long Tail Corpus / Flat Profiles [28:10]</h2>
+<ul>
+<li>Relates to: some scariness in having long tail of workloads, e.g. corpus of the whole web for TraceMonkey as an example</li>
+<li>Kind of an assumption in trace compilers that maybe most of the time is spent in (relatively) inner loops</li>
+<li>Run into the tyrrany of flat profiles -- if things actually have flat profiles may not actually get to focus on key inner loops that have most of the time spent running in the program</li>
+<li>Have this question of: I start tracing after I see this loop do N backedges, i.e. N returns back to the top of the loop, what do you set that N value to be for the general world</li>
+<li>Lots of fun related to TraceMonkey and JaegerMonkey around what to set these kinds of heuristic values to for the broader web and for benchmark sets</li>
+<li>Also ties into things like inlining heuristics and things like this -- in compiler land we have some basic premises and some benchmarketing we have to do to make things look good on benchmarks, but hard to come up with a truly perfect set of numbers for things like inlining heuristics</li>
+<li>Dovetails with things like user expectations for performance properties -- if I'm a user I want to be able to understand what this compiler system did for me and why -- been my experience people find it's harder to debug, hard to have a mental model for what the underlying system will do and why, versus method JIT'ing where methods are maybe more-clearly outlined -- could be one of the biggest downsides relative to more traditional method JIT'ing approach</li>
+<li>In classic fashion when trace compilation works well it's like <em>magic</em>: it's specializing perfectly for your key inner loop and speeding up most of the program with minimal effort and minimal compilation time, kind of amazing</li>
+</ul>
+<h2>Back to Episode 0: On Stacks [30:00]</h2>
+<ul>
+<li><p>Gotta revisit stacks just a little bit here</p>
+</li>
+<li><p>Native stack running e.g. my C code</p>
+</li>
+<li><p>Virtual machines will often keep a managed stack [i.e. the bytecodes push/pop from]</p>
+</li>
+<li><p>Sometimes can smash the two together -- can keep track of your {Java,JavaScript,Python} machine stack values by keeping them on the native stack unifying the two [i.e. with frame links that are not pointing at heap objects, or eliding frames / reifying them lazily]</p>
+</li>
+<li><p>Speaking of stacks, another aspect we can talk about called On Stack Replacement (OSR) -- likely a whole episode on its own, but idea of jumping into newly JIT'd code at a loop entry point <em>when an existing frame is already running</em> (i.e. &quot;on the stack&quot;)</p>
+</li>
+<li><p>Tracers are kind of saying &quot;at this particular bytecode I'm going to start doing my bytecode execution which this chunk of code I made for the loop body&quot;, so with tracers OSR is less challenging than it is with method JIT compilation because tracers naturally have this OSR entry point formulation</p>
+</li>
+<li><p>But then there's still also On Stack Invalidation (OSI) -- when you're down in a lower level frame and some JIT code just became invalid, e.g. because I made some assumption invalid like &quot;it assumed the static value is 42 and it became 43&quot;, but then two stack frames above the newest stack frame I have some JIT code that assumes it's always 42 -- that remains difficult in trace compilation mode, even when tracing into inline calls, you have to create multiple stack frames and invalidate everything appropriately</p>
+</li>
+</ul>
+<h2>Notion of &quot;Bolting the Tracer On&quot; [31:42]</h2>
+<ul>
+<li>We talked about the fact you can &quot;bolt a tracer in&quot; to an interpreter [ed: which is both a superpower but also can yield complexities in what it does to the modularity of your interpreter and monitoring]</li>
+<li>Can grab information from the guts of the interpreter that's not easy to re-derive statically, e.g. related to heap state queries at a particular bytecode execution time</li>
+<li>To support the various ways we wanted to instrument the interpreter we had ifdefs in the JS interpreter C++ translation unit, and IIRC it was used in three different ways, could be a bit hairy</li>
+</ul>
+<h2>High Level Trade-offs Involved in Trace Compilation [32:15]</h2>
+<ul>
+<li>Always wondering:<ul>
+<li>What's going to get compiled</li>
+<li>What's causes JIT compilation to start monitoring / continue monitoring / finish</li>
+<li>When do you trigger monitoring / compilation of bytecode execution -- after gathering a bunch of data but how much / how long</li>
+<li>What do you retain long term if there's phasic program behaviors</li>
+<li>What code / trace / information about mistakes you made do you retain across say a global garbage collection phase</li>
+<li>How do you decide when compilation is going to pay off or be interest or be stable -- what's the backedge trip count<ul>
+<li>&quot;I went back to this bytecode as part of this loop, how many times do I need to do that before I make a decision&quot; and how that shows up in benchmarks</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Cross cutting: performance vs user expectations, we're always trying to balance those</li>
+<li>One thing we didn't mention at all in this whole dicussion is security and maintainability, which are huge issues when you talk about these types of programs -- want them to be very secure in most cases, and maintainability can be pretty tricky as you add new heuristics and learn new things about how you should optimize, it can get hard to maintain things if you're not careful</li>
+<li>[Ed: the vast scope of runtime statefulness of the system can be challenging for e.g. understanding the heap state that led to a JIT code formation / crash where you just have a stack dump from long after the heap state that formed the JIT code seen on the stack]</li>
+<li>Touched on the fact there's the spectrum from method JIT'ing with chopped out portions of the control graph to region formation to linear traces that go through multiple methods -- touched on each point in that spectrum</li>
+<li>Essential difference vs method JIT'ing: method focus vs straight line code focus, chopping unused paths to maximize early assumptions</li>
+<li>Resulting fact that, if things are stable and friendly to initial assumptions made then you can save a bunch of useless work / recompilation work, one of the classic tradeoffs in aggressive speculation</li>
+</ul>
+<h2>Sample Tracing JITs [34:15]</h2>
+<ul>
+<li>LuaJIT is really interesting, with a great talk by Slava -- notion of code bases that are super small, really compact and elegant in a way -- but can be really difficult to ramp up, kind of have to be a super genius with a lot of hours to ramp on it because it doesn't have the traditional modularity you'd expect out of more enterprise scale codebases<ul>
+<li>We know cleverness can be a double edged sword but if you love to nerd out it's also hyper impressive and the resulting performance is often really nice as well</li>
+<li>Remember some cool things like a custom ABI between the interpreter ops that minimzed the amount of register shuffling around required</li>
+<li>Fun to note that interpreter loops are one of the examples where writing in hand crafted assembly can make sense because traditional register allocation can have a harder time ascribing meaning to registers when there's this giant soup of code and operations in a giant interpreter-loop switch</li>
+<li>So there <em>are</em> cases where register allocation, despite being a modern marvel, there are places where we can still sometimes do better by hand</li>
+</ul>
+</li>
+<li>Another cool thing to look into is PyPy and it's approach on &quot;tracing the meta level&quot;<ul>
+<li>Have an interpreter implementation language and it can be fairly directly lowered to lower-level primitives</li>
+<li>But what's cool is being able to grab the representation of the program to form fragments of a broader trace</li>
+<li>Can annotate in the implementation language what values indicate that backedges are being formed</li>
+</ul>
+</li>
+<li>Holy grail in a sense -- objects you use to <em>build</em> your interpreter and the &quot;guest&quot; objects hosted <em>inside</em> your interpreter can be unified in their representation -- any implementation level objects are sharing unified GC infrastructure with the language implementation</li>
+<li>Always an underlying implementation question of &quot;how do we get reuse between these different execution modes&quot; -- e.g. between interpreter, maybe baseline JIT, maybe opt JIT -- conceptually all have similar semantics and a shared runtime model</li>
+<li>There's this notion you could have like a &quot;copy paster&quot; that took e.g. your C++ interpreter code and just turned it into a splatted-JIT mechanism [i.e. just cloning your C++ switch cases together in a sequence]</li>
+<li>In practice we use self-hosted builtins; e.g. for native primitives like <code>Array.indexOf</code> we might define in JavaScript even though by the spec it's a &quot;native&quot; primitive</li>
+</ul>
+<h2>Meta-Circular Interpreters &amp; Cool Trace JITs [36:50]</h2>
+<ul>
+<li><p>Gets towards the concept of meta-circular interpreters -- cool systems I got to play with like Narcissus at Mozilla (JS implemented in JS), and cool things heard about like Maxene JVM (Java virtual machine implemented in Java)</p>
+</li>
+<li><p>Hip Hop Virtual Machine tracelet based JIT machine doing aggressive specialization for things they really cared about in their PHP serving workload</p>
+</li>
+<li><p>Goes back to discussion on basic block vs region formation vs method JIT'ing possibility</p>
+</li>
+<li><p>Very rich and cool space out there!</p>
+</li>
+</ul>
+<h2>Epilogue [37:20]</h2>
+<ul>
+<li>Glad we got to do another podcast again</li>
+<li>Hoping we don't take too long to record another one again</li>
+<li>Hopefully everybody likes this discussion on basics of trace compilation and tradeoffs involved there</li>
+<li>Would be interested to hear questions/comments/errata on Twitter, @TLBHit</li>
 </ul>
     </main>
     <script>const setPlaybackSpeed = speed => { [].slice.call(document.querySelectorAll('audio,video')).map((e, idx) => { e.playbackRate = speed; }); }</script>
