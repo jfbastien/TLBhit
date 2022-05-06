@@ -26,14 +26,13 @@
       ul { list-style-type: circle; }
       .grid .entry { padding: 1em 0 1em 0; display: flex; flex-direction: row; flex-wrap: wrap; justify-content: space-between; }
       .grid h3 { margin: 0; font-weight: 400; }
-      .grid .entry .where { display: flex; flex-direction: column; flex-basis: 8em; }
+      .grid .entry .where { display: flex; flex-direction: column; flex-basis: 16em; }
       .grid p, .grid ul { margin: 0; }
       .grid ul { padding: 0 0 0 1em; }
-      .grid .where p { font-weight: 100; }
-      .grid .entry .what { display: flex; flex-direction: column; flex-basis: 30em; }
+      .grid .when { font-weight: 100; display: flex; flex-direction: column; flex-basis: 2em; }
+      .grid .entry .what { display: flex; flex-direction: column; flex-basis: 20em; }
       .grid .short { padding: 0.2em 0 0.2em 0; }
       .grid .short .where { display: flex; flex-direction: row; }
-      .grid .short .where h3, .grid .short .where p { width: 5em; }
 
       @media (prefers-color-scheme: dark) {
           body { background-color: #121212; color: white; }
@@ -69,33 +68,36 @@
         <h2>Episodes</h2>
         <div class=grid>
           <div class="short entry">
-            <div class=where><a href="000_mov_fp_sp.html"><h3>Episode 0: <tt>mov fp, sp</tt></a></h3>
-              <p>2020-11-01</p>
-            </div>
+            <div class=where><a href="000_mov_fp_sp.html"><h3>0: <tt>mov fp, sp</tt></a></h3></div>
+            <div class=when>2020-11-01</div>
             <div class=what>
               <p>The first episode, all about the stack!</p>
             </div>
           </div>
           <div class="short entry">
-            <div class=where><a href="001_deref_char_star_0_eq_0.html"><h3>Episode 1: <tt>*(char*)0 = 0</tt></a></h3>
-              <p>2020-11-22</p>
-            </div>
+            <div class=where><a href="001_deref_char_star_0_eq_0.html"><h3>1: <tt>*(char*)0 = 0</tt></a></h3></div>
+            <div class=when>2020-11-22</div>
             <div class=what>
               <p>The adventure of storing <tt>NUL</tt> to <tt>NULL</tt>!</p>
             </div>
           </div>
           <div class="short entry">
-            <div class=where><a href="002_https_tlbh_dot_it_CR.html"><h3>Episode 2: <tt>https://tlb.it^M</tt></a></h3>
-              <p>2021-02-21</p>
-            </div>
+            <div class=where><a href="002_https_tlbh_dot_it_CR.html"><h3>2: <tt>https://tlb.it^M</tt></a></h3></div>
+            <div class=when>2021-02-21</div>
             <div class=what>
               <p>Typing in a web URL and pressing enter!</p>
             </div>
           </div>
           <div class="short entry">
-            <div class=where><a href="003_builtin_expect_bang_bang_x_0.html"><h3>Episode 3: <tt>__builtin_expect(!!(x), 0)</tt></a></h3>
-              <p>2021-04-18</p>
+            <div class=where><a href="003_builtin_expect_bang_bang_x_0.html"><h3>3: <tt>__builtin_expect(!!(x), 0)</tt></a></h3></div>
+            <div class=when>2021-04-18</div>
+            <div class=what>
+              <p>Expecting the unexpected!</p>
             </div>
+          </div>
+          <div class="short entry">
+            <div class=where><a href="004_trace_compilers.html"><h3>4: <tt>t-r-a-c-/e̅ ̅\-o-m-p-i-l-e-r-s</tt></a></h3></div>
+            <div class=when>2021-04-18</div>
             <div class=what>
               <p>Expecting the unexpected!</p>
             </div>
