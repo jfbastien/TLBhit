@@ -22,6 +22,7 @@
 * Long & amazing background in trace compilation
 * Joseph Fischer and VLIW machines (Very Long Instruction Word)
 * Idea: take a big control flow graph of operations, figure out how to schedule stuff within that horizontally, as big parallel words (full of instructions) that all execute at the same time
+  * [Ed: answering the question: what "trace" or "traces" through the control flow graph should we schedule into those big parallel instruction words?]
 * Question was: how do you do that, and why do you approach it one particular way? What of this big control flow graph to you pick out to schedule horizontally, to happen at the same time?
 * Idea was to take operations that would be sequentially but present them to the machine hardware at the same time so we could get parallelism, because we thought a lot of the performance we could obtain would come from Instruction Level Parallelism (especially at the time)
 * Early academic systems started doing VLIW, e.g. the ELI-512 machine at Yale, famous thesis (at least "famous in compiler world") called the Bulldog Compiler thesis that had a lot of the ideas required for effective VLIW compilation in it
