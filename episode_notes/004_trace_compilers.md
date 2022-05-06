@@ -1,4 +1,4 @@
-# Episode 4: `t-r-a-c-/e̅ ̅\-o-m-p-i-l-e-r-s`
+# Episode 4: `t-r-a-c-/e̅‾\-o-m-p-i-l-e`
 
 <audio id="audioplayer" src="https://traffic.libsyn.com/secure/tlbhit/tlbhit4.mp3" controls="controls" class="podcast-audio" preload="auto"></audio><div class="playback-rate-controls"><ul><li><a href="#" onclick="setPlaybackSpeed(0.5)">0.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1)">1⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.25)">1.25⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.5)">1.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.75)">1.75⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(2)">2⨉</a></li></ul></div>
 
@@ -60,6 +60,7 @@
   X, but this integer could hold a ton of different values", you can look at
   the values that are actually held and figure out "this is what the code is
   doing when it's really executing"
+
 * What's interesting is when you do that dynamically is it's very workload
   dependent -- dynamically you only measure what you
   actually see -- that can lead to sub-optimal choices if you make them
@@ -68,3 +69,28 @@
 * If your program has phases, where it does some kind of behavior for a
   while, and then shifts to another behavior afterwards, then that workload
   that you originally measured isn't representative anymore!
+* We can do a comparison of this kind of dynamic tracing / recording of information to Profile Guided Optimization (PGO) that folks use in static compilation approaches.
+* When you do PGO you're supposed to do it on the entire program and it's supposed to be representative, whereas when you're tracing you're doing that live! So how do you know when you're tracing that *what you've recorded* is representative?
+
+* Inherent tradeoff beneath the surface:
+  * You can trace a JIT compile very quickly [without observing as much] and then correct yourself later,
+  * Or you can wait longer to get more perfect information / more confidence in the information you've seen by observing the program for a longer period of time
+  * Have to trade these two things off
+* Interesting pipeline-like nature to tracing and JIT compilation
+* If you can be super low overhead then you can compile very quickly on things like mobile devices
+* Could make a "no stage compiler" where *as* the bytecodes are executing they are being "splatted out" as native machine code -- cool tradeoff point in the space
+* Pop-up ideas:
+  * How hard are we going to try to specialize for things that we saw
+  * What do we choose to bet on "continuing to be true over time"
+  * What does it cost for us to fall back and try something different when our speculation is off
+  * Again, we're tuning that "speculation knob", how *aggressively* we're going to try to speculate, and *what* we choose to speculate on
+* Concept here is "act on information you saw"
+* You can do specialization and you can guard
+* In a linear trace the number of assumptions you're making accumulates as you execute [towards the end of the trace you have the most assumptions built up]
+* If you have an always-taken control flow, e.g. some virtual function call that's always calling the same actual function, a tracing compiler will treat all back-to-back branches as one set of straightline code
+* Always-taken or always jumping to the same function, it's *like* straightline code when you execute it dynamically!
+* What it's going to do dynamically is check *on* the trace whether that was a bad assumption
+* It'll say: "Hey: I'm going to execute this all back to back, *and*, whenever convenient, I'm going to check whether any of those assumptions were wrong"
+* On the "cold path" -- again, when it's convenient -- it'll undo all the inapplicable things if it turns out the branches weren't true
+* Called a "bailout" [bailing out of the trace]
+* What's interesting with a bailout is you're being surprised with "new information that you didnt expect"; e.g. something you didn't observe when you were tracing
