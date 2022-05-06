@@ -76,7 +76,7 @@
 </ul>
 </li>
 <li>Today we're talking about trace compilers and trace compilation</li>
-<li>Many folks we talk to understand static compilation pretty well but dynamic compilation can be a bit of a mystery</li>
+<li>Many folks we talk to understand static compilation pretty well but <a href="https://www.youtube.com/watch?v=tWvaSkgVPpA">dynamic compilation can be a bit of a mystery</a></li>
 <li>Thought we'd dive into one approach for dynamic compilation called trace compilation, understand what that means</li>
 </ul>
 <h2>Tracing a Brief History of Tracing [01:10]</h2>
@@ -540,7 +540,7 @@ Value Interp(CallThreadedOp[] ops, size_t n) {
 </ul>
 <h2>Sample Tracing JITs [34:15]</h2>
 <ul>
-<li>LuaJIT is really interesting, with a great talk by Slava -- notion of code bases that are super small, really compact and elegant in a way -- but can be really difficult to ramp up, kind of have to be a super genius with a lot of hours to ramp on it because it doesn't have the traditional modularity you'd expect out of more enterprise scale codebases<ul>
+<li>LuaJIT is really interesting, with a <a href="https://www.youtube.com/watch?v=EaLboOUG9VQ">great talk by Slava</a> -- notion of code bases that are super small, really compact and elegant in a way -- but can be really difficult to ramp up, kind of have to be a super genius with a lot of hours to ramp on it because it doesn't have the traditional modularity you'd expect out of more enterprise scale codebases<ul>
 <li>We know cleverness can be a double edged sword but if you love to nerd out it's also hyper impressive and the resulting performance is often really nice as well</li>
 <li>Remember some cool things like a custom ABI between the interpreter ops that minimzed the amount of register shuffling around required</li>
 <li>Fun to note that interpreter loops are one of the examples where writing in hand crafted assembly can make sense because traditional register allocation can have a harder time ascribing meaning to registers when there's this giant soup of code and operations in a giant interpreter-loop switch</li>

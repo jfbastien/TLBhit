@@ -14,7 +14,7 @@
   * Follow up with errata / corrections / clarifications in the show notes.
   * We do the "lifelong learners" thing -- always trying to push the boundaries of things we know about and have conversations about what's interesting to develop & hone our understanding.
 * Today we're talking about trace compilers and trace compilation
-* Many folks we talk to understand static compilation pretty well but dynamic compilation can be a bit of a mystery
+* Many folks we talk to understand static compilation pretty well but [dynamic compilation can be a bit of a mystery](https://www.youtube.com/watch?v=tWvaSkgVPpA)
 * Thought we'd dive into one approach for dynamic compilation called trace compilation, understand what that means
 
 ## Tracing a Brief History of Tracing [01:10]
@@ -418,7 +418,7 @@ architectures.]
 
 ## Sample Tracing JITs [34:15]
 
-* LuaJIT is really interesting, with a great talk by Slava -- notion of code bases that are super small, really compact and elegant in a way -- but can be really difficult to ramp up, kind of have to be a super genius with a lot of hours to ramp on it because it doesn't have the traditional modularity you'd expect out of more enterprise scale codebases
+* LuaJIT is really interesting, with a [great talk by Slava](https://www.youtube.com/watch?v=EaLboOUG9VQ) -- notion of code bases that are super small, really compact and elegant in a way -- but can be really difficult to ramp up, kind of have to be a super genius with a lot of hours to ramp on it because it doesn't have the traditional modularity you'd expect out of more enterprise scale codebases
   * We know cleverness can be a double edged sword but if you love to nerd out it's also hyper impressive and the resulting performance is often really nice as well
   * Remember some cool things like a custom ABI between the interpreter ops that minimzed the amount of register shuffling around required
   * Fun to note that interpreter loops are one of the examples where writing in hand crafted assembly can make sense because traditional register allocation can have a harder time ascribing meaning to registers when there's this giant soup of code and operations in a giant interpreter-loop switch
