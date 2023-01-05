@@ -1,4 +1,4 @@
-# Episode 1: `*(char*0) = 0`!
+# Episode 1: `*(char*)0 = 0`!
 
 <audio id="audioplayer" src="https://traffic.libsyn.com/secure/tlbhit/tlbhit1.mp3" controls="controls" class="podcast-audio" preload="auto"></audio><div class="playback-rate-controls"><ul><li><a href="#" onclick="setPlaybackSpeed(0.5)">0.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1)">1⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.25)">1.25⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.5)">1.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.75)">1.75⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(2)">2⨉</a></li></ul></div>
 
@@ -6,7 +6,7 @@
 
 * Talked about TLBs last time, but didn't define what the acronym meant!
 * Rectify that by talking about them way too much this time
-* Episode title: `*(char*0) = 0`!
+* Episode title: `*(char*)0 = 0`!
 * Standard disclaimer: only know so much, will try not to say things that are
   wrong, feel free to give us feedback
 * Extensive show notes on the website (you're reading them right now!)
