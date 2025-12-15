@@ -1,6 +1,16 @@
+---
+episode: 0
+title: "mov fp, sp"
+guid: "c685f738-397d-4b7b-9dc6-171eaf2b07de"
+pubDate: "Mon, 02 Nov 2020 01:21:16 +0000"
+duration: "01:04:28"
+audio: "tlbhit0.mp3"
+description: "The stack, and how it relates to TLB Hits."
+explicit: false
+---
 # Episode 0: `mov fp, sp`
 
-<audio id="audioplayer" src="https://traffic.libsyn.com/secure/tlbhit/tlbhit0.mp3" controls="controls" class="podcast-audio" preload="auto"></audio><div class="playback-rate-controls"><ul><li><a href="#" onclick="setPlaybackSpeed(0.5)">0.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1)">1⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.25)">1.25⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.5)">1.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.75)">1.75⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(2)">2⨉</a></li></ul></div>
+<audio id="audioplayer" src="https://tlbh.it/episodes/tlbhit0.mp3" controls="controls" class="podcast-audio" preload="auto"></audio><div class="playback-rate-controls"><ul><li><a href="#" onclick="setPlaybackSpeed(0.5)">0.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1)">1⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.25)">1.25⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.5)">1.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.75)">1.75⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(2)">2⨉</a></li></ul></div>
 
 ## 00:00:00 Intro
 

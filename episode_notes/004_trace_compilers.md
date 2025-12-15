@@ -1,6 +1,16 @@
+---
+episode: 4
+title: "t-r-a-c-/e̅‾\\-o-m-p-i-l-e"
+guid: "27fba042-5bc0-44d7-b3a9-4af5bf9d42f2"
+pubDate: "Fri, 06 May 2022 12:00:05 +0000"
+duration: "00:37:48"
+audio: "tlbhit4.mp3"
+description: "Monitor. Compile. Bail. Repeat!"
+explicit: false
+---
 # Episode 4: `t-r-a-c-/e̅‾\-o-m-p-i-l-e`
 
-<audio id="audioplayer" src="https://traffic.libsyn.com/secure/tlbhit/tlbhit4.mp3" controls="controls" class="podcast-audio" preload="auto"></audio><div class="playback-rate-controls"><ul><li><a href="#" onclick="setPlaybackSpeed(0.5)">0.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1)">1⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.25)">1.25⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.5)">1.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.75)">1.75⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(2)">2⨉</a></li></ul></div>
+<audio id="audioplayer" src="https://tlbh.it/episodes/tlbhit4.mp3" controls="controls" class="podcast-audio" preload="auto"></audio><div class="playback-rate-controls"><ul><li><a href="#" onclick="setPlaybackSpeed(0.5)">0.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1)">1⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.25)">1.25⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.5)">1.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.75)">1.75⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(2)">2⨉</a></li></ul></div>
 
 ## Prologue [00:00]
 

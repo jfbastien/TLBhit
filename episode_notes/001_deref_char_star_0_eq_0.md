@@ -1,6 +1,16 @@
+---
+episode: 1
+title: "*(char*)0 = 0"
+guid: "d5f882cd-bac2-4ede-a51a-daab8e61e51d"
+pubDate: "Mon, 23 Nov 2020 06:09:40 +0000"
+duration: "00:43:52"
+audio: "tlbhit1.mp3"
+description: "The adventure of storing NUL to NULL!"
+explicit: false
+---
 # Episode 1: `*(char*)0 = 0`!
 
-<audio id="audioplayer" src="https://traffic.libsyn.com/secure/tlbhit/tlbhit1.mp3" controls="controls" class="podcast-audio" preload="auto"></audio><div class="playback-rate-controls"><ul><li><a href="#" onclick="setPlaybackSpeed(0.5)">0.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1)">1⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.25)">1.25⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.5)">1.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.75)">1.75⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(2)">2⨉</a></li></ul></div>
+<audio id="audioplayer" src="https://tlbh.it/episodes/tlbhit1.mp3" controls="controls" class="podcast-audio" preload="auto"></audio><div class="playback-rate-controls"><ul><li><a href="#" onclick="setPlaybackSpeed(0.5)">0.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1)">1⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.25)">1.25⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.5)">1.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.75)">1.75⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(2)">2⨉</a></li></ul></div>
 
 ## Intro [00:00]
 

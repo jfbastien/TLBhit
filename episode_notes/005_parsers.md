@@ -1,3 +1,13 @@
+---
+episode: 5
+title: "parsers"
+guid: "dbdfca99-ba05-4735-b8a4-6cb63faf3b8c"
+pubDate: "Thu, 23 Feb 2023 11:24:00 +0000"
+duration: "00:41:40"
+audio: "tlbhit5.mp3"
+description: "Parsers?"
+explicit: false
+---
 # Parsers Podcast Notes
 
 ## [00:00] Horrible Winter Holiday / Valentine's Day Cold Intro

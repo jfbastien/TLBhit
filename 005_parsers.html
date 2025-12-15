@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
-    <title>TLB hit 💥 Parsers Podcast Notes</title>
+    <title>TLB hit 💥 Episode 5: parsers</title>
     <style>
       @font-face { font-family: 'Alegreya Sans'; font-style: normal; font-weight: 100; src: local('Alegreya Sans Thin'), local('AlegreyaSans-Thin'), url('./fonts/AlegreyaSans-Thin.woff2') format('woff2'), url('./fonts/AlegreyaSans-Thin.woff') format('woff'); font-display: fallback; }
       @font-face { font-family: 'Alegreya Sans'; font-style: normal; font-weight: 300; src: local('Alegreya Sans Light'), local('AlegreyaSans-Light'), url('./fonts/AlegreyaSans-Light.woff2') format('woff2'), url('./fonts/AlegreyaSans-Light.woff') format('woff'); font-display: fallback; }
@@ -56,13 +56,12 @@
       <p>A podcast about systems &amp; compilers</p>
       <p>🐦 <a href="https://twitter.com/TLBhit">@TLBhit</a></p>
       <p>🐘 <a rel="me" href="https://hachyderm.io/@TLBhit">hachyderm.io/@TLBhit</a></p>
-      <p>🎙 <a href="https://tlbhit.libsyn.com/rss">RSS</a></p>
+      <p>🎙 <a href="https://tlbh.it/feed.xml">RSS</a></p>
       <p>🍎 <a href="https://podcasts.apple.com/us/podcast/tlb-hit/id1538369465">Apple podcast</a></p>
       </div>
     </header>
     <main>
 <h1>Parsers Podcast Notes</h1>
-<audio id="audioplayer" src="https://traffic.libsyn.com/secure/tlbhit/tlbhit5.mp3" controls="controls" class="podcast-audio" preload="auto"></audio><div class="playback-rate-controls"><ul><li><a href="#" onclick="setPlaybackSpeed(0.5)">0.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1)">1⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.25)">1.25⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.5)">1.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.75)">1.75⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(2)">2⨉</a></li></ul></div>
 <h2>[00:00] Horrible Winter Holiday / Valentine's Day Cold Intro</h2>
 <ul>
 <li>Warm and fuzzy... and <strong>parse-y</strong>... time of year</li>
@@ -343,17 +342,28 @@ TERM_EXPR ::= Number
 </ul>
 </li>
 <li>Features that were somewhat notorious we got exposed to in JavaScript that had funny grammatical properties, like its Automatic Semicolon Insertion (ASI)<ul>
-<li>Normal BNF grammars don't have a notion of a &quot;negative lookahead&quot;; like &quot;there can not be this terminal here&quot;, but that's how ASI was described in the JavaScript spec</li>
-<li>In Firefox SpiderMonkey [JS engine] we had a recursive descent parser, so it was very clear how that kind of &quot;production rule extension&quot; could be handled, but believe [OS X Safari] JavaScriptScore had a lex/yacc based parser -- not exactly sure how it handled things like this negative token lookahead, but would be interesting to go back and find out; how did it deal with this extension to the BNF grammar that was present in the JavaScript spec</li>
-<li>ASI one of the strange quirks of JavaScript people ideally do not rely on, but makes it an interesting language to parse; interesting accident</li>
-<li>&quot;If there would be an error, but putting a semicolon there would make it not-an-error, then you should put a semicolon there&quot; is perhaps the rule</li>
-<li>[32:30] When JF worked on Chrome's Native Client security sandbox, the parsing had to be correct, or it was a potential security vulnerability</li>
-<li>Idea of Native Client back when it started in 2009 -- <a href="https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/34913.pdf">really great paper describing it</a> -- let's try to run native code run on the web</li>
-<li>At the time had written V8 and realized there's a wall you hit with JavaScript regardless of how much your compiler can optimize things for JavaScript and kind of want to run more powerful things on the web</li>
-<li>Native Client isn't what ended up being standardized, Web Assembly was</li>
-<li>But core idea of running native code on the web was really interesting, and there were different experiments: NaCl, PNaCL, and at Mozilla there was asm.js which ended up with us creating Web Assembly together</li>
-<li>In all those contexts the parser is really really critical to get right, if you don't get it right there's a vulnerability</li>
-<li>When JF worked on Native Client the input was x86-32 x86-64 and ARM, so there's really tricky things and parsing those ISAs correctly is important to security<ul>
+<li><p>Normal BNF grammars don't have a notion of a &quot;negative lookahead&quot;; like &quot;there can not be this terminal here&quot;, but that's how ASI was described in the JavaScript spec</p>
+</li>
+<li><p>In Firefox SpiderMonkey [JS engine] we had a recursive descent parser, so it was very clear how that kind of &quot;production rule extension&quot; could be handled, but believe [OS X Safari] JavaScriptScore had a lex/yacc based parser -- not exactly sure how it handled things like this negative token lookahead, but would be interesting to go back and find out; how did it deal with this extension to the BNF grammar that was present in the JavaScript spec</p>
+</li>
+<li><p>ASI one of the strange quirks of JavaScript people ideally do not rely on, but makes it an interesting language to parse; interesting accident</p>
+</li>
+<li><p>&quot;If there would be an error, but putting a semicolon there would make it not-an-error, then you should put a semicolon there&quot; is perhaps the rule</p>
+</li>
+<li><p>[32:30] When JF worked on Chrome's Native Client security sandbox, the parsing had to be correct, or it was a potential security vulnerability</p>
+</li>
+<li><p>Idea of Native Client back when it started in 2009 -- <a href="https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/34913.pdf">really great paper describing it</a> -- let's try to run native code run on the web</p>
+</li>
+<li><p>At the time had written V8 and realized there's a wall you hit with JavaScript regardless of how much your compiler can optimize things for JavaScript and kind of want to run more powerful things on the web</p>
+</li>
+<li><p>Native Client isn't what ended up being standardized, Web Assembly was</p>
+</li>
+<li><p>But core idea of running native code on the web was really interesting, and there were different experiments: NaCl, PNaCL, and at Mozilla there was asm.js which ended up with us creating Web Assembly together</p>
+</li>
+<li><p>In all those contexts the parser is really really critical to get right, if you don't get it right there's a vulnerability</p>
+</li>
+<li><p>When JF worked on Native Client the input was x86-32 x86-64 and ARM, so there's really tricky things and parsing those ISAs correctly is important to security</p>
+<ul>
 <li>The CPU is just going to execute it, so if you haven't validated the executable correctly, something else is going to be executed which may be a vulnerability</li>
 <li>One fun bug the team had to resolve early way before launch was dealing with <code>pushf</code> / <code>popf</code> instructions in x86</li>
 <li>Those tend to just push the flags, overflow flag and such</li>
@@ -384,17 +394,12 @@ TERM_EXPR ::= Number
   // sad case using &quot;something&quot;
 }
 </code></pre>
-<pre><code>* [Chris quietly thinks this is a sad consolation prize]
-</code></pre>
-<ul>
-<li>One other story: Chris works on a team that parses SystemVerilog using ANTLRv4 that may be the largest ANTLR grammar<ul>
-<li>We've been talking a bit about the trade-offs we see there</li>
-<li>Performance optimization work sometimes means re-structuring the grammar so that the generator can do better with it</li>
-<li>Same interesting questions come up around memory usage and you get a lot of power from the grammar-generating that would be a lot of work to write in a recursive-descent parser form, especially as the grammar gets large</li>
-<li>But there's clearly a trade-off space there, been fun to re-live this understanding of the tradeoffs</li>
-</ul>
-</li>
-</ul>
+<pre><code>  * [Chris quietly thinks this is a sad consolation prize]</code></pre>
+<p>* One other story: Chris works on a team that parses SystemVerilog using ANTLRv4 that may be the largest ANTLR grammar
+* We've been talking a bit about the trade-offs we see there
+* Performance optimization work sometimes means re-structuring the grammar so that the generator can do better with it
+* Same interesting questions come up around memory usage and you get a lot of power from the grammar-generating that would be a lot of work to write in a recursive-descent parser form, especially as the grammar gets large
+* But there's clearly a trade-off space there, been fun to re-live this understanding of the tradeoffs</p>
 </li>
 </ul>
 </li>

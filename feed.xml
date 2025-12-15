@@ -1,0 +1,110 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
+  <channel>
+    <title>TLB Hit 💥</title>
+    <link>https://tlbh.it/</link>
+    <description>A podcast about systems &amp; compilers by @jfbastien and @cdleary. The only podcast you listen to at 0.5×.</description>
+    <language>en</language>
+    <copyright>Chris Leary &amp; JF Bastien</copyright>
+    <atom:link href="https://tlbh.it/feed.xml" rel="self" type="application/rss+xml" />
+    <itunes:author>JF Bastien &amp; Chris Leary</itunes:author>
+    <itunes:explicit>false</itunes:explicit>
+    <itunes:type>episodic</itunes:type>
+    <itunes:image href="https://tlbh.it/logo/tlbhit-logo.png" />
+    <itunes:category text="Technology" />
+    <itunes:new-feed-url>https://tlbh.it/feed.xml</itunes:new-feed-url>
+    <pubDate>Mon, 02 Nov 2020 01:21:16 +0000</pubDate>
+    <lastBuildDate>Sun, 15 Dec 2024 01:10:00 +0000</lastBuildDate>
+    <item>
+      <title>Episode 6: ƑẍɄʑʑ҉⟆Ƒu𝔷𝔷⧫ᶳΩ𝓕𝕦𝘇𝘇֍⧩</title>
+      <link>https://tlbh.it/006_fuzz.html</link>
+      <guid isPermaLink="false">964fa473-82c2-4c59-bd04-fd8aaf3fd0cd</guid>
+      <pubDate>Sun, 15 Dec 2024 01:10:00 +0000</pubDate>
+      <description>Code coverage and fuzzing exploration, including MC/DC testing and AFL.</description>
+      <content:encoded>Code coverage and fuzzing exploration, including MC/DC testing and AFL.</content:encoded>
+      <enclosure url="https://tlbh.it/episodes/tlbhit6.mp3" length="54275117" type="audio/mpeg" />
+      <itunes:duration>00:28:11</itunes:duration>
+      <itunes:episode>7</itunes:episode>
+      <itunes:explicit>false</itunes:explicit>
+      <itunes:episodeType>full</itunes:episodeType>
+    </item>
+    <item>
+      <title>Episode 5: parsers</title>
+      <link>https://tlbh.it/005_parsers.html</link>
+      <guid isPermaLink="false">dbdfca99-ba05-4735-b8a4-6cb63faf3b8c</guid>
+      <pubDate>Thu, 23 Feb 2023 11:24:00 +0000</pubDate>
+      <description>Parsers?</description>
+      <content:encoded>Parsers?</content:encoded>
+      <enclosure url="https://tlbh.it/episodes/tlbhit5.mp3" length="40210988" type="audio/mpeg" />
+      <itunes:duration>00:41:40</itunes:duration>
+      <itunes:episode>6</itunes:episode>
+      <itunes:explicit>false</itunes:explicit>
+      <itunes:episodeType>full</itunes:episodeType>
+    </item>
+    <item>
+      <title>Episode 4: t-r-a-c-/e̅‾\-o-m-p-i-l-e</title>
+      <link>https://tlbh.it/004_trace_compilers.html</link>
+      <guid isPermaLink="false">27fba042-5bc0-44d7-b3a9-4af5bf9d42f2</guid>
+      <pubDate>Fri, 06 May 2022 12:00:05 +0000</pubDate>
+      <description>Monitor. Compile. Bail. Repeat!</description>
+      <content:encoded>Monitor. Compile. Bail. Repeat!</content:encoded>
+      <enclosure url="https://tlbh.it/episodes/tlbhit4.mp3" length="90956498" type="audio/mpeg" />
+      <itunes:duration>00:37:48</itunes:duration>
+      <itunes:episode>5</itunes:episode>
+      <itunes:explicit>false</itunes:explicit>
+      <itunes:episodeType>full</itunes:episodeType>
+    </item>
+    <item>
+      <title>Episode 3: __builtin_expect(!!(x), 0)</title>
+      <link>https://tlbh.it/003_builtin_expect_bang_bang_x_0.html</link>
+      <guid isPermaLink="false">a99864d9-d302-40d2-b257-b6258d26ffdf</guid>
+      <pubDate>Mon, 19 Apr 2021 03:05:47 +0000</pubDate>
+      <description>Static vs runtime knowledge, compiler hints, C++20 annotations.</description>
+      <content:encoded>Static vs runtime knowledge, compiler hints, C++20 annotations.</content:encoded>
+      <enclosure url="https://tlbh.it/episodes/tlbhit3.mp3" length="29671009" type="audio/mpeg" />
+      <itunes:duration>00:39:10</itunes:duration>
+      <itunes:episode>4</itunes:episode>
+      <itunes:explicit>false</itunes:explicit>
+      <itunes:episodeType>full</itunes:episodeType>
+    </item>
+    <item>
+      <title>Episode 2: https://tlbh.it^M</title>
+      <link>https://tlbh.it/002_https_tlbh_dot_it_CR.html</link>
+      <guid isPermaLink="false">407713de-1c3f-4eac-940a-a28269788270</guid>
+      <pubDate>Sun, 21 Feb 2021 22:32:54 +0000</pubDate>
+      <description>What happens when you type https://tlbh.it in your browser and press enter?</description>
+      <content:encoded>What happens when you type https://tlbh.it in your browser and press enter?</content:encoded>
+      <enclosure url="https://tlbh.it/episodes/tlbhit2.mp3" length="43645007" type="audio/mpeg" />
+      <itunes:duration>00:56:35</itunes:duration>
+      <itunes:episode>3</itunes:episode>
+      <itunes:explicit>false</itunes:explicit>
+      <itunes:episodeType>full</itunes:episodeType>
+    </item>
+    <item>
+      <title>Episode 1: *(char*)0 = 0</title>
+      <link>https://tlbh.it/001_deref_char_star_0_eq_0.html</link>
+      <guid isPermaLink="false">d5f882cd-bac2-4ede-a51a-daab8e61e51d</guid>
+      <pubDate>Mon, 23 Nov 2020 06:09:40 +0000</pubDate>
+      <description>The adventure of storing NUL to NULL!</description>
+      <content:encoded>The adventure of storing NUL to NULL!</content:encoded>
+      <enclosure url="https://tlbh.it/episodes/tlbhit1.mp3" length="20698363" type="audio/mpeg" />
+      <itunes:duration>00:43:52</itunes:duration>
+      <itunes:episode>2</itunes:episode>
+      <itunes:explicit>false</itunes:explicit>
+      <itunes:episodeType>full</itunes:episodeType>
+    </item>
+    <item>
+      <title>Episode 0: mov fp, sp</title>
+      <link>https://tlbh.it/000_mov_fp_sp.html</link>
+      <guid isPermaLink="false">c685f738-397d-4b7b-9dc6-171eaf2b07de</guid>
+      <pubDate>Mon, 02 Nov 2020 01:21:16 +0000</pubDate>
+      <description>The stack, and how it relates to TLB Hits.</description>
+      <content:encoded>The stack, and how it relates to TLB Hits.</content:encoded>
+      <enclosure url="https://tlbh.it/episodes/tlbhit0.mp3" length="49954944" type="audio/mpeg" />
+      <itunes:duration>01:04:28</itunes:duration>
+      <itunes:episode>1</itunes:episode>
+      <itunes:explicit>false</itunes:explicit>
+      <itunes:episodeType>full</itunes:episodeType>
+    </item>
+  </channel>
+</rss>

@@ -1,6 +1,16 @@
+---
+episode: 2
+title: "https://tlbh.it^M"
+guid: "407713de-1c3f-4eac-940a-a28269788270"
+pubDate: "Sun, 21 Feb 2021 22:32:54 +0000"
+duration: "00:56:35"
+audio: "tlbhit2.mp3"
+description: "What happens when you type https://tlbh.it in your browser and press enter?"
+explicit: false
+---
 # Episode 2: `https://tlbh.it^M`
 
-<audio id="audioplayer" src="https://traffic.libsyn.com/secure/tlbhit/tlbhit2.mp3" controls="controls" class="podcast-audio" preload="auto"></audio><div class="playback-rate-controls"><ul><li><a href="#" onclick="setPlaybackSpeed(0.5)">0.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1)">1⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.25)">1.25⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.5)">1.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.75)">1.75⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(2)">2⨉</a></li></ul></div>
+<audio id="audioplayer" src="https://tlbh.it/episodes/tlbhit2.mp3" controls="controls" class="podcast-audio" preload="auto"></audio><div class="playback-rate-controls"><ul><li><a href="#" onclick="setPlaybackSpeed(0.5)">0.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1)">1⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.25)">1.25⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.5)">1.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.75)">1.75⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(2)">2⨉</a></li></ul></div>
 
 ### Artisinal hand-crafted intro [00:00]
 

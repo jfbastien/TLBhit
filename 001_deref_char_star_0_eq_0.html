@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
-    <title>TLB hit 💥 Episode 1: `*(char*)0 = 0`!</title>
+    <title>TLB hit 💥 Episode 1: *(char*)0 = 0</title>
     <style>
       @font-face { font-family: 'Alegreya Sans'; font-style: normal; font-weight: 100; src: local('Alegreya Sans Thin'), local('AlegreyaSans-Thin'), url('./fonts/AlegreyaSans-Thin.woff2') format('woff2'), url('./fonts/AlegreyaSans-Thin.woff') format('woff'); font-display: fallback; }
       @font-face { font-family: 'Alegreya Sans'; font-style: normal; font-weight: 300; src: local('Alegreya Sans Light'), local('AlegreyaSans-Light'), url('./fonts/AlegreyaSans-Light.woff2') format('woff2'), url('./fonts/AlegreyaSans-Light.woff') format('woff'); font-display: fallback; }
@@ -56,13 +56,13 @@
       <p>A podcast about systems &amp; compilers</p>
       <p>🐦 <a href="https://twitter.com/TLBhit">@TLBhit</a></p>
       <p>🐘 <a rel="me" href="https://hachyderm.io/@TLBhit">hachyderm.io/@TLBhit</a></p>
-      <p>🎙 <a href="https://tlbhit.libsyn.com/rss">RSS</a></p>
+      <p>🎙 <a href="https://tlbh.it/feed.xml">RSS</a></p>
       <p>🍎 <a href="https://podcasts.apple.com/us/podcast/tlb-hit/id1538369465">Apple podcast</a></p>
       </div>
     </header>
     <main>
+<audio id="audioplayer" src="https://tlbh.it/episodes/tlbhit1.mp3" controls="controls" class="podcast-audio" preload="auto"></audio><div class="playback-rate-controls"><ul><li><a href="#" onclick="setPlaybackSpeed(0.5)">0.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1)">1⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.25)">1.25⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.5)">1.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.75)">1.75⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(2)">2⨉</a></li></ul></div>
 <h1>Episode 1: <code>*(char*)0 = 0</code>!</h1>
-<audio id="audioplayer" src="https://traffic.libsyn.com/secure/tlbhit/tlbhit1.mp3" controls="controls" class="podcast-audio" preload="auto"></audio><div class="playback-rate-controls"><ul><li><a href="#" onclick="setPlaybackSpeed(0.5)">0.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1)">1⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.25)">1.25⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.5)">1.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.75)">1.75⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(2)">2⨉</a></li></ul></div>
 <h2>Intro [00:00]</h2>
 <ul>
 <li>Talked about TLBs last time, but didn't define what the acronym meant!</li>
@@ -246,11 +246,9 @@ written!</a> Changing to:</p>
 <p>Still tries to store value 0!</p>
 </li>
 <li><p>A bit unintuitive and annoyed kernel folks in the past, but can tell GCC to
-stop this with <code>-fno-delete-null-pointer-checks</code> -- unintuitive/frustrating</p>
+stop this with <code>-fno-delete-null-pointer-checks</code> -- unintuitive/frustrating
+to people around <code>volatile</code>, but!</p>
 </li>
-</ul>
-<p>to people around <code>volatile</code>, but!</p>
-<ul>
 <li><p>If we step back a bit, zero is a special value, but let's deref one instead,
 gets rid of the silly <code>ud2</code></p>
 <pre><code class="language-c">int main() { *(volatile char*)1 = 42; }
@@ -622,11 +620,11 @@ events</a>, but you do
 always have to be careful looking up what the counters mean for your
 particular architecture</li>
 <li>One of the cool things about open cores like BOOM is you can just link to the
-[implementation of a TLB implemented in</li>
+<a href="https://github.com/riscv-boom/riscv-boom/blob/1cb1596224c5681b839b8b115c1fbf6d802cc512/src/main/scala/lsu/tlb.scala">implementation of a TLB implemented in
+Chisel</a>
+and <a href="https://github.com/chipsalliance/rocket-chip/blob/407496940311a0f0e8ec24627d93a7b839692ac6/src/main/scala/rocket/PTW.scala#L156">a page table
+walker</a>!</li>
 </ul>
-<p>Chisel](https://github.com/riscv-boom/riscv-boom/blob/1cb1596224c5681b839b8b115c1fbf6d802cc512/src/main/scala/lsu/tlb.scala)
-  and <a href="https://github.com/chipsalliance/rocket-chip/blob/407496940311a0f0e8ec24627d93a7b839692ac6/src/main/scala/rocket/PTW.scala#L156">a page table
-walker</a>!</p>
     </main>
     <script>const setPlaybackSpeed = speed => { [].slice.call(document.querySelectorAll('audio,video')).map((e, idx) => { e.playbackRate = speed; }); }</script>
   </body>

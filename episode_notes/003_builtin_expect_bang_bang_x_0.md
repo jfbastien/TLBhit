@@ -1,6 +1,16 @@
+---
+episode: 3
+title: "__builtin_expect(!!(x), 0)"
+guid: "a99864d9-d302-40d2-b257-b6258d26ffdf"
+pubDate: "Mon, 19 Apr 2021 03:05:47 +0000"
+duration: "00:39:10"
+audio: "tlbhit3.mp3"
+description: "Static vs runtime knowledge, compiler hints, C++20 annotations."
+explicit: false
+---
 # Episode 3: `__builtin_expect(!!(x), 0)`
 
-<audio id="audioplayer" src="https://traffic.libsyn.com/secure/tlbhit/tlbhit3.mp3" controls="controls" class="podcast-audio" preload="auto"></audio><div class="playback-rate-controls"><ul><li><a href="#" onclick="setPlaybackSpeed(0.5)">0.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1)">1⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.25)">1.25⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.5)">1.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.75)">1.75⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(2)">2⨉</a></li></ul></div>
+<audio id="audioplayer" src="https://tlbh.it/episodes/tlbhit3.mp3" controls="controls" class="podcast-audio" preload="auto"></audio><div class="playback-rate-controls"><ul><li><a href="#" onclick="setPlaybackSpeed(0.5)">0.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1)">1⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.25)">1.25⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.5)">1.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.75)">1.75⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(2)">2⨉</a></li></ul></div>
 
 ## Intro [00:00]
 
