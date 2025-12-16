@@ -10,7 +10,6 @@ explicit: false
 ---
 # Episode 0: `mov fp, sp`
 
-<audio id="audioplayer" src="https://tlbh.it/episodes/tlbhit0.mp3" controls="controls" class="podcast-audio" preload="auto"></audio><div class="playback-rate-controls"><ul><li><a href="#" onclick="setPlaybackSpeed(0.5)">0.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1)">1⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.25)">1.25⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.5)">1.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.75)">1.75⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(2)">2⨉</a></li></ul></div>
 
 ## 00:00:00 Intro
 
@@ -698,7 +697,7 @@ explicit: false
   antonym: erasure: erasing information from being present in the program that
   had been determined in some prior phase like compilation
 * [translation
-  unit](https://en.wikipedia.org/wiki/Translation_unit_(programming)): the
+  unit](<https://en.wikipedia.org/wiki/Translation_unit_(programming)>): the
   input that is processed by a single compiler invocation (akin to a "module"
   concept in languages with modules), serves as a natural scope for compiler
   optimizations

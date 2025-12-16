@@ -10,7 +10,6 @@ explicit: false
 ---
 # Episode 6: ƑẍɄʑʑ҉⟆Ƒu𝔷𝔷⧫ᶳΩ𝓕𝕦𝘇𝘇֍⧩ Podcast Notes
 
-<audio id="audioplayer" src="https://tlbh.it/episodes/tlbhit6.mp3" controls="controls" class="podcast-audio" preload="auto"></audio><div class="playback-rate-controls"><ul><li><a href="#" onclick="setPlaybackSpeed(0.5)">0.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1)">1⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.25)">1.25⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.5)">1.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.75)">1.75⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(2)">2⨉</a></li></ul></div>
 
 
 **Chris** Welcome to our weekly episode of TLB Hit\! Wait, is that right?

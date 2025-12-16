@@ -270,13 +270,13 @@ explicit: false
 		* JF says there's not for now but there's the monadic operators for C++23 the same way they're added for `std::optional`
 			* Not quite the same power as the `?` operator or something like it, but somewhat novel... JF not sure it'll make it to C++26
 			* JF says what's nice is you can write the scope in the if declaration position as a neat syntactic thing in C++:
-      ```c++
-      if (auto something = make_my_expected_thing()) {
-        // happy case using "something"
-      } else {
-        // sad case using "something"
-      }
-      ```
+				```c++
+				if (auto something = make_my_expected_thing()) {
+				  // happy case using "something"
+				} else {
+				  // sad case using "something"
+				}
+				```
 			* [Chris quietly thinks this is a sad consolation prize]
 		* One other story: Chris works on a team that parses SystemVerilog using ANTLRv4 that may be the largest ANTLR grammar
 			* We've been talking a bit about the trade-offs we see there

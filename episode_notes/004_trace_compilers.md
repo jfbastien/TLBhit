@@ -10,7 +10,6 @@ explicit: false
 ---
 # Episode 4: `t-r-a-c-/e̅‾\-o-m-p-i-l-e`
 
-<audio id="audioplayer" src="https://tlbh.it/episodes/tlbhit4.mp3" controls="controls" class="podcast-audio" preload="auto"></audio><div class="playback-rate-controls"><ul><li><a href="#" onclick="setPlaybackSpeed(0.5)">0.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1)">1⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.25)">1.25⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.5)">1.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.75)">1.75⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(2)">2⨉</a></li></ul></div>
 
 ## Prologue [00:00]
 

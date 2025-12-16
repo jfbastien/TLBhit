@@ -10,7 +10,6 @@ explicit: false
 ---
 # Episode 2: `https://tlbh.it^M`
 
-<audio id="audioplayer" src="https://tlbh.it/episodes/tlbhit2.mp3" controls="controls" class="podcast-audio" preload="auto"></audio><div class="playback-rate-controls"><ul><li><a href="#" onclick="setPlaybackSpeed(0.5)">0.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1)">1⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.25)">1.25⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.5)">1.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.75)">1.75⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(2)">2⨉</a></li></ul></div>
 
 ### Artisinal hand-crafted intro [00:00]
 
@@ -100,7 +99,7 @@ explicit: false
 * Some of us are familiar with this basic concepts from
   [Tron](https://en.wikipedia.org/wiki/Tron) (or [Tron:
   Legacy](https://en.wikipedia.org/wiki/Tron:_Legacy), or its [Draft Punk
-  soundtrack](https://en.wikipedia.org/wiki/Tron:_Legacy_(soundtrack))), all of
+  soundtrack](<https://en.wikipedia.org/wiki/Tron:_Legacy_(soundtrack)>)), all of
   which will be helpful.
 
 ### Starting in physical IO space [04:50]

@@ -62,6 +62,7 @@
     </header>
     <main>
 <h1>Parsers Podcast Notes</h1>
+<audio id="audioplayer" src="https://tlbh.it/episodes/tlbhit5.mp3" controls="controls" class="podcast-audio" preload="auto"></audio><div class="playback-rate-controls"><ul><li><a href="#" onclick="setPlaybackSpeed(0.5)">0.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1)">1⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.25)">1.25⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.5)">1.5⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(1.75)">1.75⨉</a></li><li><a href="#" onclick="setPlaybackSpeed(2)">2⨉</a></li></ul></div>
 <h2>[00:00] Horrible Winter Holiday / Valentine's Day Cold Intro</h2>
 <ul>
 <li>Warm and fuzzy... and <strong>parse-y</strong>... time of year</li>
@@ -342,28 +343,17 @@ TERM_EXPR ::= Number
 </ul>
 </li>
 <li>Features that were somewhat notorious we got exposed to in JavaScript that had funny grammatical properties, like its Automatic Semicolon Insertion (ASI)<ul>
-<li><p>Normal BNF grammars don't have a notion of a &quot;negative lookahead&quot;; like &quot;there can not be this terminal here&quot;, but that's how ASI was described in the JavaScript spec</p>
-</li>
-<li><p>In Firefox SpiderMonkey [JS engine] we had a recursive descent parser, so it was very clear how that kind of &quot;production rule extension&quot; could be handled, but believe [OS X Safari] JavaScriptScore had a lex/yacc based parser -- not exactly sure how it handled things like this negative token lookahead, but would be interesting to go back and find out; how did it deal with this extension to the BNF grammar that was present in the JavaScript spec</p>
-</li>
-<li><p>ASI one of the strange quirks of JavaScript people ideally do not rely on, but makes it an interesting language to parse; interesting accident</p>
-</li>
-<li><p>&quot;If there would be an error, but putting a semicolon there would make it not-an-error, then you should put a semicolon there&quot; is perhaps the rule</p>
-</li>
-<li><p>[32:30] When JF worked on Chrome's Native Client security sandbox, the parsing had to be correct, or it was a potential security vulnerability</p>
-</li>
-<li><p>Idea of Native Client back when it started in 2009 -- <a href="https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/34913.pdf">really great paper describing it</a> -- let's try to run native code run on the web</p>
-</li>
-<li><p>At the time had written V8 and realized there's a wall you hit with JavaScript regardless of how much your compiler can optimize things for JavaScript and kind of want to run more powerful things on the web</p>
-</li>
-<li><p>Native Client isn't what ended up being standardized, Web Assembly was</p>
-</li>
-<li><p>But core idea of running native code on the web was really interesting, and there were different experiments: NaCl, PNaCL, and at Mozilla there was asm.js which ended up with us creating Web Assembly together</p>
-</li>
-<li><p>In all those contexts the parser is really really critical to get right, if you don't get it right there's a vulnerability</p>
-</li>
-<li><p>When JF worked on Native Client the input was x86-32 x86-64 and ARM, so there's really tricky things and parsing those ISAs correctly is important to security</p>
-<ul>
+<li>Normal BNF grammars don't have a notion of a &quot;negative lookahead&quot;; like &quot;there can not be this terminal here&quot;, but that's how ASI was described in the JavaScript spec</li>
+<li>In Firefox SpiderMonkey [JS engine] we had a recursive descent parser, so it was very clear how that kind of &quot;production rule extension&quot; could be handled, but believe [OS X Safari] JavaScriptScore had a lex/yacc based parser -- not exactly sure how it handled things like this negative token lookahead, but would be interesting to go back and find out; how did it deal with this extension to the BNF grammar that was present in the JavaScript spec</li>
+<li>ASI one of the strange quirks of JavaScript people ideally do not rely on, but makes it an interesting language to parse; interesting accident</li>
+<li>&quot;If there would be an error, but putting a semicolon there would make it not-an-error, then you should put a semicolon there&quot; is perhaps the rule</li>
+<li>[32:30] When JF worked on Chrome's Native Client security sandbox, the parsing had to be correct, or it was a potential security vulnerability</li>
+<li>Idea of Native Client back when it started in 2009 -- <a href="https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/34913.pdf">really great paper describing it</a> -- let's try to run native code run on the web</li>
+<li>At the time had written V8 and realized there's a wall you hit with JavaScript regardless of how much your compiler can optimize things for JavaScript and kind of want to run more powerful things on the web</li>
+<li>Native Client isn't what ended up being standardized, Web Assembly was</li>
+<li>But core idea of running native code on the web was really interesting, and there were different experiments: NaCl, PNaCL, and at Mozilla there was asm.js which ended up with us creating Web Assembly together</li>
+<li>In all those contexts the parser is really really critical to get right, if you don't get it right there's a vulnerability</li>
+<li>When JF worked on Native Client the input was x86-32 x86-64 and ARM, so there's really tricky things and parsing those ISAs correctly is important to security<ul>
 <li>The CPU is just going to execute it, so if you haven't validated the executable correctly, something else is going to be executed which may be a vulnerability</li>
 <li>One fun bug the team had to resolve early way before launch was dealing with <code>pushf</code> / <code>popf</code> instructions in x86</li>
 <li>Those tend to just push the flags, overflow flag and such</li>
@@ -384,22 +374,24 @@ TERM_EXPR ::= Number
 <li>Nice example story -- <code>std::expected</code> is easy to like, Chris hopes there's a <code>?</code> <a href="https://doc.rust-lang.org/book/ch09-02-recoverable-errors-with-result.html#a-shortcut-for-propagating-errors-the--operator">operator for it like in Rust one day</a>, so if there's C++ committee people listening...</li>
 <li>JF says there's not for now but there's the monadic operators for C++23 the same way they're added for <code>std::optional</code><ul>
 <li>Not quite the same power as the <code>?</code> operator or something like it, but somewhat novel... JF not sure it'll make it to C++26</li>
-<li>JF says what's nice is you can write the scope in the if declaration position as a neat syntactic thing in C++:</li>
-</ul>
-</li>
-</ul>
-<pre><code class="language-c++">if (auto something = make_my_expected_thing()) {
+<li>JF says what's nice is you can write the scope in the if declaration position as a neat syntactic thing in C++:<pre><code class="language-c++">if (auto something = make_my_expected_thing()) {
   // happy case using &quot;something&quot;
 } else {
   // sad case using &quot;something&quot;
 }
 </code></pre>
-<pre><code>  * [Chris quietly thinks this is a sad consolation prize]</code></pre>
-<p>* One other story: Chris works on a team that parses SystemVerilog using ANTLRv4 that may be the largest ANTLR grammar
-* We've been talking a bit about the trade-offs we see there
-* Performance optimization work sometimes means re-structuring the grammar so that the generator can do better with it
-* Same interesting questions come up around memory usage and you get a lot of power from the grammar-generating that would be a lot of work to write in a recursive-descent parser form, especially as the grammar gets large
-* But there's clearly a trade-off space there, been fun to re-live this understanding of the tradeoffs</p>
+</li>
+<li>[Chris quietly thinks this is a sad consolation prize]</li>
+</ul>
+</li>
+<li>One other story: Chris works on a team that parses SystemVerilog using ANTLRv4 that may be the largest ANTLR grammar<ul>
+<li>We've been talking a bit about the trade-offs we see there</li>
+<li>Performance optimization work sometimes means re-structuring the grammar so that the generator can do better with it</li>
+<li>Same interesting questions come up around memory usage and you get a lot of power from the grammar-generating that would be a lot of work to write in a recursive-descent parser form, especially as the grammar gets large</li>
+<li>But there's clearly a trade-off space there, been fun to re-live this understanding of the tradeoffs</li>
+</ul>
+</li>
+</ul>
 </li>
 </ul>
 </li>
