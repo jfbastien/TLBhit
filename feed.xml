@@ -29,6 +29,8 @@
       <itunes:episode>7</itunes:episode>
       <itunes:explicit>false</itunes:explicit>
       <itunes:episodeType>full</itunes:episodeType>
+      <itunes:image href="https://tlbh.it/logo/tlbhit-logo.png" />
+      <podcast:transcript url="https://tlbh.it/006_fuzz.html" type="text/html" />
     </item>
     <item>
       <title>Episode 5: parsers</title>
@@ -42,6 +44,8 @@
       <itunes:episode>6</itunes:episode>
       <itunes:explicit>false</itunes:explicit>
       <itunes:episodeType>full</itunes:episodeType>
+      <itunes:image href="https://tlbh.it/logo/tlbhit-logo.png" />
+      <podcast:transcript url="https://tlbh.it/005_parsers.html" type="text/html" />
     </item>
     <item>
       <title>Episode 4: t-r-a-c-/e̅‾\-o-m-p-i-l-e</title>
@@ -55,6 +59,8 @@
       <itunes:episode>5</itunes:episode>
       <itunes:explicit>false</itunes:explicit>
       <itunes:episodeType>full</itunes:episodeType>
+      <itunes:image href="https://tlbh.it/logo/tlbhit-logo.png" />
+      <podcast:transcript url="https://tlbh.it/004_trace_compilers.html" type="text/html" />
     </item>
     <item>
       <title>Episode 3: __builtin_expect(!!(x), 0)</title>
@@ -68,6 +74,8 @@
       <itunes:episode>4</itunes:episode>
       <itunes:explicit>false</itunes:explicit>
       <itunes:episodeType>full</itunes:episodeType>
+      <itunes:image href="https://tlbh.it/logo/tlbhit-logo.png" />
+      <podcast:transcript url="https://tlbh.it/003_builtin_expect_bang_bang_x_0.html" type="text/html" />
     </item>
     <item>
       <title>Episode 2: https://tlbh.it^M</title>
@@ -81,6 +89,8 @@
       <itunes:episode>3</itunes:episode>
       <itunes:explicit>false</itunes:explicit>
       <itunes:episodeType>full</itunes:episodeType>
+      <itunes:image href="https://tlbh.it/logo/tlbhit-logo.png" />
+      <podcast:transcript url="https://tlbh.it/002_https_tlbh_dot_it_CR.html" type="text/html" />
     </item>
     <item>
       <title>Episode 1: *(char*)0 = 0</title>
@@ -94,6 +104,8 @@
       <itunes:episode>2</itunes:episode>
       <itunes:explicit>false</itunes:explicit>
       <itunes:episodeType>full</itunes:episodeType>
+      <itunes:image href="https://tlbh.it/logo/tlbhit-logo.png" />
+      <podcast:transcript url="https://tlbh.it/001_deref_char_star_0_eq_0.html" type="text/html" />
     </item>
     <item>
       <title>Episode 0: mov fp, sp</title>
@@ -107,6 +119,8 @@
       <itunes:episode>1</itunes:episode>
       <itunes:explicit>false</itunes:explicit>
       <itunes:episodeType>full</itunes:episodeType>
+      <itunes:image href="https://tlbh.it/logo/tlbhit-logo.png" />
+      <podcast:transcript url="https://tlbh.it/000_mov_fp_sp.html" type="text/html" />
     </item>
   </channel>
 </rss>

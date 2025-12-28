@@ -240,6 +240,16 @@ def generate_rss(episodes):
 
         ET.SubElement(item, f"{{{ITUNES_NS}}}episodeType").text = "full"
 
+        # Per-episode image (uses podcast logo)
+        ET.SubElement(item, f"{{{ITUNES_NS}}}image", {"href": CHANNEL["image"]})
+
+        # Transcript - link to HTML episode page
+        episode_url = f"https://tlbh.it/{ep['slug']}.html"
+        ET.SubElement(item, f"{{{PODCAST_NS}}}transcript", {
+            "url": episode_url,
+            "type": "text/html",
+        })
+
     # Write with XML declaration
     tree = ET.ElementTree(rss)
     ET.indent(tree, space="  ")
