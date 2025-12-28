@@ -240,8 +240,9 @@ def generate_rss(episodes):
 
         ET.SubElement(item, f"{{{ITUNES_NS}}}episodeType").text = "full"
 
-        # Per-episode image (uses podcast logo)
+        # Per-episode image (uses podcast logo) - both iTunes and Podcast 2.0 formats
         ET.SubElement(item, f"{{{ITUNES_NS}}}image", {"href": CHANNEL["image"]})
+        ET.SubElement(item, f"{{{PODCAST_NS}}}image", {"href": CHANNEL["image"]})
 
         # Transcript - link to HTML episode page
         episode_url = f"https://tlbh.it/{ep['slug']}.html"
