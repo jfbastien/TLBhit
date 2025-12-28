@@ -173,9 +173,15 @@ def generate_rss(episodes):
     # NEW FEED URL TAG - for migration (safe to leave forever)
     ET.SubElement(channel, f"{{{ITUNES_NS}}}new-feed-url").text = CHANNEL["feed_url"]
 
-    # Podcast 2.0 namespace - locked tag (required for PSP-1 compliance)
+    # Podcast 2.0 namespace tags
     locked = ET.SubElement(channel, f"{{{PODCAST_NS}}}locked", {"owner": "tlbhit@jfbastien.com"})
     locked.text = "no"
+
+    # podcast:guid - permanent unique identifier for the podcast (not per-episode)
+    # Generated as UUID v5 from feed URL for stability
+    import uuid
+    podcast_guid = uuid.uuid5(uuid.NAMESPACE_URL, CHANNEL["feed_url"])
+    ET.SubElement(channel, f"{{{PODCAST_NS}}}guid").text = str(podcast_guid)
 
     # Channel dates (from episodes, sorted by episode number)
     if episodes:
